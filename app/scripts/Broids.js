@@ -26,10 +26,13 @@ function Broids(opts, callback){
   	this.foreach = opts.foreach;
   	this.step = opts.step;
   	this.ticker = opts.ticker;
+    this.follow = opts.follow;
+    this.add = opts.add;
+    this.remove = opts.remove;
 
   	//Renderer target
   	this.renderer = opts.renderer;
-  	this.setup = opts.setup;
+  	this.setup = function(){opts.setup(this.boids());}
   	this.render = opts.render;
   	this.renderSingle = opts.renderSingle;
 
@@ -42,7 +45,7 @@ function Broids(opts, callback){
   		self.ticker(function tick() {
 	  		self.onLoop();
 		  	self.ticker(tick);
-		});	
+		  });	
   	};
   	
     callback.bind(this)();

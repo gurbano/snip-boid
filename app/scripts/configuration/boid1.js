@@ -1,21 +1,28 @@
 var factory = require('boids')({ //https://www.npmjs.com/package/boids
-  boids: 1,              // The amount of boids to use 
+  //BOID [xPosition, yPosition, xSpeed, ySpeed, xAcceleration, yAcceleration]
+
+  boids: 0,              // The amount of boids to use 
   speedLimit: 2,          // Max steps to take per tick 
   accelerationLimit: 0.5,   // Max acceleration per tick 
-  /*
+  
   separationDistance: 60, // Radius at which boids avoid others 
   alignmentDistance: 180, // Radius at which boids align with others 
   choesionDistance: 180,  // Radius at which boids approach others 
   separationForce: 0.15,  // Speed to avoid at 
   alignmentForce: 0.25,   // Speed to align with other boids 
   choesionForce: 0.1,     // Speed to move towards other boids 
-  */
+  
   attractors: [[
-    $(document).width()/2 // x
-  , $(document).height()/2 // y
-  , 150 // dist
-  , 0.25 // spd
-]]
+    0 // x
+  , 0 // y
+  , 80 // dist
+  , 10.25 // spd
+  ],[
+    400 // x
+  , 400 // y
+  , 300 // dist
+  , -5 // spd
+  ]]
 
 });
 var adapters = {
@@ -23,6 +30,35 @@ var adapters = {
 	attractors: function () {return this.generator.attractors;},
 	foreach: function (cb) {this.boids().forEach(function (boid) {cb(boid);})},
 	step: function(){this.generator.tick();},
+  follow: function (x,y) {
+    this.generator.attractors[0][0] = x;
+    this.generator.attractors[0][1] = y;
+  },
+  add: function(x,y){
+    this.boids().push([x, y, 0, 0, 0, 0]);
+  },
+  remove: function (index) {
+    /*
+    if (this.boids().length == 0 || index >= this.boids().length){
+      console.error('Error removing boids', this.boids());
+      return undefined;
+    }
+    var element = this.boids()[index];
+    this.generator.boids = this.boids().splice(index, 1);
+    return element;
+    */
+    return this.generator.boids.pop()
+  }
 }
 
-module.exports = [factory,adapters];
+module.exports = [factory, adapters];
+
+
+/*
+
+function (xPosition, yPosition) {
+    //this.boids().push([xPosition, yPosition, xSpeed, ySpeed, xAcceleration, yAcceleration]);
+    
+  }
+
+*/
