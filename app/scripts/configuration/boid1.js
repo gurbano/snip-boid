@@ -2,8 +2,8 @@ var factory = require('boids')({ //https://www.npmjs.com/package/boids
   //BOID [xPosition, yPosition, xSpeed, ySpeed, xAcceleration, yAcceleration]
 
   boids: 0,              // The amount of boids to use 
-  speedLimit: 2,          // Max steps to take per tick 
-  accelerationLimit: 0.5,   // Max acceleration per tick 
+  speedLimit: 5,          // Max steps to take per tick 
+  accelerationLimit: 2,   // Max acceleration per tick 
   
   separationDistance: 60, // Radius at which boids avoid others 
   alignmentDistance: 180, // Radius at which boids align with others 
@@ -17,11 +17,6 @@ var factory = require('boids')({ //https://www.npmjs.com/package/boids
   , 0 // y
   , 80 // dist
   , 10.25 // spd
-  ],[
-    400 // x
-  , 400 // y
-  , 300 // dist
-  , -5 // spd
   ]]
 
 });
