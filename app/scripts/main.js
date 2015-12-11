@@ -6,7 +6,7 @@ var options = require('./configuration/boid1.js')[1];
 
 //var impl2 = require('boid');	//https://www.npmjs.com/package/boid
 
-var dancer = require('./dancerGlue')();
+var DGlue = require('./dancerGlue');
 var renderer = require('./BroidsRenderer')();
 var w = $(document).width();
 var h = $(document).height();
@@ -45,6 +45,17 @@ var Broids = require('./Broids')(
 	}, //opts
 	function(){
 		var self = this;
+
+		this.dancer = new DGlue({
+			onKick: function (mag) {
+				console.info('kick',mag);
+			},
+			offKick: function () {
+
+			},
+		},function () {
+			console.info('Dancer initialized');
+		});
 		
 		this.setup(); //setup renderer
 		console.info('Broids started');
@@ -73,12 +84,8 @@ var Broids = require('./Broids')(
 		/*for (var i = 0; i <5; i++ ){
 			self.addAttractor(random(0,w),random(0,h), 15, - 150);
 		}*/
-		if(dancer.dancer.isLoaded()){
-			dancer.dancer.play();	
-		}else{
-			console.error('audio not loaded');
-		}
 		
+		this.dancer.play();			
 
 
 		/*BIND MOUSE*/
