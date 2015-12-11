@@ -6,6 +6,7 @@ var options = require('./configuration/boid1.js')[1];
 
 //var impl2 = require('boid');	//https://www.npmjs.com/package/boid
 
+var dancer = require('./dancerGlue')();
 var renderer = require('./BroidsRenderer')();
 var w = $(document).width();
 var h = $(document).height();
@@ -72,6 +73,14 @@ var Broids = require('./Broids')(
 		/*for (var i = 0; i <5; i++ ){
 			self.addAttractor(random(0,w),random(0,h), 15, - 150);
 		}*/
+		if(dancer.dancer.isLoaded()){
+			dancer.dancer.play();	
+		}else{
+			console.error('audio not loaded');
+		}
+		
+
+
 		/*BIND MOUSE*/
 		document.oncontextmenu = function() {return false;};
 		$(document).mousedown(function(e){ 

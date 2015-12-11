@@ -113,6 +113,18 @@ gulp.task('images', () => {
       })))
     .pipe(gulp.dest('dist/images'));
 });
+gulp.task('audio', () => {
+  return gulp.src('app/audio/**/*')
+    .pipe($.if($.if.isFile, $.cache($.imagemin({
+        progressive: true,
+        interlaced: true,
+      }))
+      .on('error', function(err) {
+        console.log(err);
+        this.end();
+      })))
+    .pipe(gulp.dest('dist/audio'));
+});
 
 gulp.task('fonts', () => {
   return gulp.src('app/fonts/**/*')
@@ -139,13 +151,15 @@ gulp.task('serve', ['styles','watchify', 'fonts'], () => {
       baseDir: ['.tmp', 'app'],
       routes: {
         '/bower_components': 'bower_components'
-      }
+      },
+      serveStatic: ['.', 'app/audio']
     }
   });
 
   gulp.watch([
     'app/*.html',
     'app/images/**/*',
+    'app/audio/**/*',
     '.tmp/fonts/**/*'
   ]).on('change', reload);
 
@@ -175,7 +189,7 @@ gulp.task('wiredep', () => {
 });
 
 
-gulp.task('build', ['scripts', 'html', 'images', 'fonts', 'extras'], () => {
+gulp.task('build', ['scripts', 'html', 'images', 'audio','fonts', 'extras'], () => {
   return gulp.src('dist/**/*').pipe($.size({
     title: 'build',
     gzip: true
