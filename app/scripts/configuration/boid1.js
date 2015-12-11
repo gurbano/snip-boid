@@ -3,9 +3,9 @@ var factory = require('boids')({ //https://www.npmjs.com/package/boids
 
   boids: 0,              // The amount of boids to use 
   speedLimit: 2.0,          // Max steps to take per tick 
-  accelerationLimit: 0.5,   // Max acceleration per tick 
+  accelerationLimit: 0.5,   // Max acceleration per tick   
+  separationDistance: 80, // Radius at which boids avoid others 
   /*
-  separationDistance: 60, // Radius at which boids avoid others 
   alignmentDistance: 180, // Radius at which boids align with others 
   choesionDistance: 180,  // Radius at which boids approach others 
   separationForce: 0.15,  // Speed to avoid at 
@@ -31,12 +31,26 @@ var adapters = {
     this.generator.attractors[0][1] = y;
   },
   addBoid: function(x,y){
-    console.info('ading boid');
     this.boids().push([x, y, 0, 0, 0, 0]);
   },
   removeBoid: function (index) {
     //TODO: remove by index
     return this.generator.boids.pop()
+  },
+  setBoids: function (value, removeCb, getPosition) {
+      if (value>this.boids().length){
+        while (this.boids().length<value){
+          var pos = getPosition ? getPosition() : [0,0];
+          this.addBoid(pos[0],pos[1]);
+        }
+      }else{
+        while (this.boids().length>=value){
+          var pop = this.removeBoid();
+          if (removeCb){
+            removeCb(pop);
+          }
+        }
+      }
   },
   addAttractor: function(x,y,d,f){
     this.attractors().push([x, y, d, f]);

@@ -1,17 +1,22 @@
 
 var raf = require('raf');
-var generator = require('./configuration/boid1.js')[0];
-var options = require('./configuration/boid1.js')[1];
+var generator = require('./configuration/boid2.js')[0];
+var options = require('./configuration/boid2.js')[1];
 
 
 //var impl2 = require('boid');	//https://www.npmjs.com/package/boid
 
 var DGlue = require('./dancerGlue');
 var renderer = require('./BroidsRenderer')();
+
+
+var STARTING_BOIDS = 0;
+
+var random = function (min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+};
 var w = $(document).width();
 var h = $(document).height();
-
-var STARTING_BOIDS = 600;
 
 /**/
 var Broids = require('./Broids')(
@@ -22,6 +27,7 @@ var Broids = require('./Broids')(
 		attractors: options.attractors,
 		foreach: options.foreach,
 		step: options.step,
+		setBoids: options.setBoids,
 		follow: options.follow,
 		addBoid: options.addBoid,
 		removeBoid: options.removeBoid,
@@ -30,19 +36,7 @@ var Broids = require('./Broids')(
 		//ticker
 		ticker: raf,
 		//renderer
-		renderer: renderer,		
-
-		/*GLUE RENDERER AND FACTORY*/
-		render: function(){ return this.renderer.render(this.boids(), this.attractors());},
-		setup: function(boids, attractors){ 
-			return this.renderer.setup(boids, attractors);},
-		onLoop: function (argument) {
-			var self = this;
-			this.follow(document.pageX, document.pageY);
-			this.step();
-			this.render();
-		}
-		
+		renderer: renderer,			
 	}, //opts
 	function(){
 		var self = this;
@@ -61,27 +55,38 @@ var Broids = require('./Broids')(
 		this.setup(); //setup renderer
 		console.info('Broids started');
 		this.start();
-		
-		var gui = new dat.GUI();
-		gui.add(this.generator, 'speedLimitRoot',0.1,5.0);
-		//gui.add(this.generator, 'accelerationLimitRoot',0,50);
-
-		//gui.add(this.generator, 'separationDistance',0,5000);
-		gui.add(this.generator, 'separationForce',0,5);
-		gui.add(this.generator, 'cohesionForce',0,5);
-		gui.add(this.generator, 'alignmentForce',0,5);	
-
-
-
-		
-
-
-		var random = function (min, max) {
-			return Math.floor(Math.random() * (max - min + 1)) + min;
-		}
 		for (var i = 0; i <STARTING_BOIDS; i++ ){
 			self.addBoid(random(0,w),random(0,h));
 		}
+
+		
+		var gui = new dat.GUI();		
+		
+		var f1 = gui.addFolder('Boids');
+		f1.add(this.generator, 'speedLimitRoot',0.1,5.0);
+		//gui.add(this.generator, 'accelerationLimitRoot',0,50);
+		//gui.add(this.generator, 'separationDistance',0,5000);
+		f1.add(this.generator, 'separationForce',0,5);
+		f1.add(this.generator, 'cohesionForce',0,5);
+		f1.add(this.generator, 'alignmentForce',0,5);
+
+		var bn = {boids : this.boids().length};
+		var f2 = gui.addFolder('Simulation');
+		f2.add(bn, 'boids', 0, 1600)
+			.step(1)
+			.onFinishChange(
+				function (value) {
+					//console.info(bn.boids);
+					self.limitBoids(value);
+			}
+		);
+		f2.open();
+
+
+		
+
+
+	
 		/*for (var i = 0; i <5; i++ ){
 			self.addAttractor(random(0,w),random(0,h), 15, - 150);
 		}*/
@@ -97,15 +102,11 @@ var Broids = require('./Broids')(
 		      	return false;
 		    } 
 		    if( e.button == 1 ) { //center
-		      self.addAttractor(around(document.pageX),around(document.pageY), 120, -random(100,220));
+		      self.addAttractor(around(document.pageX),around(document.pageY), 100, -random(0,5));
 		      return false; 
 		    } 
-		    if( e.button == 2 ) { //right
-		      for (var i = 0; i <60; i++ ){
-		      	self.addBoid(around(document.pageX),around(document.pageY));
-		      }
-		      return false; 
-		      
+		    if( e.button == 2 ) { //right		      
+		      return false; 		      
 		    } 
 		    return true; 
 		  }); 

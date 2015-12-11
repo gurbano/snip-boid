@@ -1,5 +1,10 @@
-module.exports = Broids;
+var random = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+var w = $(document).width();
+var h = $(document).height();
 
+module.exports = Broids;
 /*
 	Configuration:
 		//Boids factory
@@ -29,6 +34,8 @@ function Broids(opts, callback){
     this.follow = opts.follow;
     this.addBoid = opts.addBoid;
     this.removeBoid = opts.removeBoid;
+    this.setBoids = opts.setBoids;
+    this.limitBoids = opts.limitBoids;
     this.addAttractor = opts.addAttractor;
     this.removeAttractor = opts.removeBoid;
   	//Renderer target
@@ -48,6 +55,26 @@ function Broids(opts, callback){
 		  	self.ticker(tick);
 		  });	
   	};
+    /*GLUE RENDERER AND FACTORY*/
+    this.limitBoids =  function (value) {
+      var self = this;
+      self.setBoids(value,
+        function (pop) {
+          self.renderer.removeBoid(pop);
+        },
+        function getPosition (argument) {
+          return [random(0,w), random(0,h)]
+        }); 
+    },
+    this.render = function(){ return this.renderer.render(this.boids(), this.attractors());};
+    this.setup = function(boids, attractors){ 
+      return this.renderer.setup(boids, attractors);};
+    this.onLoop = function (argument) {
+      var self = this;
+      this.follow(document.pageX, document.pageY);
+      this.step();
+      this.render();
+    };
   	
     callback.bind(this)();
   	
