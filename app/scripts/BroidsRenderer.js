@@ -50,10 +50,15 @@ function BroidsRenderer(opts, callback){
     /*UPDATE BOIDS*/
     for (var i = boids.length - 1; i >= 0; i--) {
         if (!boids[i].point){
-            boids[i].point = getNewBoid(boids[i][0],boids[i][1], this.stage);
+            boids[i].point = getNewBoid(this.stage);
             //this.addBoid(boids[i].point);
         }
         moveTo(boids[i].point, boids[i][0], boids[i][1]);
+        var sx = boids[i][2]; //speedX
+        var sy = boids[i][3]; //speedY
+        var rad = Math.atan2(sy,sx);
+        boids[i].point.rotation = rad + (Math.PI / 2);
+        
     };
     //UPDATE POINTER
     this.movePointer(document.pageX, document.pageY);
@@ -74,12 +79,6 @@ function BroidsRenderer(opts, callback){
       obj.position.x = x;
       obj.position.y = y;
   }
-  
-  var boidToPoint = function(boid){
-    var point = new PIXI.Graphics();
-    point.beginFill(RED);
-    point.drawCircle(0,0,2);
-  }
   var setupPointer = function(stage){
     var point = new PIXI.Graphics();
     point.beginFill(WHITE);
@@ -87,12 +86,15 @@ function BroidsRenderer(opts, callback){
     stage.addChild(point);
     return point;
   }
-  var getNewBoid = function (x, y, stage) {
+  var getNewBoid = function (stage) {
     var point = new PIXI.Graphics();
     point.beginFill(RED);
-    point.drawCircle(0,0,2);
-    point.position.x = x;
-    point.position.y = y;
+    //point.drawCircle(0,0,2);
+    point.moveTo(0,0);    
+    point.lineTo(-5, 15);
+    point.lineTo(5, 15);
+    point.endFill();
+    point.pivot.set(0,0);
     stage.addChild(point);
     return point;
   }

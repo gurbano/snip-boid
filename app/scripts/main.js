@@ -11,6 +11,7 @@ var renderer = require('./BroidsRenderer')();
 var w = $(document).width();
 var h = $(document).height();
 
+var STARTING_BOIDS = 600;
 
 /**/
 var Broids = require('./Broids')(
@@ -78,14 +79,14 @@ var Broids = require('./Broids')(
 		var random = function (min, max) {
 			return Math.floor(Math.random() * (max - min + 1)) + min;
 		}
-		for (var i = 0; i <200; i++ ){
+		for (var i = 0; i <STARTING_BOIDS; i++ ){
 			self.addBoid(random(0,w),random(0,h));
 		}
 		/*for (var i = 0; i <5; i++ ){
 			self.addAttractor(random(0,w),random(0,h), 15, - 150);
 		}*/
 		
-		this.dancer.play();			
+		//this.dancer.play();			
 
 
 		/*BIND MOUSE*/

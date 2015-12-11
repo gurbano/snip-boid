@@ -2,7 +2,7 @@ var factory = require('boids')({ //https://www.npmjs.com/package/boids
   //BOID [xPosition, yPosition, xSpeed, ySpeed, xAcceleration, yAcceleration]
 
   boids: 0,              // The amount of boids to use 
-  speedLimit: 0.5,          // Max steps to take per tick 
+  speedLimit: 2.0,          // Max steps to take per tick 
   accelerationLimit: 0.5,   // Max acceleration per tick 
   /*
   separationDistance: 60, // Radius at which boids avoid others 
@@ -16,8 +16,8 @@ var factory = require('boids')({ //https://www.npmjs.com/package/boids
   attractors: [[
     0 // x
   , 0 // y
-  , 120 // dist
-  , -50 // spd
+  , 0 // dist 120
+  , 0 // spd  -50
   ]]
 
 });
