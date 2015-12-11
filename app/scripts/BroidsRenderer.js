@@ -16,7 +16,7 @@ function BroidsRenderer(opts, callback){
   var width = $(window).width();
   var height = $(window).height();
   this.renderer = PIXI.autoDetectRenderer(width, height, { antialias: true });
-  this.setup = function  (boids) {
+  this.setup = function  (boids, attractors) {
   	console.info('Setting up stage');
     document.body.appendChild(this.renderer.view);
     var stage = new PIXI.Container();
@@ -24,32 +24,57 @@ function BroidsRenderer(opts, callback){
     this.stage = stage;
     this.pointer = setupPointer(this.stage);
   };
+
+
   this.movePointer = function (x,y) {
     this.pointer.position.x = x;
     this.pointer.position.y = y;
   }
-  this.remove = function (boid) {
+  this.removeBoid = function (boid) {
      var point = boid.point;
      boid.point = undefined;
      this.stage.removeChild(point);
   }
- 	this.render = function (boids) {   
-    //update boids 
+  this.addBoid = function (boid) {
+     this.stage.addChild(boid.point);
+  }
+  this.addAttractor = function (attractor) {
+     this.stage.addChild(attractor.point);
+  }
+  this.removeAttractor = function (attractor) {
+    var point = attractor.point;
+    attractor.point = undefined;
+    this.stage.removeChild(point);
+  }
+ 	this.render = function (boids, attractors) {   
+    /*UPDATE BOIDS*/
     for (var i = boids.length - 1; i >= 0; i--) {
         if (!boids[i].point){
             boids[i].point = getNewBoid(boids[i][0],boids[i][1], this.stage);
+            //this.addBoid(boids[i].point);
         }
         moveTo(boids[i].point, boids[i][0], boids[i][1]);
     };
-    //update pointer
+    //UPDATE POINTER
     this.movePointer(document.pageX, document.pageY);
+    //UPDATE ATTRACTORS
+    for (var i = attractors.length - 1; i >= 1; i--) {
+        if (!attractors[i].point){
+            attractors[i].point = getNewAttractor(attractors[i][0],attractors[i][1],attractors[i][2]/10,attractors[i][3], this.stage);
+            //this.addAttractor(attractors[i].point);
+        }
+        moveTo(attractors[i].point, attractors[i][0], attractors[i][1]);
+    };
     this.renderer.render(this.stage);
  	}
+
+
+  /*PRIVATE*/
   var moveTo = function(obj,x,y){
       obj.position.x = x;
       obj.position.y = y;
   }
-  /*PRIVATE*/
+  
   var boidToPoint = function(boid){
     var point = new PIXI.Graphics();
     point.beginFill(RED);
@@ -71,5 +96,17 @@ function BroidsRenderer(opts, callback){
     stage.addChild(point);
     return point;
   }
+  var getNewAttractor = function (x, y, distance, force, stage ) {
+    var point = new PIXI.Graphics();
+    point.beginFill(WHITE);
+    //point.drawCircle(0,0, Math.abs(force) );
+    point.drawCircle(0,0, Math.abs(distance) );
+    point.position.x = x;
+    point.position.y = y;
+    stage.addChild(point);
+    return point;
+  }
+
+
   callback.bind(this)();
 }

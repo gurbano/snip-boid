@@ -27,12 +27,13 @@ function Broids(opts, callback){
   	this.step = opts.step;
   	this.ticker = opts.ticker;
     this.follow = opts.follow;
-    this.add = opts.add;
-    this.remove = opts.remove;
-
+    this.addBoid = opts.addBoid;
+    this.removeBoid = opts.removeBoid;
+    this.addAttractor = opts.addAttractor;
+    this.removeAttractor = opts.removeBoid;
   	//Renderer target
   	this.renderer = opts.renderer;
-  	this.setup = function(){opts.setup(this.boids());}
+  	this.setup = function(){opts.setup(this.boids(), this.attractors());}
   	this.render = opts.render;
   	this.renderSingle = opts.renderSingle;
 

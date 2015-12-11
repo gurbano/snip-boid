@@ -7,6 +7,9 @@ var options = require('./configuration/boid1.js')[1];
 //var impl2 = require('boid');	//https://www.npmjs.com/package/boid
 
 var renderer = require('./BroidsRenderer')();
+var w = $(document).width();
+var h = $(document).height();
+
 
 /**/
 var Broids = require('./Broids')(
@@ -18,16 +21,19 @@ var Broids = require('./Broids')(
 		foreach: options.foreach,
 		step: options.step,
 		follow: options.follow,
-		add: options.add,
-		remove: options.remove,
+		addBoid: options.addBoid,
+		removeBoid: options.removeBoid,
+		addAttractor: options.addAttractor,
+		removeAttractor: options.removeAttractor,
 		//ticker
 		ticker: raf,
 		//renderer
 		renderer: renderer,		
 
 		/*GLUE RENDERER AND FACTORY*/
-		render: function(){ return this.renderer.render(this.boids());},
-		setup: function(boids){ return this.renderer.setup(boids);},
+		render: function(){ return this.renderer.render(this.boids(), this.attractors());},
+		setup: function(boids, attractors){ 
+			return this.renderer.setup(boids, attractors);},
 		onLoop: function (argument) {
 			var self = this;
 			this.follow(document.pageX, document.pageY);
@@ -38,34 +44,51 @@ var Broids = require('./Broids')(
 	}, //opts
 	function(){
 		var self = this;
-		//this.attractors().push();
+		
 		this.setup(); //setup renderer
 		console.info('Broids started');
 		this.start();
-		var w = $(document).width();
-		var h = $(document).height();
+		
+		var gui = new dat.GUI();
+		gui.add(this.generator, 'speedLimitRoot',0.1,5.0);
+		//gui.add(this.generator, 'accelerationLimitRoot',0,50);
+
+		//gui.add(this.generator, 'separationDistance',0,5000);
+		gui.add(this.generator, 'separationForce',0,5);
+		gui.add(this.generator, 'cohesionForce',0,5);
+		gui.add(this.generator, 'alignmentForce',0,5);	
+
+
+
+		
+
+
 		var random = function (min, max) {
 			return Math.floor(Math.random() * (max - min + 1)) + min;
 		}
-		for (var i = 0; i <100; i++ ){
-			self.add(random(0,w),random(0,h));
+		for (var i = 0; i <200; i++ ){
+			self.addBoid(random(0,w),random(0,h));
 		}
+		/*for (var i = 0; i <5; i++ ){
+			self.addAttractor(random(0,w),random(0,h), 15, - 150);
+		}*/
 		/*BIND MOUSE*/
 		document.oncontextmenu = function() {return false;};
 		$(document).mousedown(function(e){ 
 			//console.info(e.button);
 			if( e.button == 0 ) { //left
-		      for (var i = 0; i <60; i++ ){self.add(around(document.pageX),around(document.pageY));}
-		      return false; 
+		      	return false;
 		    } 
 		    if( e.button == 1 ) { //center
+		      self.addAttractor(around(document.pageX),around(document.pageY), 120, -random(100,220));
 		      return false; 
 		    } 
 		    if( e.button == 2 ) { //right
-		      var removed = self.remove();
-		      if (removed)
-		      	self.renderer.remove(removed);
+		      for (var i = 0; i <60; i++ ){
+		      	self.addBoid(around(document.pageX),around(document.pageY));
+		      }
 		      return false; 
+		      
 		    } 
 		    return true; 
 		  }); 

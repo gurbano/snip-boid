@@ -2,21 +2,22 @@ var factory = require('boids')({ //https://www.npmjs.com/package/boids
   //BOID [xPosition, yPosition, xSpeed, ySpeed, xAcceleration, yAcceleration]
 
   boids: 0,              // The amount of boids to use 
-  speedLimit: 5,          // Max steps to take per tick 
-  accelerationLimit: 2,   // Max acceleration per tick 
-  
+  speedLimit: 0.5,          // Max steps to take per tick 
+  accelerationLimit: 0.5,   // Max acceleration per tick 
+  /*
   separationDistance: 60, // Radius at which boids avoid others 
   alignmentDistance: 180, // Radius at which boids align with others 
   choesionDistance: 180,  // Radius at which boids approach others 
   separationForce: 0.15,  // Speed to avoid at 
   alignmentForce: 0.25,   // Speed to align with other boids 
   choesionForce: 0.1,     // Speed to move towards other boids 
+  */
   
   attractors: [[
     0 // x
   , 0 // y
-  , 80 // dist
-  , 10.25 // spd
+  , 120 // dist
+  , -50 // spd
   ]]
 
 });
@@ -29,31 +30,22 @@ var adapters = {
     this.generator.attractors[0][0] = x;
     this.generator.attractors[0][1] = y;
   },
-  add: function(x,y){
+  addBoid: function(x,y){
+    console.info('ading boid');
     this.boids().push([x, y, 0, 0, 0, 0]);
   },
-  remove: function (index) {
-    /*
-    if (this.boids().length == 0 || index >= this.boids().length){
-      console.error('Error removing boids', this.boids());
-      return undefined;
-    }
-    var element = this.boids()[index];
-    this.generator.boids = this.boids().splice(index, 1);
-    return element;
-    */
+  removeBoid: function (index) {
+    //TODO: remove by index
     return this.generator.boids.pop()
-  }
+  },
+  addAttractor: function(x,y,d,f){
+    this.attractors().push([x, y, d, f]);
+  },
+  removeAttractor: function(x,y,d,f){
+    return this.generator.attracotrs.pop();
+  },
+
+
 }
 
 module.exports = [factory, adapters];
-
-
-/*
-
-function (xPosition, yPosition) {
-    //this.boids().push([xPosition, yPosition, xSpeed, ySpeed, xAcceleration, yAcceleration]);
-    
-  }
-
-*/
