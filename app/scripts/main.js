@@ -105,8 +105,16 @@ var Broids = require('./Broids')(
 		      self.addAttractor(around(document.pageX),around(document.pageY), 100, -random(0,5));
 		      return false; 
 		    } 
-		    if( e.button == 2 ) { //right		      
-		      return false; 		      
+		    if( e.button == 2 ) { //right
+		    	for (var i = 60; i > 0; i--) {
+		    		self.addBoid(around(document.pageX),around(document.pageY));	
+		    	};
+		    	bn.boids = self.boids().length;	    
+		    	debugger;
+		    	for (var i in f2.__controllers) {
+				    f2.__controllers[i].updateDisplay();
+				}  	
+		      	return false; 		      
 		    } 
 		    return true; 
 		  }); 

@@ -43,15 +43,8 @@ function Boids(opts, callback) {
   this.alignmentForce = opts.alignmentForce || opts.alignment || 0.25
   this.attractors = opts.attractors || []
 
-  var boids = this.boids = []
-  for (var i = 0, l = opts.boids === undefined ? 50 : opts.boids; i < l; i += 1) {
-    boids[i] = [
-        Math.random()*25, Math.random()*25 // position
-      , 0, 0                               // speed
-      , 0, 0                               // acceleration
-    ]
-  }
-
+  var boids = this.boids = [];
+  var bRoids = this.bRoids = [];
   this.on('tick', function() {
     callback(boids)
   })
@@ -70,8 +63,6 @@ Boids.prototype.tick = function() {
     , accelerationLimit = this.accelerationLimit
     , accelerationLimitRoot = this.accelerationLimitRoot
     , speedLimitRoot = this.speedLimitRoot
-    , size = boids.length
-    , current = size
     , sforceX, sforceY
     , cforceX, cforceY
     , aforceX, aforceY
@@ -84,7 +75,8 @@ Boids.prototype.tick = function() {
     , length
     , target
 
-  while (current--) {
+  var current = 0;
+  while (current<boids.length) {
     sforceX = 0; sforceY = 0
     cforceX = 0; cforceY = 0
     aforceX = 0; aforceY = 0
@@ -93,19 +85,18 @@ Boids.prototype.tick = function() {
     // Attractors
     target = attractorCount
     while (target--) {
-      var attractor = attractors[target]
-      spareX = currPos[0] - attractor[0]
-      spareY = currPos[1] - attractor[1]
-      distSquared = spareX*spareX + spareY*spareY
-
-      if (distSquared < attractor[2]*attractor[2]) {
-        length = sqrt(spareX*spareX+spareY*spareY)
-        boids[current][SPEEDX] -= (attractor[3] * spareX / length) || 0
-        boids[current][SPEEDY] -= (attractor[3] * spareY / length) || 0
+      var attractor = attractors[target];
+      var positionCheck = attractor[2](currPos[0],currPos[1],attractor[0],attractor[1]);
+      if (positionCheck){
+        var speedDelta = attractor[3](currPos[0],currPos[1],attractor[0],attractor[1]);
+        var xmod = speedDelta[0];
+        var ymod = speedDelta[1];
+        boids[current][SPEEDX] -= (xmod) || 0;
+        boids[current][SPEEDY] -= (ymod)|| 0;
       }
     }
 
-    target = size
+    target = boids.length
     while (target--) {
       if (target === current) continue
       spareX = currPos[0] - boids[target][0]
@@ -139,12 +130,18 @@ Boids.prototype.tick = function() {
     length = sqrt(aforceX*aforceX + aforceY*aforceY)
     boids[current][ACCELERATIONX] -= (aliForce * aforceX / length) || 0
     boids[current][ACCELERATIONY] -= (aliForce * aforceY / length) || 0
-  }
-  current = size
 
+    current++;
+  }
+
+
+
+
+
+  current = 0;
   // Apply speed/acceleration for
   // this tick
-  while (current--) {
+  while (current < boids.length) {
     if (accelerationLimit) {
       distSquared = boids[current][ACCELERATIONX]*boids[current][ACCELERATIONX] + boids[current][ACCELERATIONY]*boids[current][ACCELERATIONY]
       if (distSquared > accelerationLimit) {
@@ -161,13 +158,15 @@ Boids.prototype.tick = function() {
       distSquared = boids[current][SPEEDX]*boids[current][SPEEDX] + boids[current][SPEEDY]*boids[current][SPEEDY]
       if (distSquared > speedLimit) {
         var ratio = speedLimitRoot / sqrt(distSquared)
-        boids[current][SPEEDX] *= ratio
-        boids[current][SPEEDY] *= ratio
+        boids[current][SPEEDX] *= ratio;
+        boids[current][SPEEDY] *= ratio;
       }
     }
 
-    boids[current][POSITIONX] += boids[current][SPEEDX]
-    boids[current][POSITIONY] += boids[current][SPEEDY]
+    boids[current][POSITIONX] += boids[current][SPEEDX];
+    boids[current][POSITIONY] += boids[current][SPEEDY];
+
+    current++;
   }
 
   this.emit('tick', boids)

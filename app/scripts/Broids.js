@@ -44,9 +44,6 @@ function Broids(opts, callback){
   	this.render = opts.render;
   	this.renderSingle = opts.renderSingle;
 
-  	//EVENTS
-  	this.onLoop = opts.onLoop || function (argument) {}; //loop cycle
-
 
   	/*PUBLIC METHODS*/
   	this.start = function (argument) {
@@ -69,7 +66,7 @@ function Broids(opts, callback){
     this.render = function(){ return this.renderer.render(this.boids(), this.attractors());};
     this.setup = function(boids, attractors){ 
       return this.renderer.setup(boids, attractors);};
-    this.onLoop = function (argument) {
+    this.onLoop = opts.onLoop || function (argument) {
       var self = this;
       this.follow(document.pageX, document.pageY);
       this.step();

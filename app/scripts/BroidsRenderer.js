@@ -50,7 +50,7 @@ function BroidsRenderer(opts, callback){
     /*UPDATE BOIDS*/
     for (var i = boids.length - 1; i >= 0; i--) {
         if (!boids[i].point){
-            boids[i].point = getNewBoid(this.stage);
+            boids[i].point = getNewBoid(boids[i][0], boids[i][1],this.stage);
             //this.addBoid(boids[i].point);
         }
         moveTo(boids[i].point, boids[i][0], boids[i][1]);
@@ -86,7 +86,7 @@ function BroidsRenderer(opts, callback){
     stage.addChild(point);
     return point;
   }
-  var getNewBoid = function (stage) {
+  var getNewBoid = function (x,y,stage) {
     var point = new PIXI.Graphics();
     point.beginFill(RED);
     //point.drawCircle(0,0,2);
@@ -95,6 +95,8 @@ function BroidsRenderer(opts, callback){
     point.lineTo(5, 15);
     point.endFill();
     point.pivot.set(0,0);
+    point.position.x = x;
+    point.position.y = y;
     stage.addChild(point);
     return point;
   }

@@ -1,7 +1,63 @@
+var radiusAttractor = function (x,y,radius,force) {
+      return [
+        x // x
+      , y // y
+      , function  (_x,_y, ax, ay) {
+          var spareX = _x - ax;
+          var spareY = _y - ay;
+          var distSquared = spareX*spareX + spareY*spareY;
+          return (distSquared < radius*radius);
+        } 
+      , function  (_x,_y, ax, ay) {
+          var spareX = _x - ax;
+          var spareY = _y - ay;
+          var distSquared = spareX*spareX + spareY*spareY;
+          var length = Math.sqrt(spareX*spareX+spareY*spareY);
+          return [force * spareX / length , force * spareY / length];
+        } // spd  -50
+      ];
+};
+
+var verticalWall = function (x,radius,force) {
+      return [
+        x // true/false
+      , 0 // true/false
+      , function  (_x,_y, ax, ay) {
+          var spareX = _x - ax;
+          var distSquared = spareX*spareX;
+          return (distSquared < radius*radius);
+        } 
+      , function  (_x,_y, ax, ay) {
+          if (_x < ax){
+            return [-force, 0];
+          }else{
+            return [force, 0];
+          }
+        } // spd  -50
+      ];
+};
+var horizontalWall = function (y,radius,force) {
+      return [
+        0 // true/false
+      , y // true/false
+      , function  (_x,_y, ax, ay) {
+          var spareY = _y - ay;
+          var distSquared = spareY*spareY;
+          return (distSquared < radius*radius);
+        } 
+      , function  (_x,_y, ax, ay) {
+          if (_y < ay){
+            return [0, -force];
+          }else{
+            return [0, force];
+          }
+        } // spd  -50
+      ];
+};
+
+
 var factory = require('../impl/broidsImpl')({ 
   //BOID [xPosition, yPosition, xSpeed, ySpeed, xAcceleration, yAcceleration]
-
-  boids: 0,              // The amount of boids to use 
   speedLimit: 2.0,          // Max steps to take per tick 
   accelerationLimit: 0.5,   // Max acceleration per tick   
   separationDistance: 80, // Radius at which boids avoid others 
@@ -12,15 +68,18 @@ var factory = require('../impl/broidsImpl')({
   alignmentForce: 0.25,   // Speed to align with other boids 
   choesionForce: 0.1,     // Speed to move towards other boids 
   */
-  
-  attractors: [[
-    0 // x
-  , 0 // y
-  , 0 // dist 120
-  , 0 // spd  -50
-  ]]
-
+  attractors: [
+    radiusAttractor(0,0,120,-20),//pointer
+    //
+    verticalWall(0,5,-120),
+    verticalWall($(document).width(),5,-120),
+    horizontalWall(0,5,-120),
+    horizontalWall($(document).height(),5,-120),
+  ]
 });
+
+
+
 var adapters = {
   boids: function(){ return this.generator.boids;},
   attractors: function () {return this.generator.attractors;},
