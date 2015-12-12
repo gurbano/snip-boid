@@ -11,6 +11,7 @@ to_add:
 
 */
 
+var Bro = require('./BroidImpl');
 
 var EventEmitter = require('events').EventEmitter
   , inherits = require('inherits')
@@ -39,7 +40,7 @@ function Boids(opts, callback) {
   this.alignmentDistance = Math.pow(opts.alignmentDistance || 180, 2)
   this.cohesionDistance = Math.pow(opts.cohesionDistance || 180, 2)
   this.separationForce = opts.separationForce || 0.15
-  this.cohesionForce = opts.cohesionForce || 0.1
+  this.cohesionForce = opts.cohesionForce || 0.01
   this.alignmentForce = opts.alignmentForce || opts.alignment || 0.25
   this.attractors = opts.attractors || []
 
@@ -52,6 +53,7 @@ function Boids(opts, callback) {
 inherits(Boids, EventEmitter)
 
 Boids.prototype.tick = function() {
+  var self = this;
   var boids = this.boids
     , sepDist = this.separationDistance
     , sepForce = this.separationForce
@@ -59,10 +61,10 @@ Boids.prototype.tick = function() {
     , cohForce = this.cohesionForce
     , aliDist = this.alignmentDistance
     , aliForce = this.alignmentForce
-    , speedLimit = this.speedLimit
-    , accelerationLimit = this.accelerationLimit
-    , accelerationLimitRoot = this.accelerationLimitRoot
     , speedLimitRoot = this.speedLimitRoot
+    , speedLimit = Math.pow(this.speedLimitRoot, 2)    
+    , accelerationLimitRoot = this.accelerationLimitRoot
+    , accelerationLimit = Math.pow(this.accelerationLimitRoot, 2)
     , sforceX, sforceY
     , cforceX, cforceY
     , aforceX, aforceY
@@ -75,99 +77,95 @@ Boids.prototype.tick = function() {
     , length
     , target
 
-  var current = 0;
-  while (current<boids.length) {
-    sforceX = 0; sforceY = 0
-    cforceX = 0; cforceY = 0
-    aforceX = 0; aforceY = 0
-    currPos = boids[current]
+    boids:[]
+
+    var current = 0;
+    while (current<boids.length) {
+      sforceX = 0; sforceY = 0
+      cforceX = 0; cforceY = 0
+      aforceX = 0; aforceY = 0
+      
+
+      var theBro = boids[current];
+      if (!theBro.data){
+        console.log("creating boid data");
+        theBro.data = new Bro({});
+      } //init 
+      var bro = theBro.data;
+      theBro.data.opts = {
+        sepDist : self.separationDistance,
+        sepForce : self.separationForce,
+        cohDist : self.cohesionDistance,
+        cohForce : self.cohesionForce,
+        aliDist : self.alignmentDistance,
+        aliForce : self.alignmentForce,
+      };
+    
+
+      target = attractorCount
+      while (target--) {
+          var attractor = attractors[target];
+          var positionCheck = attractor[2](theBro[0],theBro[1],attractor[0],attractor[1]);
+          if (positionCheck){
+            var speedDelta = attractor[3](theBro[0],theBro[1],attractor[0],attractor[1]);
+            var xmod = speedDelta[0];
+            var ymod = speedDelta[1];
+            boids[current][SPEEDX] -= (xmod) || 0;
+            boids[current][SPEEDY] -= (ymod) || 0;
+        }
+      }
+
+
+      var forceX = 0;
+      var forceY = 0;
+      for (var i = 0; i < bro.beh['boids'].length; i++) {//cycle 
+            var beh = bro.beh['boids'][i];
+            var result = beh(current,boids); //pass x,y of the boid and the 
+            forceX += result[0]; //update forcex and forcey
+            forceY += result[1];
+      };
+        
+      boids[current][ACCELERATIONX] += forceX;
+      boids[current][ACCELERATIONY] += forceY;
 
     // Attractors
-    target = attractorCount
-    while (target--) {
-      var attractor = attractors[target];
-      var positionCheck = attractor[2](currPos[0],currPos[1],attractor[0],attractor[1]);
-      if (positionCheck){
-        var speedDelta = attractor[3](currPos[0],currPos[1],attractor[0],attractor[1]);
-        var xmod = speedDelta[0];
-        var ymod = speedDelta[1];
-        boids[current][SPEEDX] -= (xmod) || 0;
-        boids[current][SPEEDY] -= (ymod)|| 0;
-      }
+    
+      current++;
     }
 
-    target = boids.length
-    while (target--) {
-      if (target === current) continue
-      spareX = currPos[0] - boids[target][0]
-      spareY = currPos[1] - boids[target][1]
-      distSquared = spareX*spareX + spareY*spareY
 
-      if (distSquared < sepDist) {
-        sforceX += spareX
-        sforceY += spareY
-      } else {
-        if (distSquared < cohDist) {
-          cforceX += spareX
-          cforceY += spareY
-        }
-        if (distSquared < aliDist) {
-          aforceX += boids[target][SPEEDX]
-          aforceY += boids[target][SPEEDY]
+    var current = 0;
+    while (current<boids.length) {
+      if (accelerationLimit) {
+        distSquared = boids[current][ACCELERATIONX]*boids[current][ACCELERATIONX] + boids[current][ACCELERATIONY]*boids[current][ACCELERATIONY]
+        if (distSquared > accelerationLimit) {
+          var ratio = accelerationLimitRoot / sqrt(distSquared)
+          boids[current][ACCELERATIONX] *= ratio
+          boids[current][ACCELERATIONY] *= ratio
         }
       }
-    }
 
-    // Separation
-    length = sqrt(sforceX*sforceX + sforceY*sforceY)
-    boids[current][ACCELERATIONX] += (sepForce * sforceX / length) || 0
-    boids[current][ACCELERATIONY] += (sepForce * sforceY / length) || 0
-    // Cohesion
-    length = sqrt(cforceX*cforceX + cforceY*cforceY)
-    boids[current][ACCELERATIONX] -= (cohForce * cforceX / length) || 0
-    boids[current][ACCELERATIONY] -= (cohForce * cforceY / length) || 0
-    // Alignment
-    length = sqrt(aforceX*aforceX + aforceY*aforceY)
-    boids[current][ACCELERATIONX] -= (aliForce * aforceX / length) || 0
-    boids[current][ACCELERATIONY] -= (aliForce * aforceY / length) || 0
+      boids[current][SPEEDX] += boids[current][ACCELERATIONX]
+      boids[current][SPEEDY] += boids[current][ACCELERATIONY]
 
-    current++;
-  }
-
-
-
-
-
-  current = 0;
-  // Apply speed/acceleration for
-  // this tick
-  while (current < boids.length) {
-    if (accelerationLimit) {
-      distSquared = boids[current][ACCELERATIONX]*boids[current][ACCELERATIONX] + boids[current][ACCELERATIONY]*boids[current][ACCELERATIONY]
-      if (distSquared > accelerationLimit) {
-        var ratio = accelerationLimitRoot / sqrt(distSquared)
-        boids[current][ACCELERATIONX] *= ratio
-        boids[current][ACCELERATIONY] *= ratio
+      if (speedLimit) {
+        distSquared = boids[current][SPEEDX]*boids[current][SPEEDX] + boids[current][SPEEDY]*boids[current][SPEEDY]
+        if (distSquared > speedLimit) {
+          var ratio = speedLimitRoot / sqrt(distSquared)
+          boids[current][SPEEDX] *= ratio;
+          boids[current][SPEEDY] *= ratio;
+        }
       }
-    }
 
-    boids[current][SPEEDX] += boids[current][ACCELERATIONX]
-    boids[current][SPEEDY] += boids[current][ACCELERATIONY]
+      boids[current][POSITIONX] += boids[current][SPEEDX];
+      boids[current][POSITIONY] += boids[current][SPEEDY];
 
-    if (speedLimit) {
-      distSquared = boids[current][SPEEDX]*boids[current][SPEEDX] + boids[current][SPEEDY]*boids[current][SPEEDY]
-      if (distSquared > speedLimit) {
-        var ratio = speedLimitRoot / sqrt(distSquared)
-        boids[current][SPEEDX] *= ratio;
-        boids[current][SPEEDY] *= ratio;
-      }
-    }
 
-    boids[current][POSITIONX] += boids[current][SPEEDX];
-    boids[current][POSITIONY] += boids[current][SPEEDY];
+      current++;
+    };
 
-    current++;
-  }
+
+  
 
   this.emit('tick', boids)
 }

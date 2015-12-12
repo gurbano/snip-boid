@@ -1,7 +1,9 @@
 
 var raf = require('raf');
-var generator = require('./configuration/boid2.js')[0];
-var options = require('./configuration/boid2.js')[1];
+
+var impl = require('./configuration/boid2.js');
+var generator = impl[0];
+var options = impl[1];
 
 
 //var impl2 = require('boid');	//https://www.npmjs.com/package/boid
@@ -110,7 +112,6 @@ var Broids = require('./Broids')(
 		    		self.addBoid(around(document.pageX),around(document.pageY));	
 		    	};
 		    	bn.boids = self.boids().length;	    
-		    	debugger;
 		    	for (var i in f2.__controllers) {
 				    f2.__controllers[i].updateDisplay();
 				}  	

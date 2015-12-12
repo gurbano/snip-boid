@@ -60,8 +60,9 @@ var factory = require('../impl/broidsImpl')({
   //BOID [xPosition, yPosition, xSpeed, ySpeed, xAcceleration, yAcceleration]
   speedLimit: 2.0,          // Max steps to take per tick 
   accelerationLimit: 0.5,   // Max acceleration per tick   
-  separationDistance: 80, // Radius at which boids avoid others 
-  /*
+  separationDistance: 80, // Radius at which boids avoid others   
+/*
+  
   alignmentDistance: 180, // Radius at which boids align with others 
   choesionDistance: 180,  // Radius at which boids approach others 
   separationForce: 0.15,  // Speed to avoid at 
@@ -69,7 +70,7 @@ var factory = require('../impl/broidsImpl')({
   choesionForce: 0.1,     // Speed to move towards other boids 
   */
   attractors: [
-    radiusAttractor(0,0,120,-20),//pointer
+    radiusAttractor(0,0,0,-20),//pointer
     //
     verticalWall(0,5,-120),
     verticalWall($(document).width(),5,-120),
@@ -78,7 +79,9 @@ var factory = require('../impl/broidsImpl')({
   ]
 });
 
-
+var random = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
 
 var adapters = {
   boids: function(){ return this.generator.boids;},
@@ -90,7 +93,7 @@ var adapters = {
     this.generator.attractors[0][1] = y;
   },
   addBoid: function(x,y){
-    this.boids().push([x, y, 0, 0, 0, 0]);
+    this.boids().push([x, y, random(-2,2), random(-2,2), random(-2,2), random(-2,2)]);
   },
   removeBoid: function (index) {
     //TODO: remove by index
