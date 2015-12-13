@@ -43,6 +43,7 @@ function Boids(opts, callback) {
   this.cohesionForce = opts.cohesionForce || 0.01
   this.alignmentForce = opts.alignmentForce || opts.alignment || 0.25
   this.attractors = opts.attractors || []
+  this.generators = opts.generators || []
 
   var boids = this.boids = [];
   var bRoids = this.bRoids = [];
@@ -110,8 +111,8 @@ Boids.prototype.tick = function() {
             var speedDelta = attractor[3](theBro[0],theBro[1],attractor[0],attractor[1]);
             var xmod = speedDelta[0];
             var ymod = speedDelta[1];
-            boids[current][SPEEDX] -= (xmod) || 0;
-            boids[current][SPEEDY] -= (ymod) || 0;
+            boids[current][ACCELERATIONX] -= (xmod) || 0;
+            boids[current][ACCELERATIONY] -= (ymod) || 0;
         }
       }
 
@@ -134,6 +135,7 @@ Boids.prototype.tick = function() {
     }
 
 
+    //Apply forces
     var current = 0;
     while (current<boids.length) {
       if (accelerationLimit) {

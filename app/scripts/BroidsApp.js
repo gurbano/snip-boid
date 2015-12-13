@@ -4,7 +4,7 @@ var random = function (min, max) {
 var w = $(document).width();
 var h = $(document).height();
 
-module.exports = Broids;
+module.exports = BroidsApp;
 /*
 	Configuration:
 		//Boids factory
@@ -18,28 +18,37 @@ module.exports = Broids;
 
 
 
-function Broids(opts, callback){
-	if (!(this instanceof Broids)) return new Broids(opts, callback);
-	var self = this;
-	opts = opts || {};
+function BroidsApp(opts, callback){
+	if (!(this instanceof BroidsApp)) return new BroidsApp(opts, callback);
+  	var self = this;
+  	opts = opts || {};
   	callback = callback || function(){};
 
   	//Boids factory
-  	this.generator = opts.generator;
-  	this.boids = opts.boids;
-  	this.attractors = opts.attractors;
-  	this.foreach = opts.foreach;
-  	this.step = opts.step;
-  	this.ticker = opts.ticker;
-    this.follow = opts.follow;
-    this.addBoid = opts.addBoid;
-    this.removeBoid = opts.removeBoid;
-    this.setBoids = opts.setBoids;
-    this.limitBoids = opts.limitBoids;
-    this.addAttractor = opts.addAttractor;
-    this.removeAttractor = opts.removeBoid;
+  	this.factory = opts.factory;
+  	this.boids = opts.adapters.boids;
+  	this.attractors = opts.adapters.attractors;
+  	this.foreach = opts.adapters.foreach;
+  	this.step = opts.adapters.step;
+    this.follow = opts.adapters.follow;
+    this.addBoid = opts.adapters.addBoid;
+    this.removeBoid = opts.adapters.removeBoid;
+    this.setBoids = opts.adapters.setBoids;
+    this.limitBoids = opts.adapters.limitBoids;
+    this.addAttractor = opts.adapters.addAttractor;
+    this.removeAttractor = opts.adapters.removeBoid;
+
+
+    this.generators = opts.adapters.generators || [];
+    this.addGenerator = function (generator) {
+        generator.start();
+        this.generators.push(generator);
+    }
+
   	//Renderer target
   	this.renderer = opts.renderer;
+    //ticker
+    this.ticker = opts.ticker;
   	this.setup = function(){opts.setup(this.boids(), this.attractors());}
   	this.render = opts.render;
   	this.renderSingle = opts.renderSingle;
@@ -48,7 +57,8 @@ function Broids(opts, callback){
   	/*PUBLIC METHODS*/
   	this.start = function (argument) {
   		self.ticker(function tick() {
-	  		self.onLoop();
+	  		self.onLoop(self);
+        self._onLoop();
 		  	self.ticker(tick);
 		  });	
   	};
@@ -63,14 +73,17 @@ function Broids(opts, callback){
           return [random(0,w), random(0,h)]
         }); 
     },
-    this.render = function(){ return this.renderer.render(this.boids(), this.attractors());};
+    this.render = function(){ return this.renderer.render(this.boids(), this.attractors(), this.generators);};
     this.setup = function(boids, attractors){ 
       return this.renderer.setup(boids, attractors);};
-    this.onLoop = opts.onLoop || function (argument) {
+    this.onLoop = opts.onLoop || function (self) {};
+
+    /*INTERNAL LOOP*/
+    this._onLoop =  function (argument) {
       var self = this;
       this.follow(document.pageX, document.pageY);
-      this.step();
-      this.render();
+      this.step(); //boids movement step
+      this.render(); //render step
     };
   	
     callback.bind(this)();

@@ -2,8 +2,8 @@
 var raf = require('raf');
 
 var impl = require('./configuration/boid2.js');
-var generator = impl[0];
-var options = impl[1];
+var factory = impl.factory;
+var adapters = impl.adapters;
 
 
 //var impl2 = require('boid');	//https://www.npmjs.com/package/boid
@@ -20,21 +20,11 @@ var random = function (min, max) {
 var w = $(document).width();
 var h = $(document).height();
 
-/**/
-var Broids = require('./Broids')(
+var Broids = require('./BroidsApp')(
 	{
 		//Boid factory
-		generator: generator,		
-		boids: options.boids,
-		attractors: options.attractors,
-		foreach: options.foreach,
-		step: options.step,
-		setBoids: options.setBoids,
-		follow: options.follow,
-		addBoid: options.addBoid,
-		removeBoid: options.removeBoid,
-		addAttractor: options.addAttractor,
-		removeAttractor: options.removeAttractor,
+		factory: factory,		
+		adapters: adapters,
 		//ticker
 		ticker: raf,
 		//renderer
@@ -42,36 +32,20 @@ var Broids = require('./Broids')(
 	}, //opts
 	function(){
 		var self = this;
-
-		this.dancer = new DGlue({
-			onKick: function (mag) {
-				console.info('kick',mag);
-			},
-			offKick: function () {
-
-			},
-		},function () {
-			console.info('Dancer initialized');
-		});
-		
 		this.setup(); //setup renderer
 		console.info('Broids started');
 		this.start();
 		for (var i = 0; i <STARTING_BOIDS; i++ ){
 			self.addBoid(random(0,w),random(0,h));
-		}
-
-		
-		var gui = new dat.GUI();		
-		
+		}		
+		var gui = new dat.GUI();				
 		var f1 = gui.addFolder('Boids');
-		f1.add(this.generator, 'speedLimitRoot',0.1,5.0);
-		//gui.add(this.generator, 'accelerationLimitRoot',0,50);
-		//gui.add(this.generator, 'separationDistance',0,5000);
-		f1.add(this.generator, 'separationForce',0,5);
-		f1.add(this.generator, 'cohesionForce',0,5);
-		f1.add(this.generator, 'alignmentForce',0,5);
-
+		f1.add(this.factory, 'speedLimitRoot',0.1,5.0);
+		//gui.add(this.factory, 'accelerationLimitRoot',0,50);
+		//gui.add(this.factory, 'separationDistance',0,5000);
+		f1.add(this.factory, 'separationForce',0,5);
+		f1.add(this.factory, 'cohesionForce',0,5);
+		f1.add(this.factory, 'alignmentForce',0,5);
 		var bn = {boids : this.boids().length};
 		var f2 = gui.addFolder('Simulation');
 		f2.add(bn, 'boids', 0, 1600)
@@ -83,18 +57,6 @@ var Broids = require('./Broids')(
 			}
 		);
 		f2.open();
-
-
-		
-
-
-	
-		/*for (var i = 0; i <5; i++ ){
-			self.addAttractor(random(0,w),random(0,h), 15, - 150);
-		}*/
-		
-		//this.dancer.play();			
-
 
 		/*BIND MOUSE*/
 		document.oncontextmenu = function() {return false;};
@@ -151,4 +113,5 @@ function handleMouseMove(event) {
     // Use event.pageX / event.pageY here
     document.pageX = event.pageX;
     document.pageY = event.pageY;
+    //console.info(document.pageX,document.pageY,window.innerWidth);
 }

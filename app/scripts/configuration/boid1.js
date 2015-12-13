@@ -62,4 +62,4 @@ var adapters = {
 
 }
 
-module.exports = [factory, adapters];
+module.exports = {factory: factory, adapters: adapters};

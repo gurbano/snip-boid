@@ -4,8 +4,8 @@ function BroidImpl(opts) {
   if (!(this instanceof BroidImpl)) return new BroidImpl(opts);
   var self = this;
   this.opts = opts;
-  this.beh = {
-  	boids:[
+  this.beh = {//behaviours
+  	boids:[ //boids related, arguments (i -index, boids - arrayOfBoids)
   		function sca (i, boids) {
   			var target = boids.length;
       		var forceX = [0,0,0];
