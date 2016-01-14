@@ -22,7 +22,7 @@ var Boid = function (opts) {
 	this.step = function (neighb) {
 		this.setPosition(
 			this.getPosition()[0] + this.getSpeed()[0],
-			this.getPosition()[1] + this.getSpeed()[1],
+			this.getPosition()[1] + this.getSpeed()[1]
 		);
 	}
 
