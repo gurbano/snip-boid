@@ -45,12 +45,13 @@ var experiment = new function () {
 	function load (aStage, callback) {
 		console.info('loading stage', aStage);
 		if (callback)callback();
-	}
-	
+	}	
 	function animate(time) { 	
 		var time = raf(animate);
-		flock.step(time);	
-		renderer.render(stage);			    
+		flock.step(time);//update the flock
+		stage.synchronizeFlock(flock); //synchronize the graphical representation of the boids
+		stage.update(time); //update the world - update all the other entities
+		renderer.render(stage); //render
 	}
 }();
 

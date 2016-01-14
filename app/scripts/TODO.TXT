@@ -1,0 +1,13 @@
+TODO.TXT
+
+
+FlockFactory.js
+
+
+class flock
+- fast neighbour selection
+
+class boid
+- basic boids impl (coherence, align, separation)
+
+
