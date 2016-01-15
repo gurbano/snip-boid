@@ -20,13 +20,13 @@ var Flock = function (opts) {
 	this.addBoid = function (opts) {
 		var b = new Boid(opts);
 		_b.push(b);
-		__b[b.getPosition()[0]][b.getPosition()[1]].push(b);
+		__b[b.getPosition().x][b.getPosition().y].push(b);
 		return b;
 	}
 	//REMOVE A BOID
 	this.removeBoid = function (boid) {
 		_b.remove(boid);
-		__b[boid.getPosition()[0]][boid.getPosition()[1]].remove(boid);
+		__b[boid.getPosition().x][boid.getPosition().y].remove(boid);
 	}
 	this.removeBoidAt = function (x,y) {
 		var boids = this.listAt(x,y);
@@ -46,7 +46,7 @@ var Flock = function (opts) {
 	this.step = function (time) {
 		for (var i = 0; i < _b.length; i++) {
 			var boid = _b[i];
-			boid.step();
+			boid.step(_b);
 		};
 	}	
 	/*INTERNAL*/

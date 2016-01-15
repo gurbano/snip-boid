@@ -1,3 +1,6 @@
+var IMPL = require('./impl/B1')({});
+IMPL.info();
+
 var sqrt = Math.sqrt
   , px = 0
   , py = 1
@@ -9,21 +12,20 @@ var sqrt = Math.sqrt
 var Boid = function (opts) {
 	var self = this;
 	opts = opts || {};
+	this.id = opts.id || 0 + gu.random(0,100000);
 	if (!(this instanceof Boid)) return new Boid(opts);
-
-	this.getPosition = function () {return [_[px], _[py] ];};
-	this.getSpeed = function () {return [_[sx], _[sy] ];};
-	this.getForce = function () {return [_[fx], _[fy] ];};
+	this.implementation =  IMPL;
+	this.getPosition = function () {return  {x: _[px], y: _[py]}};
+	this.getSpeed = function () {return  {x: _[sx], y: _[sy]}};
+	this.getForce = function () {return  {x: _[fx], y: _[fy]}};
 	
 	this.setPosition = function (x,y) { _[px] = x; _[py] = y};
 	this.setSpeed = function (x,y) { _[sx] = x; _[sy] = y};
 	this.setForce = function (x,y) { _[fx] = x; _[fy] = y};
 
 	this.step = function (neighb) {
-		this.setPosition(
-			this.getPosition()[0] + this.getSpeed()[0],
-			this.getPosition()[1] + this.getSpeed()[1]
-		);
+		//apply the rules
+		this.implementation.step(this, neighb,{});
 	}
 
 	/*INTERNAL*/

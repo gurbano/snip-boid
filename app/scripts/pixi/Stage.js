@@ -1,4 +1,4 @@
-var PBoid = require('./Pboid');
+var PBoid = require('./PBoid');
 
 
 /*WRAPPER FOR PIXI STAGE
@@ -21,10 +21,10 @@ var Stage = function (opts) {
 				this.addChild(pBoids[i]);
 			}
 			//Update position of the pBoid according to the position of the boid
-			pBoids[i].position.x = boids[i].getPosition()[0];
-			pBoids[i].position.y = boids[i].getPosition()[1];
+			pBoids[i].position.x = boids[i].getPosition().x;
+			pBoids[i].position.y = boids[i].getPosition().y;
 			//Update rotation of the pBoid accordin to the speed (direction) of the boid
-	        var rad = Math.atan2(boids[i].getSpeed()[1],boids[i].getSpeed()[0]); //rotation: atan2(speedy , speedx)
+	        var rad = Math.atan2(boids[i].getSpeed().y ,boids[i].getSpeed().x); //rotation: atan2(speedy , speedx)
 	        pBoids[i].rotation = rad + (Math.PI / 2);
 		};
 	}
