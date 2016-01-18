@@ -1,8 +1,8 @@
-var sepD = 100;
+var sepD = 30;
 var cohD = 500;
 var aliD = 110;
 
-var sepW = 5.0;
+var sepW = 35.0;
 var cohW = 5.0;
 var aliW = 10.5;
 
@@ -23,13 +23,17 @@ var BoidImplementation1 = function (opts) {
 	}
 	this.step = function (boid, neighbors, data) {
 		var bounce = [0,0];
+		var goal = [0,0];
 		if (data.attractors){
 			bounce = calculateBounce(boid,data.attractors);
+		}
+		if (data.goals){
+			goal = calculateBounce(boid,data.goals);
 		}
 
 		var acc = calculateForces(boid,neighbors,data);
 		
-		applyForces(boid, {x: acc[0], y: acc[1]},  {x: bounce[0], y: bounce[1]});
+		applyForces(boid, {x: acc[0], y: acc[1]},  {x: bounce[0] + goal[0], y: bounce[1] + goal[1]});
 		//console.info(boid);
 	}
 	/*private*/

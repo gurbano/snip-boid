@@ -10,6 +10,7 @@ var Stage = require('./pixi/Stage');
 var stages = require('./stages/stages');
 var FlockFactory = require('./boids/FlockFactory')({});
 var PAttractor = require('./pixi/PAttractor');
+var PGoal = require('./pixi/PGoal');
 
 var experiment = new function () {
 	var self = this;
@@ -32,18 +33,26 @@ var experiment = new function () {
 
 		});
 		var mouseBouncer = stage.addEntity(
-			new PAttractor({radius:30, force:-100, distance:30}), 
+			new PAttractor({radius:30, force: -100, distance:30}), 
 			function (obj) {
 				obj.update = function () {
 					obj.position.x = document.pageX;
 					obj.position.y = document.pageY;
 				}
 		});
+		var simpleGoal = stage.addEntity(
+			new PGoal({x:30, y:50, radius:30, force: 100, distance:300}), 
+			function (obj) {
+				obj.update = function () {
+					//obj.position.x += gu.random(-10,10);
+					//obj.position.y += gu.random(-10,10);
+				}
+		});
 
 		//3- initialize simulation (boids)
 		flock = new FlockFactory.generate(
 				$.extend(conf.FLOCK,{
-					N: 400,
+					N: 4,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: false //generate boids at random position

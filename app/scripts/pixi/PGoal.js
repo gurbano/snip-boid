@@ -1,12 +1,12 @@
 var RED = 0xFF0000;
 var WHITE = 0xFFFFFF;
 
-var PAttractor = function (opts) {
+var PGoal = function (opts) {
 	var self = this;
-	this.type = 'attractor';
-	if (!(this instanceof PAttractor)) return new PAttractor(opts);
+	this.type = 'goal';
+	if (!(this instanceof PGoal)) return new PGoal(opts);
 	PIXI.Graphics.call(this); //extends pixi.container
-    this.beginFill(WHITE);
+    this.beginFill(RED);
     this.drawCircle(0,0, Math.abs(opts.radius || 10) );
     this.position.x = opts.x || 0;
     this.position.y = opts.y || 0; 
@@ -25,8 +25,8 @@ var PAttractor = function (opts) {
 
 
 /*PROTO INHERITANCE*/
-PAttractor.prototype = Object.create(PIXI.Graphics.prototype);
-PAttractor.prototype.constructor = PIXI.Graphics;
+PGoal.prototype = Object.create(PIXI.Graphics.prototype);
+PGoal.prototype.constructor = PIXI.Graphics;
 
 
-module.exports = PAttractor;
+module.exports = PGoal;

@@ -45,25 +45,58 @@ var Flock = function (opts) {
 		return __b[x][y];
 	}
 	/*STEP - advance the simulation one step*/
-	this.step = function (data) {
-		
+	this.step = function (data) {	
+		//_init2dMap();
+		//_update2dMap();
 		for (var i = 0; i < _b.length; i++) {
 			var boid = _b[i];
-			boid.step(_b, data);
+			var neigh = _b;// getNeighbous(i, 250);
+			//debugger;
+			boid.step(neigh, data);
 		};
 	}	
+
+
+
+
+	
 	/*INTERNAL*/
 	var _b = []; //internal array representation
 	var __b = new Array(mx); //internal 2d spatial boid rappresentation
 
-	var _init = function () {
-		console.info('Creating flock', [mx,my]);
+	/*
+	var getNeighbous = function (i, radius) {
+		var ret = [];
+		var x = Math.floor(_b[i].getPosition().x);
+		var y = Math.floor(_b[i].getPosition().y);
+		var limx = [Math.max(0,x-radius),  Math.min(mx, x+radius) ];
+		var limy = [Math.max(0,y-radius),  Math.min(my, y+radius) ];
+		//console.info(limx,limy);
+		for (var ix = limx[0]; ix < limx[1]; ix++) {
+			for (var iy = limy[0]; iy < limy[1]; iy++) {
+				if (__b[ix][iy].length>0)
+					ret.concat(__b[ix][iy]);
+			};	
+		};
+		return ret;
+	}*/
+	var _init2dMap = function () {
 		for (var x = 0; x < mx;	 x++) {
 			__b[x] = new Array(my);
 			for (var y = 0; y < my;	 y++) {
 				__b[x][y] = [];
 			};	
 		};
+	}
+	var _update2dMap = function () {
+		for (var i = 0; i < _b.length; i++) {
+			var b = _b[i];		
+			__b[Math.floor(b.getPosition().x)][Math.floor(b.getPosition().y)].push(b);
+		};		
+	}
+	var _init = function () {
+		console.info('Creating flock', [mx,my]);
+		_init2dMap();
 		console.info('Inited flock', [mx,my]);
 		if (opts.N){
 			for (var i = 0; i < opts.N; i++) {
