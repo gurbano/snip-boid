@@ -10,9 +10,9 @@ var FlockFactory = function (opts) {
 	this.info = function () {
 		console.info(this);
 	}
-	this.generate = function (opts) {
-		opts = opts || {};
-		var f =  new Flock(opts);
+	this.generate = function (fopts) {
+		fopts = fopts || {};
+		var f =  new Flock($.extend(opts, fopts));
 
 		return f;
 	}

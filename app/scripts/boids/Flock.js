@@ -45,10 +45,11 @@ var Flock = function (opts) {
 		return __b[x][y];
 	}
 	/*STEP - advance the simulation one step*/
-	this.step = function (time) {
+	this.step = function (data) {
+		
 		for (var i = 0; i < _b.length; i++) {
 			var boid = _b[i];
-			boid.step(_b);
+			boid.step(_b, data);
 		};
 	}	
 	/*INTERNAL*/
@@ -63,6 +64,7 @@ var Flock = function (opts) {
 				__b[x][y] = [];
 			};	
 		};
+		console.info('Inited flock', [mx,my]);
 		if (opts.N){
 			for (var i = 0; i < opts.N; i++) {
 				if (opts.RANDOM){
@@ -73,11 +75,17 @@ var Flock = function (opts) {
 						sy: gu.randomReal(-MAX_FORCE,MAX_FORCE),
 					});
 				}else{
-					self.addBoid();	
+					self.addBoid({
+						px: Math.floor(mx/2), //gu.random(0,mx), 
+						py: Math.floor(my/2), //gu.random(0,my), 
+						sx: gu.randomReal(-MAX_FORCE,MAX_FORCE), 
+						sy: gu.randomReal(-MAX_FORCE,MAX_FORCE),
+					});
 				}
 				
 			};
 		}
+		console.info('Added boids', self.list().length);
 	}
 	_init();
 }

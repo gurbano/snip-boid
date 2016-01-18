@@ -23,9 +23,9 @@ var Boid = function (opts) {
 	this.setSpeed = function (x,y) { _[sx] = x; _[sy] = y};
 	this.setForce = function (x,y) { _[fx] = x; _[fy] = y};
 
-	this.step = function (neighb) {
+	this.step = function (neighb, data) {
 		//apply the rules
-		this.implementation.step(this, neighb,{});
+		this.implementation.step(this, neighb, data || {});
 	}
 
 	/*INTERNAL*/
