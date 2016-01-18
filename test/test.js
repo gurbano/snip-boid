@@ -1,4 +1,4 @@
-require('../app/scripts/utils.js'); //load utility class
+var gu = require('../app/scripts/utils.js'); //load utility class
 var assert = require('assert');
 var FlockFactory = require('../app/scripts/boids/FlockFactory');
 

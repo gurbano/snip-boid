@@ -9,7 +9,7 @@ var Flock = function (opts) {
 	/*DEFAULT VALUES*/
 	var mx = opts.WIDTH || 2000; 
 	var my = opts.HEIGHT || 2000; // max width, max height
-	var MAX_FORCE = opts.MAX_FORCE || 2;
+	var MAX_FORCE = opts.MAX_FORCE || 20;
 
 	this.info = function () {
 		console.info(this);
@@ -18,7 +18,9 @@ var Flock = function (opts) {
 	}
 	//ADD A BOID
 	this.addBoid = function (opts) {
-		var b = new Boid(opts);
+		var b = new Boid(
+				$.extend(opts,{id: _b.length})
+			);
 		_b.push(b);
 		__b[b.getPosition().x][b.getPosition().y].push(b);
 		return b;

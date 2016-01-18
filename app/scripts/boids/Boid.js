@@ -12,7 +12,7 @@ var sqrt = Math.sqrt
 var Boid = function (opts) {
 	var self = this;
 	opts = opts || {};
-	this.id = opts.id || 0 + gu.random(0,100000);
+	this.id = opts.id || 0;
 	if (!(this instanceof Boid)) return new Boid(opts);
 	this.implementation =  IMPL;
 	this.getPosition = function () {return  {x: _[px], y: _[py]}};

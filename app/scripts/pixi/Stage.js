@@ -20,6 +20,7 @@ var Stage = function (opts) {
 				pBoids.push(new PBoid());
 				this.addChild(pBoids[i]);
 			}
+			//console.info(boids[i].getPosition());
 			//Update position of the pBoid according to the position of the boid
 			pBoids[i].position.x = boids[i].getPosition().x;
 			pBoids[i].position.y = boids[i].getPosition().y;
