@@ -41,7 +41,7 @@ var experiment = new function () {
 				}
 		});
 		var simpleGoal = stage.addEntity(
-			new PGoal({x:30, y:50, radius:30, force: 100, distance:300}), 
+			new PGoal({x:gu.random(0,this.width), y:gu.random(0,this.height), radius:30, force: 100, distance:300}), 
 			function (obj) {
 				obj.update = function () {
 					//obj.position.x += gu.random(-10,10);
@@ -52,13 +52,16 @@ var experiment = new function () {
 		//3- initialize simulation (boids)
 		flock = new FlockFactory.generate(
 				$.extend(conf.FLOCK,{
-					N: 4,
+					N: 200,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
-					RANDOM: false //generate boids at random position
-				})
+					RANDOM: true //generate boids at random position
+				}),
+				function(_flock){
+					stage.addFlock(_flock);
+				}
 			);
-		stage.addFlock(flock);
+		
 		//4- start
 		document.body.appendChild(renderer.view);
 		animate();
