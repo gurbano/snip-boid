@@ -14,6 +14,7 @@ var stages = require('./stages/stages');
 var FlockFactory = require('./boids/FlockFactory')({});
 var PAttractor = require('./pixi/PAttractor');
 var PGoal = require('./pixi/PGoal');
+var PWall = require('./pixi/PWall');
 
 var experiment = new function () {
 	var self = this;
@@ -45,8 +46,18 @@ var experiment = new function () {
 					obj.position.y = document.pageY;
 				}
 		});
-		var simpleGoal = stage.addEntity(
+		/*var simpleGoal = stage.addEntity(
 			new PGoal({x:gu.random(0,this.width), y:gu.random(0,this.height), radius:30, force: 100, distance:300}), 
+			function (obj) {
+				obj.update = function () {
+					//obj.position.x += gu.random(-10,10);
+					//obj.position.y += gu.random(-10,10);
+				}
+		});
+		*/
+
+			var simpleGoal = stage.addEntity(
+			new PWall({start: {x: 5,y: 5 },end: {x: 5,y: this.height -5 }, force: 100, distance:300}), 
 			function (obj) {
 				obj.update = function () {
 					//obj.position.x += gu.random(-10,10);

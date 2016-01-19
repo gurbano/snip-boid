@@ -1,5 +1,6 @@
 var RED = 0xFF0000;
 var WHITE = 0xFFFFFF;
+var gu = require('../utils');
 
 var PAttractor = function (opts) {
 	var self = this;
@@ -17,7 +18,9 @@ var PAttractor = function (opts) {
 	this.distance = opts.distance || 1; //distance multip
 
     this.getPosition = function () {return this.position};
-
+	this.getDistanceFrom = function (x,y) {
+    	return gu.distToPoint({x: x, y:y}, this.position);
+    }
 
     return this;		
 }

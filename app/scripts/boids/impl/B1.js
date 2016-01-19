@@ -14,9 +14,13 @@ var BoidImplementation1 = function (opts) {
 	}
 	this.step = function (boid, neighbors, data) {
 		var bounce = [0,0];
+		var bounceWall = [0,0];
 		var goal = [0,0];
 		if (data.attractors){
 			bounce = calculateBounce(boid,data.attractors);
+		}
+		if (data.walls){
+			bounceWall = calculateBounce(boid,data.walls);
 		}
 		if (data.goals){
 			goal = calculateBounce(boid,data.goals);
@@ -39,7 +43,7 @@ var BoidImplementation1 = function (opts) {
 			var attractor = attractors[i];
 			var dx =  boid.getPosition().x - attractor.getPosition().x;
 			var dy =  boid.getPosition().y - attractor.getPosition().y;
-			var dsquare = (dx*dx) + (dy*dy);
+			var dsquare = Math.pow(attractor.getDistanceFrom(boid.getPosition().x,boid.getPosition().y),2); //(dx*dx) + (dy*dy);
 			if (dsquare < (attractor.radius  * attractor.radius) * (attractor.distance) ){
 				var ratio = Math.sqrt(dx*dx+dy*dy);
 		        ret[0] = ret[0] - (attractor.force * dx / ratio) || 0;

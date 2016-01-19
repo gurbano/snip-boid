@@ -84,7 +84,6 @@ var Flock = function (opts) {
 		console.info('Creating flock', [mx,my]);
 		//_init2dMap();
 		console.info('Inited flock', [mx,my]);
-		debugger;
 		if (opts.SIZE){
 			for (var i = 0; i < opts.SIZE; i++) {
 				if (opts.RANDOM){
