@@ -3,6 +3,19 @@ var Boid = require('./Boid');
 /*A Flock is a collection of boids*/
 var Flock = function (opts) {
 	var self = this;
+
+	this.sepD = 30;
+	this.cohD = 500;
+	this.aliD = 110;
+
+	this.sepW = 35.0;
+	this.cohW = 5.5;
+	this.aliW = 10.5;
+
+	this.aLimit = 1;
+	this.sLimit = 3;
+
+
 	opts = opts || {};
 	if (!(this instanceof Flock)) return new Flock(opts);	
 
@@ -42,12 +55,22 @@ var Flock = function (opts) {
 
 	/*STEP - advance the simulation one step*/
 	this.step = function (data) {	
-
 		for (var i = 0; i < _b.length; i++) {
 			var boid = _b[i];
 			var neigh = _b;// getNeighbous(i, 250);
-			boid.step(neigh, data);
-		};
+			boid.step(neigh, $.extend(data, {
+				sepD: this.sepD,
+				cohD: this.cohD,
+				aliD: this.aliD,
+			
+				sepW: this.sepW,
+				cohW: this.cohW,
+				aliW: this.aliW,
+
+				aLimit: this.aLimit,
+				sLimit: this.sLimit
+			}));
+		}
 	}	
 
 
@@ -61,8 +84,9 @@ var Flock = function (opts) {
 		console.info('Creating flock', [mx,my]);
 		//_init2dMap();
 		console.info('Inited flock', [mx,my]);
-		if (opts.N){
-			for (var i = 0; i < opts.N; i++) {
+		debugger;
+		if (opts.SIZE){
+			for (var i = 0; i < opts.SIZE; i++) {
 				if (opts.RANDOM){
 					self.addBoid({
 						px: gu.random(0,mx), 

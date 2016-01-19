@@ -4,6 +4,9 @@ var gu = document.gu = window.gu = require('./utils');
 console.info('random' , gu.random(-100,100));
 
 
+
+
+
 var raf = require('raf');
 var conf = require('./configurations/experiment1');
 var Stage = require('./pixi/Stage');
@@ -20,6 +23,8 @@ var experiment = new function () {
 	this.description = 'display flock of boids with pixi.js'
 	this.width = $(document).width();
 	this.height = $(document).height();
+
+
 	/*public methods*/
 	this.info = function () {
 		console.info(this);
@@ -52,7 +57,7 @@ var experiment = new function () {
 		//3- initialize simulation (boids)
 		flock = new FlockFactory.generate(
 				$.extend(conf.FLOCK,{
-					N: 200,
+					SIZE: 500,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: true //generate boids at random position
@@ -65,6 +70,18 @@ var experiment = new function () {
 		//4- start
 		document.body.appendChild(renderer.view);
 		animate();
+
+
+		//5 dat.gui
+		var gui = new dat.GUI();				
+		var f1 = gui.addFolder('Distances');
+		f1.add(flock, 'sepD',10,1000);
+		f1.add(flock, 'cohD',10,1000);
+		f1.add(flock, 'aliD',10,1000);
+		var f2 = gui.addFolder('Forces');
+		f2.add(flock, 'sepW',1,100);
+		f2.add(flock, 'cohW',1,100);
+		f2.add(flock, 'aliW',1,100);
 	}
 	/*private//internal*/
 	function load (aStage, callback) {

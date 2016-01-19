@@ -1,13 +1,4 @@
-var sepD = 30;
-var cohD = 500;
-var aliD = 110;
 
-var sepW = 35.0;
-var cohW = 5.0;
-var aliW = 10.5;
-
-var aLimit = 1;
-var sLimit = 3;
 
 
 
@@ -33,7 +24,11 @@ var BoidImplementation1 = function (opts) {
 
 		var acc = calculateForces(boid,neighbors,data);
 		
-		applyForces(boid, {x: acc[0], y: acc[1]},  {x: bounce[0] + goal[0], y: bounce[1] + goal[1]});
+		applyForces(
+			boid,  
+			{x: acc[0], y: acc[1]}, 
+			{x: bounce[0] + goal[0], y: bounce[1] + goal[1]},
+			data);
 		//console.info(boid);
 	}
 	/*private*/
@@ -56,10 +51,10 @@ var BoidImplementation1 = function (opts) {
 	}
 
 	/*Apply forces*/
-	var applyForces = function (boid, acc, spd) {
+	var applyForces = function (boid, acc, spd, data) {
 		var accSq = acc.x*acc.x + acc.y*acc.y;
-        if (accSq > aLimit) {
-          var ratio = aLimit / Math.sqrt(accSq);
+        if (accSq > data.aLimit) {
+          var ratio = data.aLimit / Math.sqrt(accSq);
           acc.x =  acc.x * ratio;
           acc.y =  acc.y * ratio;
         }       
@@ -68,8 +63,8 @@ var BoidImplementation1 = function (opts) {
 		var sy = boid.getSpeed().y + acc.y + spd.y;		
 		//todo: limit speed
 		var speedSq = sx*sx + sy*sy;
-        if (speedSq > sLimit) {
-          var ratio = sLimit / Math.sqrt(speedSq);
+        if (speedSq > data.sLimit) {
+          var ratio = data.sLimit / Math.sqrt(speedSq);
           sx =  sx * ratio;
           sy =  sy * ratio;
         }
@@ -99,16 +94,16 @@ var BoidImplementation1 = function (opts) {
 						var dx =  px - other.getPosition().x;
 			      		var dy =  py - other.getPosition().y;
 			      		var dsquare = (dx*dx) + (dy*dy);
-			      		if (dsquare < sepD*sepD){
+			      		if (dsquare < data.sepD*data.sepD){
 				      		sForce[0] +=dx;
 				      		sForce[1] +=dy;
 				      	}
 				      	else{
-				      		if (dsquare < cohD*cohD){
+				      		if (dsquare < data.cohD*data.cohD){
 					      		cForce[0] +=dx;
 			    	  			cForce[1] +=dy;	
 			    	  		}
-			    	  		if (dsquare < aliD*aliD){
+			    	  		if (dsquare < data.aliD*data.aliD){
 			    	  			aForce[0] += other.getSpeed().x;
 			      				aForce[1] += other.getSpeed().y;
 			    	  		}      			
@@ -119,16 +114,16 @@ var BoidImplementation1 = function (opts) {
 		var acc = [0,0];//;
 		//separation
 		length = Math.sqrt(sForce[0]*sForce[0] + sForce[1]*sForce[1]);		
-		acc[0] += sepW * (sForce[0] / length) || 0;
-		acc[1] += sepW * (sForce[1] / length) || 0;
+		acc[0] += data.sepW * (sForce[0] / length) || 0;
+		acc[1] += data.sepW * (sForce[1] / length) || 0;
 		//cohesion
 		length = Math.sqrt(cForce[0]*cForce[0] + cForce[1]*cForce[1]);		
-		acc[0] -= cohW * (cForce[0] / length) || 0;
-		acc[1] -= cohW * (cForce[1] / length) || 0;
+		acc[0] -= data.cohW * (cForce[0] / length) || 0;
+		acc[1] -= data.cohW * (cForce[1] / length) || 0;
 		//align
 		length = Math.sqrt(aForce.x*aForce.x + aForce.y*aForce.y);		
-		acc[0] -= aliW * (aForce[0] / length) || 0;
-		acc[1] -= aliW * (aForce[1] / length) || 0;
+		acc[0] -= data.aliW * (aForce[0] / length) || 0;
+		acc[1] -= data.aliW * (aForce[1] / length) || 0;
 
 		return acc;
 	};
