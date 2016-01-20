@@ -1,4 +1,4 @@
-
+var utils = require('../../utils');
 
 
 
@@ -17,7 +17,7 @@ var BoidImplementation1 = function (opts) {
 		var bounceWall = [0,0];
 		var goal = [0,0];
 		if (data.attractors){
-			//bounce = calculateBounce(boid,data.attractors);
+			bounce = calculateBounce(boid,data.attractors);
 		}
 		if (data.walls){
 			bounceWall = calculateBounceWall(boid,data.walls);
@@ -31,7 +31,7 @@ var BoidImplementation1 = function (opts) {
 		applyForces(
 			boid,  
 			{x: acc[0], y: acc[1]}, 
-			{x: bounce[0] + bounceWall[0] + goal[0], y: bounce[1] + bounceWal[1] + goal[1]},
+			{x: bounce[0] + bounceWall[0] + goal[0], y: bounce[1] + bounceWall[1] + goal[1]},
 			data);
 		//console.info(boid);
 	}
@@ -57,17 +57,26 @@ var BoidImplementation1 = function (opts) {
 		var ret = [0,0];
 		for (var i = attractors.length - 1; i >= 0; i--) {
 			var attractor = attractors[i];
-			var dist = attractor.getDistanceFrom(boid.getPosition().x,boid.getPosition().y):
-			
-			var dx =  boid.getPosition().x - attractor.getPosition().x;
-			var dy =  boid.getPosition().y - attractor.getPosition().y;
-			var dsquare = Math.pow(pos,2); //(dx*dx) + (dy*dy);
-			if (dsquare < (attractor.radius  * attractor.radius) * (attractor.distance) ){
-				var ratio = Math.sqrt(dx*dx+dy*dy);
-		        ret[0] = ret[0] - (attractor.force * dx / ratio) || 0;
-		        ret[1] = ret[1] - (attractor.force * dy / ratio) || 0;
+			var proj = utils.getLineEq(
+						{x: boid.getPosition().x, y: boid.getPosition().y},
+						{x: boid.getPosition().x + boid.getSpeed().x, y: boid.getPosition().y + boid.getSpeed().y},
+			);
+			var intersection = utils.lineInterception(proj, attractor.getLineEq());
+			if (intersection){
+				var distanceFromIntersection = utils.distToPoint(intersection, {x: boid.getPosition().x, y: boid.getPosition().y});
+				var distanceCheck = (attractor.radius  * attractor.radius) * (attractor.distance);
+				if ( distanceFromIntersection * distanceFromIntersection  < distanceCheck ){
+					var dx =  boid.getPosition().x - intersection.x;
+					var dy =  boid.getPosition().y - intersection.y;
+			        
+			        ret[1] = ret[1] + (attractor.force * dx / distanceFromIntersection) || 0;
+			        ret[0] = ret[0] + (attractor.force * dy / distanceFromIntersection) || 0;
+		        	
+		        	console.info(dx, dy, ret);
+				}
+			}else{
+				//boid is parallel
 			}
-
 		};
 		return ret;
 	}

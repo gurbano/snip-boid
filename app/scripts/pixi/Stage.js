@@ -37,6 +37,7 @@ var Stage = function (opts) {
 			if (!p[i]){
 				p.push(new PBoid());
 				self.addChild(p[i]);
+				self.addChild(p[i].target);
 			}			
 	        p[i].update(boids[i]);
 		};
@@ -53,8 +54,7 @@ var Stage = function (opts) {
 			if (goal.update){
 				goal.update();
 			}
-		});		
-		
+		});				
 
 		//Update flocks
 		for (var i = 0; i < flocks.length; i++) {

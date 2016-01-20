@@ -11,7 +11,7 @@ describe('Array', function() {
   });
 });
 
-describe('FlockFactory', function() {
+/*describe('FlockFactory', function() {
   describe('#generate()', function () {
     it('should return an empty flock, 2000 * 2000', function () {
     	var flock = new FlockFactory({}).generate({});
@@ -37,13 +37,18 @@ describe('Flock', function() {
      	assert.equal(0, flock.listAt(10,10).length);
     });
   });
-  describe('#add() // #removeAt()', function () {
-    it('adding and removing boids at given position', function () {
-    	var flock = new FlockFactory({}).generate({});    	
-    	flock.addBoid({px : 10, py: 10 });
-     	assert.equal(1, flock.list().length);
-     	assert.equal(0, flock.listAt(0,0).length);
-     	assert.equal(1, flock.listAt(10,10).length);
+  */
+  describe('#utils()', function () {
+    it('line intersection', function () {
+      var line1 = gu.getLineEquation({x:0,y:0},{x:10, y:0});
+      var line2 = gu.getLineEquation({x:0,y:0},{x:0, y:10});
+      assert(line1.isHorizontal);
+      assert(line2.isVertical);
+      var inter = gu.lineInterception(line1, line2);
+      assert.equal(0,inter.x);
+      assert.equal(0,inter.y);
+
+      //console.info(line);
     });
+
   });
-});

@@ -25,6 +25,10 @@ var experiment = new function () {
 	this.width = $(document).width();
 	this.height = $(document).height();
 
+	this.running = true;
+	this.pause = function () {
+		this.running = !this.running;
+	}
 
 	/*public methods*/
 	this.info = function () {
@@ -56,31 +60,31 @@ var experiment = new function () {
 		});
 		*/
 
-		var pad = 50;
+		var pad = 10;
 		var walls = [];
 		walls.push(stage.addEntity(
-					new PWall({start: {x: pad,y: pad },end: {x: pad,y: this.height - pad }, force: 100, distance:1}), 
+					new PWall({start: {x: pad,y: pad },end: {x: pad,y: this.height - pad }, force: 100, distance:100}), 
 					function (obj) {
 						obj.update = function () {
 
 						}
 				}));
 		walls.push(stage.addEntity(
-					new PWall({start: {x: this.width - pad, y: pad },end: {x: this.width - pad, y: this.height -pad }, force: 100, distance:300}), 
+					new PWall({start: {x: this.width - pad, y: pad },end: {x: this.width - pad, y: this.height -pad }, force: 100, distance:100}), 
 					function (obj) {
 						obj.update = function () {
 
 						}
 				}));
 		walls.push(stage.addEntity(
-					new PWall({start: {x: pad,y: pad },end: {x: this.width - pad, y: pad }, force: 100, distance:300}), 
+					new PWall({start: {x: pad,y: pad },end: {x: this.width - pad, y: pad }, force: 100, distance:100}), 
 					function (obj) {
 						obj.update = function () {
 
 						}
 				}));
 		walls.push(stage.addEntity(
-					new PWall({start: {x: pad,y: this.height - pad },end: {x: this.width - pad, y: this.height - pad }, force: 100, distance:300}), 
+					new PWall({start: {x: pad,y: this.height - pad },end: {x: this.width - pad, y: this.height - pad }, force: 100, distance:100}), 
 					function (obj) {
 						obj.update = function () {
 
@@ -93,7 +97,7 @@ var experiment = new function () {
 					SIZE: 1,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
-					RANDOM: true //generate boids at random position
+					RANDOM: false //generate boids at random position
 				}),
 				function(_flock){
 					stage.addFlock(_flock);
@@ -125,7 +129,8 @@ var experiment = new function () {
 		var time = raf(animate);
 		//flock.step(time);//update the flock
 		//stage.synchronizeFlock(flock); //synchronize the graphical representation of the boids
-		stage.update(time); //update the world - update all the other entities
+		if (self.running)
+			stage.update(time); //update the world - update all the other entities
 		renderer.render(stage); //render
 	}
 }();
@@ -134,7 +139,13 @@ var experiment = new function () {
 experiment.info();
 experiment.start();
 
-
+$(window).keypress(function (e) {
+  if (e.keyCode === 0 || e.keyCode === 32) {
+    e.preventDefault();
+    experiment.pause();
+    console.log('Space pressed');
+	}
+});
 
 
 document.onmousemove = handleMouseMove;

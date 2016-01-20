@@ -1,4 +1,3 @@
-
 var Flock = require('./Flock');
 
 var FlockFactory = function (opts) {

@@ -32,6 +32,29 @@ var Util = function () {
 	}
 	this.distToSegment = function(p, v, w) { return Math.sqrt(distToSegmentSquared(p, v, w)); }
 	this.distToPoint = function(p, v) { return Math.sqrt(dist2(p, v)); }
+
+
+	/*LINES*/
+	this.getLineEq = function (start, end) {
+		return{
+			A : end.y - start.y,
+			B : start.x - end.x,
+			C : (/*A*/end.y - start.y) * start.x + (/*B*/start.x - end.x) * start.y,
+			M : (end.y - start.y) / (end.x - start.x ),
+			isVertical : Math.abs(end.x - start.x) < 0.00001 ,
+			isHorizontal : Math.abs(end.y - start.y) < 0.00001 
+		}
+	}
+	this.lineInterception = function (line1, line2) {
+		var det = line1.A*line2.B - line2.A*line1.B;
+		if(det == 0){
+        	return undefined;
+	    }else{
+	        var x = (line2.B * line1.C - line1.B * line2.C)/det;
+	        var y = (line1.A * line2.C - line2.A * line1.C)/det;
+	    	return {x : x,y : y};
+		}
+	}
 	return this;
 }
 

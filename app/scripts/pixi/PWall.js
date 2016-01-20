@@ -8,11 +8,17 @@ var PWall = function (opts) {
 	this.type = 'wall';
 	this.start = opts.start;
 	this.end = opts.end;
-	this.m = (opts.end.y - opts.start.y) / (opts.end.x - opts.start.x );
+	
+	this.A = opts.end.y - opts.start.y;
+	this.B = opts.start.x - opts.end.x;
+	this.C = this.A * opts.start.x+this.B*opts.start.y;
+	this.M = (opts.end.y - opts.start.y) / (opts.end.x - opts.start.x );		
+	this.isVertical = Math.abs(this.end.x - this.start.x) < 0.00001 ;	
+	this.isHorizontal = Math.abs(this.end.y - this.start.y) < 0.00001 ;
+	
 	this.Y = function (x) {
-		return this.m * x;
-	}()
-
+		return this.M * x;
+	};
 
 	if (!(this instanceof PWall)) return new PWall(opts);
 	PIXI.Graphics.call(this); //extends pixi.container
@@ -29,6 +35,16 @@ var PWall = function (opts) {
     this.getPosition = function () {return this.position};
     this.getDistanceFrom = function (x,y) {
     	return gu.distToSegment({x: x, y:y},this.start, this.end);
+    }
+    this.getLineEq = function  () {
+    	return{
+			A : this.A,
+			B : this.B,
+			C : this.C,
+			M : this.M,
+			isVertical : this.isVertical,
+			isHorizontal : this.isHorizontal 
+		}
     }
 
     return this;		
