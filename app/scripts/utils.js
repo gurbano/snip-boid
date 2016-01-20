@@ -41,6 +41,7 @@ var Util = function () {
 			B : start.x - end.x,
 			C : (/*A*/end.y - start.y) * start.x + (/*B*/start.x - end.x) * start.y,
 			M : (end.y - start.y) / (end.x - start.x ),
+			Y : function(x){ return ((end.y - start.y) / (end.x - start.x )) * x;},
 			isVertical : Math.abs(end.x - start.x) < 0.00001 ,
 			isHorizontal : Math.abs(end.y - start.y) < 0.00001 
 		}

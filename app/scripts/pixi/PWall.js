@@ -3,7 +3,9 @@ var WHITE = 0xFFFFFF;
 var BLACK = 0x000000;
 var gu = require('../utils');
 
-var PWall = function (opts) {
+var PWall = function (opts) {	
+	if (!(this instanceof PWall)) return new PWall(opts);
+	PIXI.Graphics.call(this); //extends pixi.container
 	var self = this;
 	this.type = 'wall';
 	this.start = opts.start;
@@ -20,8 +22,6 @@ var PWall = function (opts) {
 		return this.M * x;
 	};
 
-	if (!(this instanceof PWall)) return new PWall(opts);
-	PIXI.Graphics.call(this); //extends pixi.container
 	this.lineStyle(3, BLACK);    
     this.moveTo(opts.start.x,opts.start.y);
     this.lineTo(opts.end.x,opts.end.y);

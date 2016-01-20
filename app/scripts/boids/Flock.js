@@ -12,8 +12,8 @@ var Flock = function (opts) {
 	this.cohW = 5.5;
 	this.aliW = 10.5;
 
-	this.aLimit = 1;
-	this.sLimit = 3;
+	this.aLimit = 0.2;
+	this.sLimit = 1.5;
 
 
 	opts = opts || {};

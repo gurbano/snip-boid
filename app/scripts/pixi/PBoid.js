@@ -42,8 +42,8 @@ PBoid.prototype.update = function (boid) {
     var rad = Math.atan2(boid.getSpeed().y ,boid.getSpeed().x); //rotation: atan2(speedy , speedx)
     this.rotation = rad;
     
-    this.target.position.x =  boid.getPosition().x + (10 * boid.getSpeed().x);
-    this.target.position.y =  boid.getPosition().y + (10 * boid.getSpeed().y);
+    this.target.position.x =  boid.getPosition().x + (100 * boid.getSpeed().x);
+    this.target.position.y =  boid.getPosition().y + (100 * boid.getSpeed().y);
 }
 
 

@@ -43,33 +43,38 @@ var experiment = new function () {
 
 		});
 		var mouseBouncer = stage.addEntity(
-			new PAttractor({radius:30, force: -100, distance:30}), 
+			new PAttractor({radius:30, force: 100, distance:300}), 
 			function (obj) {
 				obj.update = function () {
 					obj.position.x = document.pageX;
 					obj.position.y = document.pageY;
+					if (!mousedown){
+						obj.force = 0;
+					}else{
+						obj.force = 100;
+					}
 				}
 		});
 		
+
+		var pad = 10;
 	/*
 		var simpleGoal = stage.addEntity(
-			new PGoal({x:gu.random(0,this.width), y:gu.random(0,this.height), radius:10, force: 10, distance:1500}), 
+			new PGoal({x:gu.random(pad,pad), y:gu.random(pad,pad), radius:10, force: 10, distance:11500}), 
 			function (obj) {
 				obj.update = function () {
 					//obj.position.x += gu.random(-10,10);
 					//obj.position.y += gu.random(-10,10);
 				}
 		});
-	*/
-
-		var pad = 100;
+	
+*/
+		
 		var walls = [];
 
-
+/*
 		walls.push(stage.addEntity(
-
-
-					new PWall({start: {x: pad,y: pad },end: {x: pad,y: this.height - pad }, force: 100, distance:100}), 
+					new PWall({start: {x: pad,y: pad },end: {x: 5*pad,y: this.height - pad }, force: 200, distance:100}), 
 					function (obj) {
 						obj.update = function () {
 
@@ -87,7 +92,7 @@ var experiment = new function () {
 
 
 		walls.push(stage.addEntity(
-					new PWall({start: {x: pad,y: pad },end: {x: this.width - pad, y: pad }, force: 100, distance:100}), 
+					new PWall({start: {x: pad,y: pad },end: {x: this.width - pad, y: pad }, force: 200, distance:100}), 
 					function (obj) {
 						obj.update = function () {
 
@@ -100,12 +105,43 @@ var experiment = new function () {
 
 						}
 				}));
-		
+*/
+		for (var i = 0; i < 0; i++) {
+			var rx = gu.random(pad, this.width - pad);
+			var ry = gu.random(pad, this.height - pad);
+			var dx = gu.random(- pad*10, pad*10);
+			var dy = gu.random(- pad*10, pad*10);
+			
+			walls.push(
+				stage.addEntity(				
+					new PWall({start: {x: rx,y: ry },end: {x: rx + dx , y: ry + dy }, radius:gu.random(2,6), force: 100, distance:100}), 
+				function (obj) {
+					obj.update = function () {
+
+					}
+			}));
+					
+		};	
+
+		for (var i = 0; i < 60; i++) {
+			var rx = gu.random(pad, this.width - pad);
+			var ry = gu.random(pad, this.height - pad);
+			var dx = gu.random(- pad*10, pad*10);
+			var dy = gu.random(- pad*10, pad*10);
+			
+		stage.addEntity(
+			new PAttractor({x: rx, y: ry, radius:gu.random(1,10), force: -100, distance:60}), 
+			function (obj) {
+				obj.update = function () {
+					
+				}
+			});					
+		};			
 
 		//3- initialize simulation (boids)
 		flock = new FlockFactory.generate(
 				$.extend(conf.FLOCK,{
-					SIZE: 1,
+					SIZE: 100,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: false //generate boids at random position
@@ -150,6 +186,7 @@ var experiment = new function () {
 experiment.info();
 experiment.start();
 
+var mousedown = false;
 $(window).keypress(function (e) {
   if (e.keyCode === 0 || e.keyCode === 32) {
     e.preventDefault();
@@ -158,6 +195,12 @@ $(window).keypress(function (e) {
 	}
 });
 
+$(window).mousedown(function (e) {
+  	mousedown = true;
+});
+$(window).mouseup(function (e) {
+  	mousedown = false;
+});
 
 document.onmousemove = handleMouseMove;
 function handleMouseMove(event) {
