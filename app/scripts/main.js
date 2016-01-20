@@ -50,25 +50,32 @@ var experiment = new function () {
 					obj.position.y = document.pageY;
 				}
 		});
-		/*var simpleGoal = stage.addEntity(
-			new PGoal({x:gu.random(0,this.width), y:gu.random(0,this.height), radius:30, force: 100, distance:300}), 
+		
+	/*
+		var simpleGoal = stage.addEntity(
+			new PGoal({x:gu.random(0,this.width), y:gu.random(0,this.height), radius:10, force: 10, distance:1500}), 
 			function (obj) {
 				obj.update = function () {
 					//obj.position.x += gu.random(-10,10);
 					//obj.position.y += gu.random(-10,10);
 				}
 		});
-		*/
+	*/
 
-		var pad = 10;
+		var pad = 100;
 		var walls = [];
+
+
 		walls.push(stage.addEntity(
+
+
 					new PWall({start: {x: pad,y: pad },end: {x: pad,y: this.height - pad }, force: 100, distance:100}), 
 					function (obj) {
 						obj.update = function () {
 
 						}
 				}));
+		
 		walls.push(stage.addEntity(
 					new PWall({start: {x: this.width - pad, y: pad },end: {x: this.width - pad, y: this.height -pad }, force: 100, distance:100}), 
 					function (obj) {
@@ -76,6 +83,9 @@ var experiment = new function () {
 
 						}
 				}));
+
+
+
 		walls.push(stage.addEntity(
 					new PWall({start: {x: pad,y: pad },end: {x: this.width - pad, y: pad }, force: 100, distance:100}), 
 					function (obj) {
@@ -90,6 +100,7 @@ var experiment = new function () {
 
 						}
 				}));
+		
 
 		//3- initialize simulation (boids)
 		flock = new FlockFactory.generate(

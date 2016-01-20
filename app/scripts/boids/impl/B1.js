@@ -23,15 +23,14 @@ var BoidImplementation1 = function (opts) {
 			bounceWall = calculateBounceWall(boid,data.walls);
 		}
 		if (data.goals){
-			//goal = calculateBounce(boid,data.goals);
+			goal = calculateBounce(boid,data.goals);
 		}
 
 		var acc = calculateForces(boid,neighbors,data);
 		
 		applyForces(
 			boid,  
-			{x: acc[0], y: acc[1]}, 
-			{x: bounce[0] + bounceWall[0] + goal[0], y: bounce[1] + bounceWall[1] + goal[1]},
+			{x: acc[0]  + bounceWall[0] + bounce[0] + goal[0], y: acc[1]  + bounceWall[1] + bounce[1] + goal[1]},
 			data);
 		//console.info(boid);
 	}
@@ -68,9 +67,9 @@ var BoidImplementation1 = function (opts) {
 				if ( distanceFromIntersection * distanceFromIntersection  < distanceCheck ){
 					var dx =  boid.getPosition().x - intersection.x;
 					var dy =  boid.getPosition().y - intersection.y;
-			        
-			        ret[1] = ret[1] + (attractor.force * dx / distanceFromIntersection) || 0;
-			        ret[0] = ret[0] + (attractor.force * dy / distanceFromIntersection) || 0;
+			        ret[0] = ret[0] + (attractor.force * dx / Math.abs(distanceFromIntersection)) || 0;
+			        ret[1] = ret[1] - (attractor.force * dy / Math.abs(distanceFromIntersection)) || 0;	
+
 		        	
 		        	console.info(dx, dy, ret);
 				}
@@ -82,7 +81,7 @@ var BoidImplementation1 = function (opts) {
 	}
 
 	/*Apply forces*/
-	var applyForces = function (boid, acc, spd, data) {
+	var applyForces = function (boid, acc, data) {
 		var accSq = acc.x*acc.x + acc.y*acc.y;
         if (accSq > data.aLimit) {
           var ratio = data.aLimit / Math.sqrt(accSq);
@@ -90,8 +89,8 @@ var BoidImplementation1 = function (opts) {
           acc.y =  acc.y * ratio;
         }       
 
-		var sx = boid.getSpeed().x + acc.x + spd.x;
-		var sy = boid.getSpeed().y + acc.y + spd.y;		
+		var sx = boid.getSpeed().x + acc.x;
+		var sy = boid.getSpeed().y + acc.y;		
 		//todo: limit speed
 		var speedSq = sx*sx + sy*sy;
         if (speedSq > data.sLimit) {

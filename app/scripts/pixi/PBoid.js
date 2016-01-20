@@ -16,7 +16,7 @@ var PBoid = function (opts) {
     this.position.x = 0;
     this.position.y = 0;
     this.target = new Target();
-    this.target.visible = true;
+    this.target.visible = false;
     return this;		
 }
 
