@@ -56,19 +56,41 @@ var experiment = new function () {
 		});
 		*/
 
-			var simpleGoal = stage.addEntity(
-			new PWall({start: {x: 5,y: 5 },end: {x: 5,y: this.height -5 }, force: 100, distance:300}), 
-			function (obj) {
-				obj.update = function () {
-					//obj.position.x += gu.random(-10,10);
-					//obj.position.y += gu.random(-10,10);
-				}
-		});
+		var pad = 50;
+		var walls = [];
+		walls.push(stage.addEntity(
+					new PWall({start: {x: pad,y: pad },end: {x: pad,y: this.height - pad }, force: 100, distance:1}), 
+					function (obj) {
+						obj.update = function () {
+
+						}
+				}));
+		walls.push(stage.addEntity(
+					new PWall({start: {x: this.width - pad, y: pad },end: {x: this.width - pad, y: this.height -pad }, force: 100, distance:300}), 
+					function (obj) {
+						obj.update = function () {
+
+						}
+				}));
+		walls.push(stage.addEntity(
+					new PWall({start: {x: pad,y: pad },end: {x: this.width - pad, y: pad }, force: 100, distance:300}), 
+					function (obj) {
+						obj.update = function () {
+
+						}
+				}));
+		walls.push(stage.addEntity(
+					new PWall({start: {x: pad,y: this.height - pad },end: {x: this.width - pad, y: this.height - pad }, force: 100, distance:300}), 
+					function (obj) {
+						obj.update = function () {
+
+						}
+				}));
 
 		//3- initialize simulation (boids)
 		flock = new FlockFactory.generate(
 				$.extend(conf.FLOCK,{
-					SIZE: 500,
+					SIZE: 1,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: true //generate boids at random position

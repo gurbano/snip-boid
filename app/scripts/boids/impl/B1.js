@@ -17,13 +17,13 @@ var BoidImplementation1 = function (opts) {
 		var bounceWall = [0,0];
 		var goal = [0,0];
 		if (data.attractors){
-			bounce = calculateBounce(boid,data.attractors);
+			//bounce = calculateBounce(boid,data.attractors);
 		}
 		if (data.walls){
-			bounceWall = calculateBounce(boid,data.walls);
+			bounceWall = calculateBounceWall(boid,data.walls);
 		}
 		if (data.goals){
-			goal = calculateBounce(boid,data.goals);
+			//goal = calculateBounce(boid,data.goals);
 		}
 
 		var acc = calculateForces(boid,neighbors,data);
@@ -31,7 +31,7 @@ var BoidImplementation1 = function (opts) {
 		applyForces(
 			boid,  
 			{x: acc[0], y: acc[1]}, 
-			{x: bounce[0] + goal[0], y: bounce[1] + goal[1]},
+			{x: bounce[0] + bounceWall[0] + goal[0], y: bounce[1] + bounceWal[1] + goal[1]},
 			data);
 		//console.info(boid);
 	}
@@ -44,6 +44,24 @@ var BoidImplementation1 = function (opts) {
 			var dx =  boid.getPosition().x - attractor.getPosition().x;
 			var dy =  boid.getPosition().y - attractor.getPosition().y;
 			var dsquare = Math.pow(attractor.getDistanceFrom(boid.getPosition().x,boid.getPosition().y),2); //(dx*dx) + (dy*dy);
+			if (dsquare < (attractor.radius  * attractor.radius) * (attractor.distance) ){
+				var ratio = Math.sqrt(dx*dx+dy*dy);
+		        ret[0] = ret[0] - (attractor.force * dx / ratio) || 0;
+		        ret[1] = ret[1] - (attractor.force * dy / ratio) || 0;
+			}
+
+		};
+		return ret;
+	}
+	var calculateBounceWall = function (boid, attractors) {
+		var ret = [0,0];
+		for (var i = attractors.length - 1; i >= 0; i--) {
+			var attractor = attractors[i];
+			var dist = attractor.getDistanceFrom(boid.getPosition().x,boid.getPosition().y):
+			
+			var dx =  boid.getPosition().x - attractor.getPosition().x;
+			var dy =  boid.getPosition().y - attractor.getPosition().y;
+			var dsquare = Math.pow(pos,2); //(dx*dx) + (dy*dy);
 			if (dsquare < (attractor.radius  * attractor.radius) * (attractor.distance) ){
 				var ratio = Math.sqrt(dx*dx+dy*dy);
 		        ret[0] = ret[0] - (attractor.force * dx / ratio) || 0;
