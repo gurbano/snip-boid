@@ -43,7 +43,7 @@ var experiment = new function () {
 		renderer = PIXI.autoDetectRenderer(this.width, this.height, {backgroundColor: conf.BACKGROUND});
 		document.body.appendChild(renderer.view);
 		//2- initialize world
-		load.bind(this)(stages['EXP1'], 
+		load.bind(this)(stages['GEN1'], //<---------------------------- stage loading
 			function (stage, aStage) {
 				console.info(stage, aStage);
 				//3- initialize simulation (boids)
