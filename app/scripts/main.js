@@ -39,8 +39,8 @@ var experiment = new function () {
 		stage = new Stage();
 		renderer = PIXI.autoDetectRenderer(this.width, this.height, {backgroundColor: conf.BACKGROUND});
 		//2- initialize world
-		load(stages['LOADING'], function () {
-
+		load(stages['LOADING'], function (cb) {
+			cb(stage);
 		});
 		var mouseBouncer = stage.addEntity(
 			new PAttractor({radius:30, force: 100, distance:300}), 
@@ -170,7 +170,10 @@ var experiment = new function () {
 	/*private//internal*/
 	function load (aStage, callback) {
 		console.info('loading stage', aStage);
-		if (callback)callback();
+
+		//aStage.build(stage);
+
+		if (callback)callback(aStage);
 	}	
 	function animate(time) { 	
 		var time = raf(animate);
