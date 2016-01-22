@@ -1,4 +1,5 @@
 var PAttractor = require('../pixi/PAttractor');
+var BoidGenerator = require('../pixi/BoidGenerator');
 var FlockFactory = require('../boids/FlockFactory')({});
 var conf = require('../configurations/experiment1');
 
@@ -21,10 +22,10 @@ module.exports = {
 			//add the flock
 			var flock = new FlockFactory.generate(
 				$.extend(conf.FLOCK,{
-					SIZE: 100,
+					SIZE: 400,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
-					RANDOM: false //generate boids at random position
+					RANDOM: true //generate boids at random position
 				}),
 				function(_flock){
 					stage.addFlock(_flock);
@@ -45,7 +46,7 @@ module.exports = {
 	},
 	'EXP2' : {
 		name: 'EXP2',
-		description: 'Boids and a bunch of obstacles',
+		description: 'Random 100 boids',
 		next: 'EXP1',
 		populateWorld : function (stage) {
 			//add the flock
@@ -78,36 +79,58 @@ module.exports = {
 		description: 'Boids and a bunch of obstacles',
 		next: '',
 		populateWorld : function (stage) {
+			var flock = undefined;
+			var self = this;
+			//Add a new mouse bouncer - left click attract, right click push
+			addMouseBouncer.bind(this)(stage, {radius:30, force: 100, distance:300} )
 			//add the flock
-			var flock = new FlockFactory.generate(
+			 flock = new FlockFactory.generate(
 				$.extend(conf.FLOCK,{
-					SIZE: 0,
+					SIZE: 10,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
-					RANDOM: false //generate boids at random position
+					RANDOM: true //generate boids at random position
 				}),
 				function(_flock){
 					stage.addFlock(_flock);
 				}
 			);
-
-			//var generator = new BoidGenerator({});
-			/*
+		
+			var generator = new BoidGenerator(
+				{	
+					x: gu.random(pad, this.width - pad),
+					y: gu.random(pad, this.height - pad),
+					N: 1, //how many boids are generated per click
+					flock: flock, //target flock ,
+					delay: function(){return gu.random(1000,10000);}
+				}
+			);
+			
 			stage.addEntity(generator, function(obj){
-
+				console.info(obj);
+				var gen = function() {
+					if (self.running){
+						obj.generate();
+						console.info('generation boid');
+					}
+					setTimeout(gen, obj.delay());	
+				}
+				setTimeout(gen, obj.delay());
 			});
-*/
+
 
 			//5 dat.gui
-			var gui = new dat.GUI();				
-			var f1 = gui.addFolder('Distances');
-			f1.add(flock, 'sepD',10,1000);
-			f1.add(flock, 'cohD',10,1000);
-			f1.add(flock, 'aliD',10,1000);
-			var f2 = gui.addFolder('Forces');
-			f2.add(flock, 'sepW',1,100);
-			f2.add(flock, 'cohW',1,100);
-			f2.add(flock, 'aliW',1,100);
+			if (flock){
+				var gui = new dat.GUI();				
+				var f1 = gui.addFolder('Distances');
+				f1.add(flock, 'sepD',10,1000);
+				f1.add(flock, 'cohD',10,1000);
+				f1.add(flock, 'aliD',10,1000);
+				var f2 = gui.addFolder('Forces');
+				f2.add(flock, 'sepW',1,100);
+				f2.add(flock, 'cohW',1,100);
+				f2.add(flock, 'aliW',1,100);
+			}
 
 		}
 	}

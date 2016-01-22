@@ -22,7 +22,7 @@ var Flock = function (opts) {
 	/*DEFAULT VALUES*/
 	var mx = opts.WIDTH || 2000; 
 	var my = opts.HEIGHT || 2000; // max width, max height
-	var MAX_FORCE = opts.MAX_FORCE || 20;
+	var MAX_FORCE = opts.MAX_FORCE || this.sLimit;
 
 	this.info = function () {
 		console.info(this);
