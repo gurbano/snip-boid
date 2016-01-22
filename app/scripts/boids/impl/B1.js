@@ -151,7 +151,7 @@ var BoidImplementation1 = function (opts) {
 		acc[0] -= data.cohW * (cForce[0] / length) || 0;
 		acc[1] -= data.cohW * (cForce[1] / length) || 0;
 		//align
-		length = Math.sqrt(aForce.x*aForce.x + aForce.y*aForce.y);		
+		length = Math.sqrt(aForce[0]*aForce[0] + aForce[1]*aForce[1]);		
 		acc[0] -= data.aliW * (aForce[0] / length) || 0;
 		acc[1] -= data.aliW * (aForce[1] / length) || 0;
 

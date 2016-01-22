@@ -4,16 +4,16 @@ var Boid = require('./Boid');
 var Flock = function (opts) {
 	var self = this;
 
-	this.sepD = 30;
-	this.cohD = 500;
-	this.aliD = 110;
+	this.sepD = opts.sepD || 1;
+	this.cohD = opts.cohD || 1;
+	this.aliD = opts.aliD || 1;
 
-	this.sepW = 35.0;
-	this.cohW = 5.5;
-	this.aliW = 10.5;
+	this.sepW = opts.sepW || 1;
+	this.cohW = opts.cohW || 1;
+	this.aliW = opts.aliW || 1;
 
-	this.aLimit = 0.2;
-	this.sLimit = 1.5;
+	this.aLimit = opts.aLimit || 1;
+	this.sLimit = opts.sLimit || 1;
 
 
 	opts = opts || {};

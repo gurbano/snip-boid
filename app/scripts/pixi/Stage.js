@@ -2,6 +2,7 @@ var PBoid = require('./PBoid');
 
 
 
+
 /*WRAPPER FOR PIXI STAGE
 	- synchronizes flocks
 
@@ -18,6 +19,9 @@ var Stage = function (opts) {
 	this.addFlock = function (flock) {
 		flocks.push(flock);	
 		pBoids.push([]);
+	}
+	this.getFlocks = function () {
+		return flocks;
 	}
 	this.addEntity = function (ent, cb) {
 		this.addChild(ent);
