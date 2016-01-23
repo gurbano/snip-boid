@@ -17,6 +17,9 @@ var BoidGenerator = function (opts) {
     this.position.y = opts.y || 0; 
 	this.endFill(); 
 
+	this.count = 0;
+	this.max = opts.max || Infinity;
+	this.N = opts.N;
 	this.delay = opts.delay || 1000;
 	this.flock = opts.flock;
 	this.radius = opts.radius || 10;
@@ -28,12 +31,18 @@ var BoidGenerator = function (opts) {
     	return gu.distToPoint({x: x, y:y}, this.position);
     }
     this.generate = function () {
-    	this.flock.addBoid({
-			px: this.position.x, 
-			py: this.position.y, 
-			sx: gu.randomReal(-10,10), 
-			sy: gu.randomReal(-10,10),
-    	});
+    	var n = this.N();
+    	for (var i = 0; (i < n)&&(this.count < this.max()); i++) {
+    		this.count++;
+    		//console.info('generation boid', this.count);
+    		this.flock().addBoid(
+    			$.extend(opts,{
+    						px: this.position.x, 
+    						py: this.position.y, 
+    						sx: gu.randomReal(-10,10), 
+    						sy: gu.randomReal(-10,10),
+    			    	}));
+		};    	
     }
 
     return this;		

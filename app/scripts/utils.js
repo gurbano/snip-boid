@@ -8,7 +8,7 @@ Array.prototype.remove = function() {
     }
     return this;
 };
-
+var randomcolor  = require('randomcolor');
 var Util = function () {
 	var self = this;
 	if (!(this instanceof Util)) return new Util(opts);
@@ -16,6 +16,9 @@ var Util = function () {
 	this.description = 'some method'
 	this.info = function () {
 		console.info(this);
+	}
+	this.v = function (x,y,z) {
+		return $V([x,y,z]);
 	}
 	/**
 	 * Returns a random integer between min (inclusive) and max (inclusive)
@@ -32,8 +35,9 @@ var Util = function () {
 	}
 	this.distToSegment = function(p, v, w) { return Math.sqrt(distToSegmentSquared(p, v, w)); }
 	this.distToPoint = function(p, v) { return Math.sqrt(dist2(p, v)); }
-
-
+	this.color = function() {
+	  return randomcolor().replace('#','0x');
+	}
 	/*LINES*/
 	this.getLineEq = function (start, end) {
 		return{

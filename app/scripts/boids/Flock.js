@@ -14,7 +14,9 @@ var Flock = function (opts) {
 
 	this.aLimit = opts.aLimit || 1;
 	this.sLimit = opts.sLimit || 1;
+	this.sRatio = opts.sRatio || 10;
 
+	this.opts = opts; //flock option. contains info about boids as well
 
 	opts = opts || {};
 	if (!(this instanceof Flock)) return new Flock(opts);	
@@ -55,6 +57,15 @@ var Flock = function (opts) {
 
 	/*STEP - advance the simulation one step*/
 	this.step = function (data) {	
+		/*
+		var parallel = new Parallel(_b);
+
+		var _step = function  () {
+			
+		}
+		parallel.map(fib).then(log)
+
+		*/
 		for (var i = 0; i < _b.length; i++) {
 			var boid = _b[i];
 			var neigh = _b;// getNeighbous(i, 250);
@@ -68,7 +79,8 @@ var Flock = function (opts) {
 				aliW: this.aliW,
 
 				aLimit: this.aLimit,
-				sLimit: this.sLimit
+				sLimit: this.sLimit,
+				sRatio: this.sRatio
 			}));
 		}
 	}	
@@ -90,15 +102,18 @@ var Flock = function (opts) {
 					self.addBoid({
 						px: gu.random(0,mx), 
 						py: gu.random(0,my), 
+						pz: 0, 
 						sx: gu.randomReal(-MAX_FORCE,MAX_FORCE), 
 						sy: gu.randomReal(-MAX_FORCE,MAX_FORCE),
+						sz: gu.randomReal(-MAX_FORCE,MAX_FORCE),
 					});
 				}else{
 					self.addBoid({
 						px: Math.floor(mx/2), //gu.random(0,mx), 
-						py: Math.floor(my/2), //gu.random(0,my), 
+						py: 0, //gu.random(0,my), 
 						sx: gu.randomReal(-MAX_FORCE,MAX_FORCE), 
 						sy: gu.randomReal(-MAX_FORCE,MAX_FORCE),
+						sz: gu.randomReal(-MAX_FORCE,MAX_FORCE),
 					});
 				}
 				

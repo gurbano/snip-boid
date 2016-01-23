@@ -39,7 +39,7 @@ var Stage = function (opts) {
 		//console.info('displayin ', boids.length, ' boids');
 		for (var i = 0; i < boids.length; i++) {
 			if (!p[i]){
-				p.push(new PBoid());
+				p.push(new PBoid(f.opts.boids || {}));
 				self.addChild(p[i]);
 				self.addChild(p[i].target);
 			}			

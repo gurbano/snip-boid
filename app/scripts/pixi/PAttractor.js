@@ -11,6 +11,7 @@ var PAttractor = function (opts) {
     this.drawCircle(0,0, Math.abs(opts.radius || 10) );
     this.position.x = opts.x || 0;
     this.position.y = opts.y || 0; 
+    this.position.z = opts.z || 0; 
 	this.endFill(); 
 
 	this.radius = opts.radius || 10;
@@ -18,6 +19,7 @@ var PAttractor = function (opts) {
 	this.distance = opts.distance || 1; //distance multip
 
     this.getPosition = function () {return this.position};
+    this.getPositionV = function () {return gu.v(this.position.x, this.position.y, this.position.z)};
 	this.getDistanceFrom = function (x,y) {
     	return gu.distToPoint({x: x, y:y}, this.position);
     }

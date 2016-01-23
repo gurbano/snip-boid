@@ -2,7 +2,7 @@ var utils = require('../../utils');
 
 
 
-
+ 
 var BoidImplementation1 = function (opts) {
 	var self = this;
 	opts = opts || {};
