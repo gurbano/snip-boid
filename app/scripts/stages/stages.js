@@ -1,8 +1,10 @@
 var PAttractor = require('../pixi/PAttractor');
 var BoidGenerator = require('../pixi/BoidGenerator');
-var FlockFactory = require('../boids/FlockFactory')({});
+var FlockFactory = require('../boids/FlockFactory');
 var conf = require('../configurations/experiment1');
 
+var IMPL1 = require('../boids/impl/B1')({});
+var IMPL2 = require('../boids/impl/B2')({});
 
 module.exports = {
 	'LOADING' : {
@@ -10,52 +12,59 @@ module.exports = {
 		description: 'Loading screen',
 		next: 'EXP1'
 	},
-	'EXP1' : {
-		name: 'EXP1',
-		description: 'Boids and a bunch of obstacles',
-		next: 'EXP2',
-		populateWorld : function (stage) {
-			//Add a new mouse bouncer - left click attract, right click push
-			addMouseBouncer.bind(this)(stage, {radius:30, force: 100, distance:300} )
-			//add random bouncers
-			addBouncers.bind(this)(stage, { force: -100, distance:60}, 100);
-			//add the flock
-			var flock = new FlockFactory.generate(
-				$.extend(conf.FLOCK,{
-					SIZE: 400,
-					WIDTH: this.width, //flock max x (coordinates - same as the screen)
-					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
-					RANDOM: true //generate boids at random position
-				}),
-				function(_flock){
-					stage.addFlock(_flock);
-				}
-			);
-			//5 dat.gui
-			var gui = new dat.GUI();				
-			var f1 = gui.addFolder('Distances');
-			f1.add(flock, 'sepD',10,1000);
-			f1.add(flock, 'cohD',10,1000);
-			f1.add(flock, 'aliD',10,1000);
-			var f2 = gui.addFolder('Forces');
-			f2.add(flock, 'sepW',1,100);
-			f2.add(flock, 'cohW',1,100);
-			f2.add(flock, 'aliW',1,100);
-
-		}
-	},
 	'EXP2' : {
 		name: 'EXP2',
 		description: 'Random 100 boids',
 		next: 'EXP1',
 		populateWorld : function (stage) {
+			addMouseBouncer.bind(this)(stage, 
+					{radius:30, 
+					force_zero: 0, 
+					force: 500, 
+					distance: 300} );
+			addBouncers.bind(this)(stage, { force: 5000, distance:40}, 50);
 			//add the flock
-			var flock = new FlockFactory.generate(
+			var flock = new FlockFactory({}).generate(
 				$.extend(conf.FLOCK,{
 					SIZE: 100,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
-					RANDOM: true //generate boids at random position
+					RANDOM: true, //generate boids at random position
+					IMPL: IMPL1,
+					boids :{
+						render: function  () {
+							this.beginFill(0xffffff);
+							this.moveTo(0,0);    
+							this.lineTo(-10, 15);
+					        this.lineTo(10, 0);
+					        this.lineTo(-10, -15);
+					        this.endFill();
+						}
+					},
+				}),
+				function(_flock){
+					stage.addFlock(_flock);
+				}
+			);
+			var flock = new FlockFactory({}).generate(
+				$.extend(conf.FLOCK,{
+					SIZE: 100,
+					WIDTH: this.width, //flock max x (coordinates - same as the screen)
+					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
+					RANDOM: true, //generate boids at random position
+					IMPL: IMPL2,
+					boids :{
+						render: function  () {
+							this.beginFill(0x000000);
+							this.moveTo(0,0);    
+					        this.lineTo(-10, 15);
+					        this.lineTo(10, 0);
+					        this.lineTo(-10, -15);
+					        this.endFill();
+							this.endFill();
+						}
+					},
+					sRatio: 0.9,
 				}),
 				function(_flock){
 					stage.addFlock(_flock);
@@ -81,30 +90,30 @@ module.exports = {
 		populateWorld : function (stage) {
 			var flock = undefined;
 			var self = this;
-			addBouncers.bind(this)(stage, { force: 500, distance:50}, 10);
+			addBouncers.bind(this)(stage, { force: 5000, distance:40}, 0);
 			//Add a new mouse bouncer - left click attract, right click push
 			addMouseBouncer.bind(this)(stage, 
 					{radius:30, 
-					force_zero: 100, 
-					force: -100, 
-					distance: 200} )
+					force_zero: 0, 
+					force: - 500, 
+					distance: 300} )
 			
 			//add the flock
-			 flock = new FlockFactory.generate(
+			flock = conf.FLOCK.generate(
 				{
 					sepD: 100, //try to keep this distance
 					cohD: 300, //try to stick with ppl inside this radius
 					aliD: 300,
 
-					sepW: 550,
-					cohW: 50, //0 -> 100
-					aliW: 500,
+					sepW: 55,
+					cohW: 35, //0 -> 100
+					aliW: 50,
 
-					aLimit: 0.15,
-					sLimit: 3,
+					aLimit: 0.5,
+					sLimit: 5,
 					sRatio: 1,
 
-					SIZE: 100,
+					SIZE: 50,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: true, //generate boids at random position
@@ -112,10 +121,11 @@ module.exports = {
 						render: function  () {
 							this.beginFill(gu.color());
 							this.moveTo(0,0);    
-							this.lineTo(-10 + gu.random(-5,5), 15 + gu.random(-5,5));
-							this.lineTo(10 + gu.random(-5,5), 0+ gu.random(-5,5));
-							this.lineTo(-10 + gu.random(-5,5), -15 + gu.random(-5,5));
-							this.endFill();
+							this.lineTo(-10, 15);
+					        this.lineTo(10, 0);
+					        this.lineTo(-10, -15);
+					        this.endFill();
+
 						}
 					}
 				},
@@ -166,7 +176,105 @@ module.exports = {
 			}
 
 		}
-	}
+	},
+	'SNA' : {
+		name: 'SNA',
+		description: 'Boids as snake',
+		next: '',
+		populateWorld : function (stage) {	
+			addBouncers.bind(this)(stage, { force: 5000, distance:40}, 0);
+			addMouseBouncer.bind(this)(stage, 
+					{radius:30, 
+					force_zero: 30, 
+					force: - 500, 
+					distance: 300} );
+			var loader = new PIXI.loaders.Loader(); // you can also create your own if you want
+			loader.add('snake',"../../images/snake.png");
+			loader.once('complete',go.bind(this));
+			loader.load();
+
+			function go() {  
+				var texture = PIXI.TextureCache["../../images/snake.png"]; 
+				var segLen = 10;
+				var segs = 4;
+				var hei = 1.8;
+				var _render= function _render () {
+					this.lineStyle(1,0x000000);
+					this.moveTo(this.points[0].x,this.points[0].y);
+					for (var i = 1; i < this.points.length; i++) {
+					    this.lineTo(this.points[i].x,this.points[i].y);
+					};	
+				    for (var i = 1; i < this.points.length; i++) {
+					    var x = this.points[i].x;
+					    var y = this.points[i].y;
+					    
+					    //legs
+					    var delta =  Math.sin((i * 0.5) + this.count)*10;
+					    this.moveTo(x,y);
+					    this.lineTo(x + delta, y+10);
+					    this.moveTo(x,y);
+					    this.lineTo(x - delta, y-10);
+
+					    this.beginFill(0xff0022);
+						this.drawCircle(x,y,4);
+						this.endFill();
+					    
+					};	
+					this.lineStyle(2,0x000000);
+					this.beginFill(0xf05522);
+				    this.drawCircle(0,0,6);				    
+				    this.endFill();
+
+
+					
+
+				    
+				};
+				new FlockFactory(conf.FLOCK).generate(
+				{
+
+					SIZE: 50,
+					WIDTH: this.width, //flock max x (coordinates - same as the screen)
+					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
+					RANDOM: false, //generate boids at random position
+					IMPL: IMPL1,
+					//sLimit: 1,
+					boids :{
+						render: function(){
+							this.points = [];
+							this.count = 0;
+							for (var i = 0; i < segs; i++)
+							{
+							    this.points.push(new PIXI.Point(- i * segLen, gu.random(-5,5)) );
+							}
+							_render.bind(this)();
+						},
+						animate: function () {
+							var draw = function(){
+								this.clear();
+								_render.bind(this)();
+							}
+							var updatePoints = function () {
+								this.count += 0.2;
+							    // make the snake
+							    for (var i = 0; i < this.points.length; i++) {
+							        this.points[i].y = Math.sin((i * 0.5) + this.count) * (i*hei);
+							        this.points[i].x = -(i * segLen + Math.cos((i * 0.5) + this.count));
+							    }
+							}
+							updatePoints.bind(this)();
+							draw.bind(this)();
+						}
+					}
+
+					
+				},
+				function(_flock){
+					stage.addFlock(_flock);
+				});
+			}	
+		}
+	}//SNA
 
 
 }

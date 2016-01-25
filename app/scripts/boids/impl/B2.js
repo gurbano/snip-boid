@@ -23,19 +23,11 @@ var BoidImplementation2 = function (opts) {
 		var sep = ruleSep(boid, neighbors, data);
 		var ali = ruleAli(boid, neighbors, data);
 		var attr = data.attractors ? ruleAttractor(boid,data.attractors, data) : utils.v(0,0,0);
-	/*		
-		if (boid.id == 0){
-			console.info(
-				//sep.inspect(), 
-				//coh.inspect(), 				
-				//ali.inspect(),
-				attr.inspect()
-				)
-		};
-	*/	
 		var forces = [];
 		if (sep.distanceFrom(Vector.Zero(3))>0){
 			forces.push(sep);
+			forces.push(coh.multiply(1/100));
+			forces.push(ali.multiply(1/100));
 		}else{
 			forces.push(coh);
 			forces.push(ali);
@@ -44,12 +36,7 @@ var BoidImplementation2 = function (opts) {
 		forces.push(attr);
 		applyForces(boid,
 			forces,
-			data);
-		
-		if (boid.id == 0){
-		//	console.info(boid.getPositionV().inspect(),boid.getSpeedV().inspect());
-		};
-		
+			data);		
 		
 
 	}
@@ -63,6 +50,7 @@ var BoidImplementation2 = function (opts) {
 		f = limit(f, data.aLimit, data);
 		speed = speed.add(f);
 		speed = limit(speed, data.sLimit, data);
+		//todo:maybe scale
 
 		boid.setSpeedV(speed);
 		var pos = boid.getPositionV();
@@ -75,7 +63,20 @@ var BoidImplementation2 = function (opts) {
         var sy =  v.e(2);
         var sz =  v.e(3);
 		var speedSq = v.e(1)*v.e(1) + v.e(2)*v.e(2) + v.e(3) * v.e(3);
-        if ( Math.sqrt(speedSq) > lim) {
+        if ( speedSq > lim) {
+          var ratio = lim / Math.sqrt(speedSq);
+          sx =  v.e(1) * ratio;
+          sy =  v.e(2) * ratio;
+          sz =  v.e(3) * ratio;
+        }
+        return utils.v(sx,sy,sz);
+	}
+	var scale = function (v, min, max, data) {//todo:scale???
+		var sx =  v.e(1);
+        var sy =  v.e(2);
+        var sz =  v.e(3);
+		var speedSq = v.e(1)*v.e(1) + v.e(2)*v.e(2) + v.e(3) * v.e(3);
+        if ( speedSq > lim) {
           var ratio = lim / Math.sqrt(speedSq);
           sx =  v.e(1) * ratio;
           sy =  v.e(2) * ratio;
@@ -162,18 +163,11 @@ var BoidImplementation2 = function (opts) {
 				var dist = startPos.distanceFrom(aPos);
 				//console.info(dist);
 				if (dist < distanceLimit){//distance check
-					if (dist>0){
-						var force = startPos.subtract(attractor.getPositionV()); 
-						force = force.multiply((distanceLimit - dist)/distanceLimit ); // linear decrease with distance
-						force = force.multiply(attractor.force);
-						ret = ret.add(force);
-					}else{
-						console.info('boid collision', boid.id, attractor);
-						var force = startPos.subtract(attractor.getPositionV()); 
-						//force = force.multiply(1); // linear decrease with distance
-						//force = force.multiply(attractor.force);
-						ret = ret.subtract(force);
-					}
+					var force = startPos.subtract(attractor.getPositionV()); 
+					force = force.multiply((distanceLimit - dist)/distanceLimit ); // linear decrease with distance
+					force = force.multiply((distanceLimit - dist)/distanceLimit ); // linear decrease with distance
+					force = force.multiply(attractor.force);
+					ret = ret.add(force);					
 				}
 			}	
 		}

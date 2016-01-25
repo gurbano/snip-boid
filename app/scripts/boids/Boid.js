@@ -1,6 +1,3 @@
-var IMPL = require('./impl/B2')({});
-IMPL.info();
-
 var sqrt = Math.sqrt
   , _X = 1
   , _Y = 2
@@ -28,7 +25,7 @@ var Boid = function (opts) {
 	this.opts = opts || {};
 	this.id = opts.id || 0;
 	if (!(this instanceof Boid)) return new Boid(this.opts);
-	this.implementation =  IMPL;
+	this.implementation =  opts.IMPL;
 	this.getPosition = function () {return  {x: _[px], y: _[py], z:_[pz]}};
 	this.getSpeed = function () {return  {x: _[sx], y: _[sy], z:_[sz] }};
 	this.getPositionV = function () {return  V(this.getPosition());};

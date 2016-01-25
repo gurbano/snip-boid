@@ -38,17 +38,20 @@ var BoidImplementation1 = function (opts) {
 
 	var calculateBounce = function (boid, attractors) {
 		var ret = [0,0];
+		var startPos = utils.v(boid.getPosition().x,boid.getPosition().y,0);
 		for (var i = attractors.length - 1; i >= 0; i--) {
 			var attractor = attractors[i];
-			var dx =  boid.getPosition().x - attractor.getPosition().x;
-			var dy =  boid.getPosition().y - attractor.getPosition().y;
-			var dsquare = Math.pow(attractor.getDistanceFrom(boid.getPosition().x,boid.getPosition().y),2); //(dx*dx) + (dy*dy);
-			if (dsquare < (attractor.radius  * attractor.radius) * (attractor.distance) ){
-				var ratio = Math.sqrt(dx*dx+dy*dy);
-		        ret[0] = ret[0] - (attractor.force * dx / ratio) || 0;
-		        ret[1] = ret[1] - (attractor.force * dy / ratio) || 0;
+			var aPos = utils.v(attractor.getPosition().x, attractor.getPosition().y, 0);
+			var dist = startPos.distanceFrom(aPos);
+			var distanceLimit = attractor.distance + attractor.radius;
+			if (dist < distanceLimit){//distance check
+			var force = startPos.subtract(attractor.getPositionV()); 
+				force = force.multiply((distanceLimit - dist)/distanceLimit ); // linear decrease with distance
+				force = force.multiply((distanceLimit - dist)/distanceLimit ); // linear decrease with distance
+				force = force.multiply(attractor.force);
+				ret[0] = ret[0] + force.e(1);	
+				ret[1] = ret[1] + force.e(2);	
 			}
-
 		};
 		return ret;
 	}

@@ -4,15 +4,16 @@ module.exports = {
 	FLOCK: {
 		SIZE: 100,
 		
-		sepD: 30,
-		cohD: 500,
-		aliD: 110,
+		sepD: 100, //try to keep this distance
+		cohD: 300, //try to stick with ppl inside this radius
+		aliD: 150,
 
-		sepW: 35.0,
-		cohW: 5.5,
-		aliW: 10.5,
+		sepW: 55,
+		cohW: 75, //0 -> 100
+		aliW: 50,
 
-		aLimit: 0.2,
-		sLimit: 1.5
+		aLimit: 0.5,
+		sLimit: 5,
+		sRatio: 1,
 	}
 }

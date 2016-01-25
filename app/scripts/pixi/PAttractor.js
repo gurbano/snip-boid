@@ -7,13 +7,20 @@ var PAttractor = function (opts) {
 	this.type = 'attractor';
 	if (!(this instanceof PAttractor)) return new PAttractor(opts);
 	PIXI.Graphics.call(this); //extends pixi.container
-    this.beginFill(WHITE);
-    this.drawCircle(0,0, Math.abs(opts.radius || 10) );
-    this.position.x = opts.x || 0;
-    this.position.y = opts.y || 0; 
-    this.position.z = opts.z || 0; 
-	this.endFill(); 
 
+    this.animate = opts.animate;
+    this.render = opts.render || function () {
+        this.lineStyle(2,0x000000);
+        this.beginFill(0x888888);
+        this.drawCircle(0,0, Math.abs(opts.radius || 10) );
+        this.position.x = opts.x || 0;
+        this.position.y = opts.y || 0; 
+        this.position.z = opts.z || 0; 
+        this.endFill(); 
+    };
+    this.render();
+
+    
 	this.radius = opts.radius || 10;
 	this.force = opts.force || 10;
 	this.distance = opts.distance || 1; //distance multip
@@ -32,6 +39,8 @@ var PAttractor = function (opts) {
 /*PROTO INHERITANCE*/
 PAttractor.prototype = Object.create(PIXI.Graphics.prototype);
 PAttractor.prototype.constructor = PIXI.Graphics;
-
+PAttractor.prototype.update = function () {
+    if (this.animate)this.animate();
+}
 
 module.exports = PAttractor;

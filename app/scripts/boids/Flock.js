@@ -1,8 +1,11 @@
 var Boid = require('./Boid');
+var Parallel = require('paralleljs');
 
 /*A Flock is a collection of boids*/
 var Flock = function (opts) {
 	var self = this;
+
+	this.name = opts.name || 'flock';
 
 	this.sepD = opts.sepD || 1;
 	this.cohD = opts.cohD || 1;
@@ -57,32 +60,27 @@ var Flock = function (opts) {
 
 	/*STEP - advance the simulation one step*/
 	this.step = function (data) {	
-		/*
-		var parallel = new Parallel(_b);
-
-		var _step = function  () {
+		var opts = $.extend(data, {
+			sepD: this.sepD,
+			cohD: this.cohD,
+			aliD: this.aliD,
 			
-		}
-		parallel.map(fib).then(log)
+			sepW: this.sepW,
+			cohW: this.cohW,
+			aliW: this.aliW,
 
-		*/
-		for (var i = 0; i < _b.length; i++) {
-			var boid = _b[i];
+			aLimit: this.aLimit,
+			sLimit: this.sLimit,
+			sRatio: this.sRatio
+		});
+
+		var _step = function  (boid) {
 			var neigh = _b;// getNeighbous(i, 250);
-			boid.step(neigh, $.extend(data, {
-				sepD: this.sepD,
-				cohD: this.cohD,
-				aliD: this.aliD,
-			
-				sepW: this.sepW,
-				cohW: this.cohW,
-				aliW: this.aliW,
-
-				aLimit: this.aLimit,
-				sLimit: this.sLimit,
-				sRatio: this.sRatio
-			}));
+			boid.step(neigh, opts);
 		}
+		_b.forEach(function (boid) {
+			_step(boid);
+		});
 	}	
 
 
@@ -92,29 +90,31 @@ var Flock = function (opts) {
 	/*INTERNAL*/
 	var _b = []; //internal array representation
 
+	
 	var _init = function () {
 		console.info('Creating flock', [mx,my]);
 		//_init2dMap();
 		console.info('Inited flock', [mx,my]);
+		if(opts.IMPL)opts.IMPL.info();
 		if (opts.SIZE){
 			for (var i = 0; i < opts.SIZE; i++) {
 				if (opts.RANDOM){
-					self.addBoid({
+					self.addBoid($.extend(opts,{
 						px: gu.random(0,mx), 
 						py: gu.random(0,my), 
 						pz: 0, 
 						sx: gu.randomReal(-MAX_FORCE,MAX_FORCE), 
 						sy: gu.randomReal(-MAX_FORCE,MAX_FORCE),
 						sz: gu.randomReal(-MAX_FORCE,MAX_FORCE),
-					});
+					}));
 				}else{
-					self.addBoid({
+					self.addBoid($.extend(opts,{
 						px: Math.floor(mx/2), //gu.random(0,mx), 
-						py: 0, //gu.random(0,my), 
+						py: Math.floor(my/2), //gu.random(0,my), 
 						sx: gu.randomReal(-MAX_FORCE,MAX_FORCE), 
 						sy: gu.randomReal(-MAX_FORCE,MAX_FORCE),
 						sz: gu.randomReal(-MAX_FORCE,MAX_FORCE),
-					});
+					}));
 				}
 				
 			};

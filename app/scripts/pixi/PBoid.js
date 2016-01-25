@@ -7,6 +7,7 @@ var PBoid = function (opts) {
     opts = opts || {};
 	if (!(this instanceof PBoid)) return new PBoid(opts);
 	PIXI.Graphics.call(this); //extends pixi.container    
+    this.animate = opts.animate;
     this.render = opts.render || function () {
         this.beginFill(GRAY);
         this.moveTo(0,0);    
@@ -16,6 +17,9 @@ var PBoid = function (opts) {
         this.endFill();
     };
     this.render();
+
+    
+
     this.pivot.set(0,0);
     this.position.x = 0;
     this.position.y = 0;
@@ -36,9 +40,9 @@ var Target = function () {
 Target.prototype = Object.create(PIXI.Graphics.prototype);
 Target.prototype.constructor = PIXI.Graphics;
 
-var maxz = 100; //todo: remove
-var maxscale = 3; //todo: remove
-var minscale = 0.5; //todo: remove
+var maxz = 0.1; //todo: remove
+var maxscale = 1.0; //todo: remove
+var minscale = 1.0; //todo: remove
 
 /*PROTO INHERITANCE*/
 PBoid.prototype = Object.create(PIXI.Graphics.prototype);
@@ -47,24 +51,22 @@ PBoid.prototype.update = function (boid) {
     this.position.x = boid.getPosition().x;
     this.position.y = boid.getPosition().y;
     this.position.z = boid.getPosition().z;
-    if (Math.abs(this.position.z)>maxz){
-        if (this.position.z>0)this.position.z=maxz;
-        else this.position.z=-maxz;
+    if (this.position.z){
+        if (Math.abs(this.position.z)>maxz){
+            if (this.position.z>0)this.position.z=maxz;
+            else this.position.z=-maxz;
+        }
+        //update scale to reflect z
+        var newScale = minscale +  (((this.position.z + maxz)/(maxz*2)) * (maxscale-minscale));
+        this.scale = new PIXI.Point(newScale,newScale);
     }
-    //update scale to reflect z
-    var ratio = minscale + ((this.position.z/maxz)*maxscale);
-    //this.scale = new PIXI.Point(ratio,ratio);
-
     //Update rotation of the pBoid accordin to the speed (direction) of the boid
     var rad = Math.atan2(boid.getSpeed().y ,boid.getSpeed().x); //rotation: atan2(speedy , speedx)
-    this.rotation = rad;
-    
-
-
+    this.rotation = rad;    
     this.target.position.x =  boid.getPosition().x + (100 * boid.getSpeed().x);
     this.target.position.y =  boid.getPosition().y + (100 * boid.getSpeed().y);
 
-
+    if (this.animate)this.animate();
 }
 
 
