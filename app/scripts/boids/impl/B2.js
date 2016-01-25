@@ -23,14 +23,16 @@ var BoidImplementation2 = function (opts) {
 		var sep = ruleSep(boid, neighbors, data);
 		var ali = ruleAli(boid, neighbors, data);
 		var attr = data.attractors ? ruleAttractor(boid,data.attractors, data) : utils.v(0,0,0);
+		var walls = data.walls ? ruleWalls(boid,data.walls, data) : utils.v(0,0,0);
+		//console.info(walls.inspect());
 		var forces = [];
 		if (sep.distanceFrom(Vector.Zero(3))>0){
 			forces.push(sep);
-			forces.push(coh.multiply(1/100));
-			forces.push(ali.multiply(1/100));
+			forces.push(walls);
 		}else{
 			forces.push(coh);
 			forces.push(ali);
+			forces.push(walls);
 		}
 		
 		forces.push(attr);
@@ -41,6 +43,29 @@ var BoidImplementation2 = function (opts) {
 
 	}
 	/*private*/
+	var ruleWalls = function (boid, walls, data) {
+		var ret = Vector.Zero(3);
+		var proj = Line.create([boid.getPosition().x,boid.getPosition().y],[boid.getSpeed().x,boid.getSpeed().y]);
+		for (var i = walls.length - 1; i >= 0; i--) {
+			var wall = walls[i];
+			var _t = proj.intersectionWith( wall.line);			
+			if (_t){
+				var intersection = {x: _t.e(1), y: _t.e(2)};
+				var distanceFromIntersection = utils.distToPoint(intersection, {x: boid.getPosition().x, y: boid.getPosition().y});
+				var distanceCheck = wall.radius + wall.distance;
+				if (distanceFromIntersection < distanceCheck){
+					wall.intersection = intersection;
+
+				}else{					
+					wall.intersection = undefined;
+				}				
+			}else{				
+				wall.intersection = undefined;
+			}
+
+		}
+		return ret;
+	}
 	var applyForces = function (boid, forces, data) {
 		var speed = boid.getSpeedV(); //residual speed
 		var f = Vector.create([0,0,0]);

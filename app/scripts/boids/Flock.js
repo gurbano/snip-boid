@@ -1,5 +1,5 @@
 var Boid = require('./Boid');
-var Parallel = require('paralleljs');
+//var Parallel = require('paralleljs');
 
 /*A Flock is a collection of boids*/
 var Flock = function (opts) {

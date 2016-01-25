@@ -1,4 +1,5 @@
 var PAttractor = require('../pixi/PAttractor');
+var PWall = require('../pixi/PWall');
 var BoidGenerator = require('../pixi/BoidGenerator');
 var FlockFactory = require('../boids/FlockFactory');
 var conf = require('../configurations/experiment1');
@@ -182,10 +183,11 @@ module.exports = {
 		description: 'Boids as snake',
 		next: '',
 		populateWorld : function (stage) {	
+			addWalls.bind(this)(stage);
 			addBouncers.bind(this)(stage, { force: 5000, distance:40}, 0);
 			addMouseBouncer.bind(this)(stage, 
 					{radius:30, 
-					force_zero: 30, 
+					force_zero: -0, 
 					force: - 500, 
 					distance: 300} );
 			var loader = new PIXI.loaders.Loader(); // you can also create your own if you want
@@ -224,8 +226,6 @@ module.exports = {
 					this.beginFill(0xf05522);
 				    this.drawCircle(0,0,6);				    
 				    this.endFill();
-
-
 					
 
 				    
@@ -233,11 +233,11 @@ module.exports = {
 				new FlockFactory(conf.FLOCK).generate(
 				{
 
-					SIZE: 50,
+					SIZE: 1,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: false, //generate boids at random position
-					IMPL: IMPL1,
+					IMPL: IMPL2,
 					//sLimit: 1,
 					boids :{
 						render: function(){
@@ -284,7 +284,51 @@ module.exports = {
 
 /*UTILS*/
 
-var pad = 100;
+var pad = 50;
+var addWalls = function(stage, cb){
+	var left = {start: {x: pad,y: pad },end: {x:  pad, y: this.height - pad }, force: 200, distance:100};
+	var right = {start: {x: this.width - pad, y: pad },end: {x: this.width - pad, y: this.height -pad }, force: 200, distance:100};
+	var up = {start: {x: pad,y: pad },end: {x: this.width - pad, y: pad }, force: 200, distance:100};
+	var down ={start: {x: pad,y: this.height - pad },end: {x: this.width - pad, y: this.height - pad }, force: 200, distance:100};
+	var _anim = function () {
+		this.clear();
+		if (this.intersection){
+			this.lineStyle(2,0x000000);
+			this.beginFill(0xf05522);
+		    this.drawCircle(this.intersection.x,this.intersection.y,6);				    
+		    this.endFill();
+		    if (this.norm){
+		    	debugger;
+				this.moveTo(this.intersection.x,this.intersection.y);
+				this.lineTo(this.intersection.x, this.norm.Y(this.intersection.x));
+			}
+		}
+
+		this.render();
+	};
+	stage.addEntity(
+		new PWall(left), 
+		function (obj) {	
+			obj.animate = _anim;
+	});
+	stage.addEntity(
+		new PWall(right), 
+		function (obj) {	
+			obj.animate = _anim;
+	});
+	stage.addEntity(
+		new PWall(up), 
+		function (obj) {	
+			obj.animate = _anim;
+	});
+	stage.addEntity(
+		new PWall(down), 
+		function (obj) {	
+			obj.animate = _anim;
+	});
+
+}
+
 var addBouncers = function(stage, options, number, cb){
 	for (var i = 0; i < number; i++) {
 		var rx = gu.random(pad, this.width - pad);
@@ -316,39 +360,3 @@ var addMouseBouncer = function (stage, options) {
 		});	
 }
 
-
-/*
-		var walls = [];
-		walls.push(stage.addEntity(
-					new PWall({start: {x: pad,y: pad },end: {x: 5*pad,y: this.height - pad }, force: 200, distance:100}), 
-					function (obj) {
-						obj.update = function () {
-
-						}
-				}));
-		
-		walls.push(stage.addEntity(
-					new PWall({start: {x: this.width - pad, y: pad },end: {x: this.width - pad, y: this.height -pad }, force: 100, distance:100}), 
-					function (obj) {
-						obj.update = function () {
-
-						}
-				}));
-
-
-
-		walls.push(stage.addEntity(
-					new PWall({start: {x: pad,y: pad },end: {x: this.width - pad, y: pad }, force: 200, distance:100}), 
-					function (obj) {
-						obj.update = function () {
-
-						}
-				}));
-		walls.push(stage.addEntity(
-					new PWall({start: {x: pad,y: this.height - pad },end: {x: this.width - pad, y: this.height - pad }, force: 100, distance:100}), 
-					function (obj) {
-						obj.update = function () {
-
-						}
-				}));
-*/

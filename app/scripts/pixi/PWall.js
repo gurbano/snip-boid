@@ -18,14 +18,22 @@ var PWall = function (opts) {
 	this.isVertical = Math.abs(this.end.x - this.start.x) < 0.00001 ;	
 	this.isHorizontal = Math.abs(this.end.y - this.start.y) < 0.00001 ;
 	
+	this.line = Line.create([opts.start.x,opts.start.y], [opts.end.x,opts.end.y]);
+
 	this.Y = function (x) {
 		return this.M * x;
 	};
 
-	this.lineStyle(3, BLACK);    
-    this.moveTo(opts.start.x,opts.start.y);
-    this.lineTo(opts.end.x,opts.end.y);
-	this.endFill(); 
+	this.animate = opts.animate;
+    this.render = opts.render || function () {
+    	this.beginFill();
+        this.lineStyle(3, BLACK);    
+	    this.moveTo(opts.start.x,opts.start.y);
+	    this.lineTo(opts.end.x,opts.end.y);
+		this.endFill(); 
+    };
+    this.render();
+	
 
 
 	this.force = opts.force || 10;
@@ -55,6 +63,9 @@ var PWall = function (opts) {
 /*PROTO INHERITANCE*/
 PWall.prototype = Object.create(PIXI.Graphics.prototype);
 PWall.prototype.constructor = PIXI.Graphics;
+PWall.prototype.update = function (boid) {
+    if (this.animate)this.animate();
+}
 
 
 module.exports = PWall;

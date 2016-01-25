@@ -58,7 +58,12 @@ var Stage = function (opts) {
 			if (goal.update){
 				goal.update();
 			}
-		});				
+		});		
+		walls.forEach(function(wall){
+			if (wall.update){
+				wall.update();
+			}
+		});			
 
 		//Update flocks
 		for (var i = 0; i < flocks.length; i++) {
