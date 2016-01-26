@@ -24,8 +24,7 @@ var PBoid = function (opts) {
     this.position.x = 0;
     this.position.y = 0;
     this.position.z = 0;
-    this.target = new Target();
-    this.target.visible = false;
+    
     return this;		
 }
 
@@ -63,10 +62,8 @@ PBoid.prototype.update = function (boid) {
     //Update rotation of the pBoid accordin to the speed (direction) of the boid
     var rad = Math.atan2(boid.getSpeed().y ,boid.getSpeed().x); //rotation: atan2(speedy , speedx)
     this.rotation = rad;    
-    this.target.position.x =  boid.getPosition().x + (100 * boid.getSpeed().x);
-    this.target.position.y =  boid.getPosition().y + (100 * boid.getSpeed().y);
-
-    if (this.animate)this.animate();
+   
+    if (this.animate)this.animate(boid);
 }
 
 

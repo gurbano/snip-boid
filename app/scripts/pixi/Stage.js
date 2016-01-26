@@ -41,7 +41,6 @@ var Stage = function (opts) {
 			if (!p[i]){
 				p.push(new PBoid(f.opts.boids || {}));
 				self.addChild(p[i]);
-				self.addChild(p[i].target);
 			}			
 	        p[i].update(boids[i]);
 		};

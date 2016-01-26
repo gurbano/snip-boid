@@ -27,15 +27,16 @@ var BoidImplementation2 = function (opts) {
 		//console.info(walls.inspect());
 		var forces = [];
 		if (sep.distanceFrom(Vector.Zero(3))>0){
-			forces.push(sep);
-			forces.push(walls);
+			forces.push(sep);		
 		}else{
 			forces.push(coh);
-			forces.push(ali);
-			forces.push(walls);
+			forces.push(ali);		
 		}
-		
+		forces.push(walls);		
 		forces.push(attr);
+
+
+
 		applyForces(boid,
 			forces,
 			data);		
@@ -44,20 +45,29 @@ var BoidImplementation2 = function (opts) {
 	}
 	/*private*/
 	var ruleWalls = function (boid, walls, data) {
+		var startPos = utils.v(boid.getPosition().x,boid.getPosition().y,0);
 		var ret = Vector.Zero(3);
-		var proj = Line.create([boid.getPosition().x,boid.getPosition().y],[boid.getSpeed().x,boid.getSpeed().y]);
+		var proj = utils.getLineEq(
+						{x: boid.getPosition().x, y: boid.getPosition().y},
+						{x: boid.getPosition().x + boid.getSpeed().x, y: boid.getPosition().y + boid.getSpeed().y},
+			);
 		for (var i = walls.length - 1; i >= 0; i--) {
 			var wall = walls[i];
-			var _t = proj.intersectionWith( wall.line);			
-			if (_t){
-				var intersection = {x: _t.e(1), y: _t.e(2)};
+			var intersection = utils.lineInterception(proj, wall.getLineEq());
+			if (intersection){
+				wall.intersection = intersection;
 				var distanceFromIntersection = utils.distToPoint(intersection, {x: boid.getPosition().x, y: boid.getPosition().y});
 				var distanceCheck = wall.radius + wall.distance;
 				if (distanceFromIntersection < distanceCheck){
 					wall.intersection = intersection;
-
+					//var dx = boid.getPosition().x - wall.intersection.x; 
+					//var dy = boid.getPosition().y - wall.intersection.y; 
+					var force = Vector.Zero(3);
+					
+					ret = ret.add(force);						
 				}else{					
 					wall.intersection = undefined;
+					wall.norm = undefined;
 				}				
 			}else{				
 				wall.intersection = undefined;

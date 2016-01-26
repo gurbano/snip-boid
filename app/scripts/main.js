@@ -45,8 +45,8 @@ var experiment = new function () {
 		//2- initialize world
 		//load.bind(this)(stages['EXP1'],
 		//load.bind(this)(stages['GEN1'],
-		load.bind(this)(stages['SNA'],
-		//load.bind(this)(stages['EXP2'], //<---------------------------- stage loading
+		//load.bind(this)(stages['SNA'],
+		load.bind(this)(stages['EXP2'], //<---------------------------- stage loading
 			function (stage, aStage) {
 				console.info(stage, aStage);
 				//3- initialize simulation (boids)

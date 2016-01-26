@@ -41,6 +41,7 @@ var PWall = function (opts) {
 	this.radius = opts.radius || 10;
 
     this.getPosition = function () {return this.position};
+    this.getPositionV = function () {return gu.v(this.position.x, this.position.y, this.position.z)};
     this.getDistanceFrom = function (x,y) {
     	return gu.distToSegment({x: x, y:y},this.start, this.end);
     }

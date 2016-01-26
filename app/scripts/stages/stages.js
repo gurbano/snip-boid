@@ -30,7 +30,7 @@ module.exports = {
 					SIZE: 100,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
-					RANDOM: true, //generate boids at random position
+					RANDOM: false, //generate boids at random position
 					IMPL: IMPL1,
 					boids :{
 						render: function  () {
@@ -52,7 +52,7 @@ module.exports = {
 					SIZE: 100,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
-					RANDOM: true, //generate boids at random position
+					RANDOM: false, //generate boids at random position
 					IMPL: IMPL2,
 					boids :{
 						render: function  () {
@@ -85,7 +85,7 @@ module.exports = {
 		}
 	},
 	'GEN1': {
-		name: 'GEN1',
+		name: '',
 		description: 'Boids and a bunch of obstacles',
 		next: '',
 		populateWorld : function (stage) {
@@ -180,7 +180,7 @@ module.exports = {
 	},
 	'SNA' : {
 		name: 'SNA',
-		description: 'Boids as snake',
+		description: 'Boids as ANT',
 		next: '',
 		populateWorld : function (stage) {	
 			addWalls.bind(this)(stage);
@@ -200,7 +200,7 @@ module.exports = {
 				var segLen = 10;
 				var segs = 4;
 				var hei = 1.8;
-				var _render= function _render () {
+				var _render= function _render (boid) {
 					this.lineStyle(1,0x000000);
 					this.moveTo(this.points[0].x,this.points[0].y);
 					for (var i = 1; i < this.points.length; i++) {
@@ -208,8 +208,7 @@ module.exports = {
 					};	
 				    for (var i = 1; i < this.points.length; i++) {
 					    var x = this.points[i].x;
-					    var y = this.points[i].y;
-					    
+					    var y = this.points[i].y;					    
 					    //legs
 					    var delta =  Math.sin((i * 0.5) + this.count)*10;
 					    this.moveTo(x,y);
@@ -228,16 +227,21 @@ module.exports = {
 				    this.endFill();
 					
 
-				    
+				    if (boid){
+    				    this.lineStyle(1,0x0000ff);
+    				    this.moveTo(0,0);
+    				    var targ = gu.v(boid.getSpeed().x ,boid.getSpeed().y ,0).multiply(5);
+    					this.lineTo(targ.e(1), targ.e(2));
+    				}
 				};
 				new FlockFactory(conf.FLOCK).generate(
 				{
 
-					SIZE: 1,
+					SIZE: 15,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: false, //generate boids at random position
-					IMPL: IMPL2,
+					IMPL: IMPL1	,
 					//sLimit: 1,
 					boids :{
 						render: function(){
@@ -249,10 +253,10 @@ module.exports = {
 							}
 							_render.bind(this)();
 						},
-						animate: function () {
+						animate: function (boid) {
 							var draw = function(){
 								this.clear();
-								_render.bind(this)();
+								_render.bind(this)(boid);
 							}
 							var updatePoints = function () {
 								this.count += 0.2;
