@@ -60,10 +60,10 @@ var BoidImplementation2 = function (opts) {
 				var distanceCheck = wall.radius + wall.distance;
 				if (distanceFromIntersection < distanceCheck){
 					wall.intersection = intersection;
-					//var dx = boid.getPosition().x - wall.intersection.x; 
-					//var dy = boid.getPosition().y - wall.intersection.y; 
-					var force = Vector.Zero(3);
-					
+					var force = startPos.subtract(utils.v(intersection.x, intersection.y, 0)); 
+					force = force.multiply((distanceCheck - distanceFromIntersection)/distanceCheck ); // linear decrease with distance
+					force = force.multiply((distanceCheck - distanceFromIntersection)/distanceCheck ); // linear decrease with distance
+					force = force.multiply(wall.force);					
 					ret = ret.add(force);						
 				}else{					
 					wall.intersection = undefined;

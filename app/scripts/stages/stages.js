@@ -17,7 +17,9 @@ module.exports = {
 		name: 'EXP2',
 		description: 'Random 100 boids',
 		next: 'EXP1',
+
 		populateWorld : function (stage) {
+			addWalls.bind(this)(stage);
 			addMouseBouncer.bind(this)(stage, 
 					{radius:30, 
 					force_zero: 0, 
