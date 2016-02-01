@@ -19,6 +19,7 @@ var PAttractor = function (opts) {
         this.endFill(); 
     };
     this.render();
+    
 
     
 	this.radius = opts.radius || 10;
@@ -40,7 +41,8 @@ var PAttractor = function (opts) {
 PAttractor.prototype = Object.create(PIXI.Graphics.prototype);
 PAttractor.prototype.constructor = PIXI.Graphics;
 PAttractor.prototype.update = function () {
-    if (this.animate)this.animate();
+    //this.clear();
+    //this.animate();
 }
 
 module.exports = PAttractor;

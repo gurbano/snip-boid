@@ -21,13 +21,13 @@ module.exports = {
 			addMouseBouncer.bind(this)(stage, 
 					{radius:30, 
 					force_zero: 0, 
-					force: 500, 
-					distance: 300} );
-			addBouncers.bind(this)(stage, { force: 5000, distance:40}, 50);
+					force: -100, 
+					distance: 3000} );
+			addBouncers.bind(this)(stage, { force: 1500, distance:60}, 50);
 			//add the flock
 			var flock = new FlockFactory({}).generate(
 				$.extend(conf.FLOCK,{
-					SIZE: 100,
+					SIZE: 10,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: false, //generate boids at random position
@@ -49,7 +49,7 @@ module.exports = {
 			);
 			var flock = new FlockFactory({}).generate(
 				$.extend(conf.FLOCK,{
-					SIZE: 100,
+					SIZE: 10,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: false, //generate boids at random position
@@ -341,13 +341,14 @@ var addBouncers = function(stage, options, number, cb){
 		stage.addEntity(
 			new PAttractor($.extend(options,{radius:gu.random(5,10), x: rx, y:ry}) ), 
 			function (obj) {
-				obj.update = function () {
-					if (cb)cb();
-				}
+				if (cb)cb();
 			}
 		);					
 	};	
 };
+
+
+
 var addMouseBouncer = function (stage, options) {
 	stage.addEntity(
 		new PAttractor(options), 
