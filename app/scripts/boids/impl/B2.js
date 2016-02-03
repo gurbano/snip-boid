@@ -57,18 +57,20 @@ var BoidImplementation2 = function (opts) {
 			if (intersection){
 				wall.intersection = intersection;
 				var distanceFromIntersection = utils.distToPoint(intersection, {x: boid.getPosition().x, y: boid.getPosition().y});
-				var distanceCheck = wall.radius + wall.distance;
-				if (distanceFromIntersection < distanceCheck){
+				var distanceCheck = (wall.radius*wall.radius) + (wall.distance*wall.distance);
+				if ((distanceFromIntersection*distanceFromIntersection) < distanceCheck){
 					wall.intersection = intersection;
 					var force = startPos.subtract(utils.v(intersection.x, intersection.y, 0)); 
 					force = force.multiply((distanceCheck - distanceFromIntersection)/distanceCheck ); // linear decrease with distance
-					force = force.multiply((distanceCheck - distanceFromIntersection)/distanceCheck ); // linear decrease with distance
-					force = force.multiply(wall.force);					
+//					force = force.multiply((distanceCheck - distanceFromIntersection)/distanceCheck ); // linear decrease with distance
+					force = force.multiply(wall.force);			
+
+
 					ret = ret.add(force);						
 				}else{					
 					wall.intersection = undefined;
 					wall.norm = undefined;
-				}				
+				}		
 			}else{				
 				wall.intersection = undefined;
 			}

@@ -6,6 +6,7 @@ var FlockFactory = function (opts) {
 	if (!(this instanceof FlockFactory)) return new FlockFactory(opts);
 	this.name = 'FlockFactory';
 	this.description = 'create a flock'
+	
 	this.info = function () {
 		console.info(this);
 	}
@@ -19,7 +20,6 @@ var FlockFactory = function (opts) {
 	}
 	return this;
 }
-
 
 
 

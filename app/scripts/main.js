@@ -10,6 +10,7 @@ var conf = require('./configurations/experiment1');
 var raf = require('raf');
 var Stage = require('./pixi/Stage');
 var stages = require('./stages/stages');
+var cities = require('./stages/cities');
 
 
 var experiment = new function () {
@@ -46,12 +47,11 @@ var experiment = new function () {
 		//load.bind(this)(stages['EXP1'],
 		//load.bind(this)(stages['GEN1'],
 		//load.bind(this)(stages['SNA'],
-		load.bind(this)(stages['EXP2'], //<---------------------------- stage loading
+		//load.bind(this)(stages['EXP2'], //<---------------------------- stage loading
+		load.bind(this)(cities['CITY1'], //<---------------------------- stage loading
 			function (stage, aStage) {
-				console.info(stage, aStage);
-				//3- initialize simulation (boids)
-				flock = stage.getFlocks()[0];			
-				//4- start				
+				console.info(stage, aStage);				
+				flock = stage.getFlocks()[0];							
 				animate();
 		});			
 	}
@@ -74,9 +74,10 @@ var experiment = new function () {
 	}
 }();
 
-
 experiment.info();
 experiment.start();
+
+
 
 var mousedown = false;
 $(window).keypress(function (e) {

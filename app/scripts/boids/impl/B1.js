@@ -72,8 +72,6 @@ var BoidImplementation1 = function (opts) {
 					var dy =  boid.getPosition().y - intersection.y;
 			        ret[1] = ret[1] + (attractor.force * dx / Math.abs(distanceFromIntersection)) || 0;
 			        ret[0] = ret[0] - (attractor.force * dy / Math.abs(distanceFromIntersection)) || 0;	
-
-		        	
 		        	console.info(dx, dy, ret);
 				}
 			}else{

@@ -15,10 +15,9 @@ module.exports = {
 	},
 	'EXP2' : {
 		name: 'EXP2',
-		description: 'Random 100 boids',
-		next: 'EXP1',
-
-		populateWorld : function (stage) {
+		description: 'two flocks implementations, walls around, 50 bouncers, ',
+		next: 'GEN1',
+		populateWorld : function (stage) {			
 			addWalls.bind(this)(stage);
 			addMouseBouncer.bind(this)(stage, 
 					{radius:30, 
@@ -102,7 +101,7 @@ module.exports = {
 					distance: 300} )
 			
 			//add the flock
-			flock = conf.FLOCK.generate(
+			flock = new FlockFactory(conf.FLOCK).generate(
 				{
 					sepD: 100, //try to keep this distance
 					cohD: 300, //try to stick with ppl inside this radius
@@ -115,6 +114,7 @@ module.exports = {
 					aLimit: 0.5,
 					sLimit: 5,
 					sRatio: 1,
+					IMPL: IMPL2,
 
 					SIZE: 50,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
