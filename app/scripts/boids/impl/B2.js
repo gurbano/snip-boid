@@ -36,7 +36,6 @@ var BoidImplementation2 = function (opts) {
 		forces.push(attr);
 
 
-
 		applyForces(boid,
 			forces,
 			data);		

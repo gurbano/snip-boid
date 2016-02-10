@@ -19,6 +19,8 @@ var arr = function (obj) {
 var V = function (obj) {
 	return $V(arr(obj));
 }
+
+
 /*the single boid, part of the flock*/
 var Boid = function (opts) {
 	var self = this;
@@ -36,14 +38,10 @@ var Boid = function (opts) {
 	this.setPositionV = function (pos) { _[px] = pos.e(_X); _[py] = pos.e(_Y); _[pz] = pos.e(_Z)};
 	this.setSpeedV = function (spd) { _[sx] = spd.e(_X); _[sy] = spd.e(_Y); _[sz] = spd.e(_Z)};
 	
-
-
-
 	this.step = function (neighb, data) {
 		//apply the rules
 		this.implementation.step(this, neighb, data || {});
 	}
-
 	/*INTERNAL*/
 	var _ = [	opts.px || 0,
 				opts.py || 0,

@@ -28,4 +28,16 @@ StageFactory.prototype.addMouseBouncer = function (stage, options) {
 					}
 		});	
 }
+StageFactory.prototype.addBouncers = function(stage, width, height, options, number){
+	for (var i = 0; i < number; i++) {
+		var rx = gu.random(10, width - (10));
+		var ry = gu.random(10, height - (10));			
+		stage.addEntity(
+			new PAttractor($.extend(options,{radius:gu.random(5,10), x: rx, y:ry}) ), 
+			function (obj) {
+				
+			}
+		);					
+	};	
+};
 module.exports = StageFactory;

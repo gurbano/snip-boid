@@ -24,6 +24,9 @@ var Flock = function (opts) {
 	opts = opts || {};
 	if (!(this instanceof Flock)) return new Flock(opts);	
 
+	/*INTERNAL*/
+	var _b = []; //array of boids
+
 	/*DEFAULT VALUES*/
 	var mx = opts.WIDTH || 2000; 
 	var my = opts.HEIGHT || 2000; // max width, max height
@@ -73,22 +76,11 @@ var Flock = function (opts) {
 			sLimit: this.sLimit,
 			sRatio: this.sRatio
 		});
-
-		var _step = function  (boid) {
-			var neigh = _b;// getNeighbous(i, 250);
-			boid.step(neigh, opts);
-		}
 		_b.forEach(function (boid) {
-			_step(boid);
+			boid.step(_b, opts);
 		});
 	}	
-
-
-
-
 	
-	/*INTERNAL*/
-	var _b = []; //internal array representation
 
 	
 	var _init = function () {
