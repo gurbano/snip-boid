@@ -27,14 +27,15 @@ module.exports = {
 			//Generate the flock
 			FlockFactory({}).generate(
 				$.extend(conf.FLOCK,{
-					SIZE: 100,
+					SIZE: 2,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: false, //generate boids at random position
 					IMPL: IMPL3,
 					boids :{
 						render: function  () {
-							this.beginFill(gu.color());
+							//this.beginFill(gu.color());
+							this.beginFill(0x000000);
 							this.moveTo(0,0);    
 							this.lineTo(-10, 15);
 					        this.lineTo(10, 0);
