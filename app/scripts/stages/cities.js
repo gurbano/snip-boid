@@ -30,7 +30,7 @@ module.exports = {
 					SIZE: 2,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
-					RANDOM: false, //generate boids at random position
+					RANDOM: true, //generate boids at random position
 					IMPL: IMPL3,
 					boids :{
 						render: function  () {
