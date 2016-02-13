@@ -9,7 +9,8 @@ var sqrt = Math.sqrt
   , sy = 4
   , sz = 5
   , fx = 6
-  , fy = 7;
+  , fy = 7
+  , fz = 8;
 
  /*Utils - to sylvester vectors - http://sylvester.jcoglan.com/api/vector.html#create*/
 var arr = function (obj) {
@@ -30,11 +31,13 @@ var Boid = function (opts) {
 	this.implementation =  opts.IMPL;
 	this.getPosition = function () {return  {x: _[px], y: _[py], z:_[pz]}};
 	this.getSpeed = function () {return  {x: _[sx], y: _[sy], z:_[sz] }};
+	this.getAcc = function () {return  {x: _[fx], y: _[fy], z:_[fz] }};
 	this.getPositionV = function () {return  V(this.getPosition());};
 	this.getSpeedV = function () {return  V(this.getSpeed());};
 	
 	this.setPosition = function (x,y,z) { _[px] = x; _[py] = y; _[pz] = z};
 	this.setSpeed = function (x,y,z) { _[sx] = x; _[sy] = y; _[sz] = z};
+	this.setAcc = function (x,y,z) { _[fx] = x; _[fy] = y; _[fz] = z};
 	this.setPositionV = function (pos) { _[px] = pos.e(_X); _[py] = pos.e(_Y); _[pz] = pos.e(_Z)};
 	this.setSpeedV = function (spd) { _[sx] = spd.e(_X); _[sy] = spd.e(_Y); _[sz] = spd.e(_Z)};
 	

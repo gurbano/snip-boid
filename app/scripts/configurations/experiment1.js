@@ -1,4 +1,5 @@
 module.exports = {
+	simRatio: 3,
 	BACKGROUND : 0x000000,
 	FACTORY: {},
 	FLOCK: {

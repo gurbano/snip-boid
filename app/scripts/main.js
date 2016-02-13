@@ -58,7 +58,7 @@ var experiment = new function () {
 	}
 
 
-
+	var count = 0;
 	/*private//internal*/
 	function load (aStage, callback) {
 		stage = new Stage();
@@ -69,7 +69,10 @@ var experiment = new function () {
 	function animate(time) { 	
 		stats.begin();
 		var time = raf(animate);
-		if (self.running)stage.update(time); //update the world - update all the other entities
+		if (self.running){
+			if (count++ % (conf.simRatio || 1) == 0)
+			stage.update(time);
+		} //update the world - update all the other entities
 		renderer.render(stage); //render
 		stats.end();
 	}
@@ -78,6 +81,8 @@ var experiment = new function () {
 experiment.info();
 experiment.start();
 
+var gui = new dat.GUI();				
+gui.add(conf, 'simRatio',1,30).step(1);
 
 
 var mousedown = false;

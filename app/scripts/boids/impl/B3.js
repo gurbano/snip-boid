@@ -28,7 +28,7 @@ BoidImplementation3.prototype.step = function(boid, boids, data) {
 	/*attractors/bouncers*/
 	var attractors = this.attractor(boid, data.attractors || []);
 	acc.add( attractors );	
-	/*attractors/bouncers*/
+	/*goals*/
 	var goals = this.goal(boid, data.goals || []);
 	acc.add( goals );	
 
@@ -41,6 +41,7 @@ BoidImplementation3.prototype.step = function(boid, boids, data) {
     loc = loc.clone().add(vel);
     boid.setPosition(loc.x, loc.y);
     boid.setSpeed(vel.x, vel.y);
+    boid.setAcc(acc.x, acc.y);
 };
 
 BoidImplementation3.prototype.attractor = function (boid, attractors) {

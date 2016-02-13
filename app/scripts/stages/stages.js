@@ -9,6 +9,7 @@ var IMPL1 = require('../boids/impl/B1')({});
 var IMPL2 = require('../boids/impl/B2')({});
 var IMPL3 = require('../boids/impl/B3')({});
 
+var Victor = require('victor'); //http://victorjs.org/
 module.exports = {
 	'LOADING' : {
 		name: 'LOADING',
@@ -81,29 +82,27 @@ module.exports = {
 			//addWalls.bind(this)(stage);
 			addWalls.bind(this)(stage);
 			addRandomWalls.bind(this)(stage,{}, 10);
-			/*addMouseBouncer.bind(this)(stage, 
+			addMouseBouncer.bind(this)(stage, 
 					{radius:30, 
 					force_zero: 0, 
 					force: -100, 
-					distance: 3000} );*/
+					distance: 3000} );
 			//add the flock
+			stage.addEntity(
+				new PGoal($.extend({},{force:-10, radius:30, x: 40, y: 80}) ), 
+				function (obj) {
+					
+				}
+			);	
 			var flock = new FlockFactory({}).generate(
 				$.extend(conf.FLOCK,{
-					SIZE: 0 ,
+					SIZE: 1 ,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: false, //generate boids at random position
 					IMPL: IMPL3,
-					boids :{
-						render: function  () {
-							this.beginFill(gu.color());
-							this.moveTo(0,0);    
-							this.lineTo(-10, 15);
-					        this.lineTo(10, 0);
-					        this.lineTo(-10, -15);
-					        this.endFill();
-
-						}
+					boids :{						
+						
 					}
 				}),
 				function(_flock){
@@ -116,7 +115,7 @@ module.exports = {
 					x: this.width/2,//gu.random(pad, this.width - pad),
 					y: this.height/2,//gu.random(pad, this.height - pad),
 					N: function(){return 1;}, //how many boids are generated per click
-					max: function(){return 10;},
+					max: function(){return 0;},
 					flock: function(){return flock;}, //target flock ,
 					delay: function(){return 100 * gu.random(1,10);}
 				}
@@ -187,14 +186,13 @@ module.exports = {
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: true, //generate boids at random position
 					boids :{
-						render: function  () {
+						render: function _render () {
 							this.beginFill(gu.color());
 							this.moveTo(0,0);    
 							this.lineTo(-10, 15);
 					        this.lineTo(10, 0);
 					        this.lineTo(-10, -15);
 					        this.endFill();
-
 						}
 					}
 				},
@@ -309,7 +307,7 @@ module.exports = {
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: false, //generate boids at random position
-					IMPL: IMPL1	,
+					IMPL: IMPL3	,
 					//sLimit: 1,
 					boids :{
 						render: function(){
