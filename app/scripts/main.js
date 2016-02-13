@@ -48,7 +48,8 @@ var experiment = new function () {
 		//load.bind(this)(stages['GEN1'],
 		//load.bind(this)(stages['SNA'],
 		//load.bind(this)(stages['EXP2'], //<---------------------------- stage loading
-		load.bind(this)(cities['CITY1'], //<---------------------------- stage loading
+		load.bind(this)(stages['WALL1'],
+		//load.bind(this)(cities['CITY1'], //<---------------------------- stage loading
 			function (stage, aStage) {
 				console.info(stage, aStage);				
 				flock = stage.getFlocks()[0];							

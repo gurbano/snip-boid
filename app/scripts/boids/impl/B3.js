@@ -13,74 +13,110 @@ BoidImplementation3.prototype.info = function() {
 	console.info(this);
 	console.info('Info', 0.1);
 };
-BoidImplementation3.prototype.step = function(boid, neighbors, data) {
-	/*calculate sep, coh and ali*/
-	var newTargetVec = this.flockForce(boid,neighbors,data);
-	var force = this.steerTo(boid, newTargetVec, data);
-	this.applyForces(boid, force, data);
+
+
+BoidImplementation3.prototype.step = function(boid, boids, data) {
+	var loc = V(boid); //position
+	var vel = VV(boid.getSpeed()); //velocity
+	var acc = VVV(0,0);
+	var maxspeed = data.sLimit;
+	var maxforce = data.aLimit;
+	
+	/*Separation, Cohesion, Alignement*/
+	var sca = this.sca(boid, boids, data);	
+	acc.add(sca);	
+	/*attractors/bouncers*/
+	var attractors = this.attractor(boid, data.attractors || []);
+	acc.add( attractors );	
+	/*attractors/bouncers*/
+	var goals = this.goal(boid, data.goals || []);
+	acc.add( goals );	
+
+
+	acc = limit(acc, maxforce);
+
+
+	vel = vel.clone().add(acc);
+    vel = limit(vel, maxspeed);
+    loc = loc.clone().add(vel);
+    boid.setPosition(loc.x, loc.y);
+    boid.setSpeed(vel.x, vel.y);
 };
 
-BoidImplementation3.prototype.steerTo = function(boid, targetVec, data) {
+BoidImplementation3.prototype.attractor = function (boid, attractors) {
 	var ret = VVV(0,0);
-   	var desiredVelocity = targetVec.clone().subtract(V(boid));
-    var force = desiredVelocity.subtract(VV(boid.getSpeed()));
-    return force.normalize().multiply(VVV(data.aLimit,data.aLimit));;
-};
+	var startPos = utils.v(boid.getPosition().x,boid.getPosition().y,0);
+	var loc = V(boid);
+	for (var i = attractors.length - 1; i >= 0; i--) {
+		var attractor = attractors[i];
+		var aPos = utils.v(attractor.getPosition().x, attractor.getPosition().y, 0);
+		var dist = startPos.distanceFrom(aPos);
+		var otherloc = V(attractor);
+		var distance = V(boid).subtract(otherloc).magnitude();
+		var distanceLimit = attractor.distance + attractor.radius;
+		if (distance > attractor.radius  && distance < distanceLimit){//distance check
+			var force = loc.clone().subtract(otherloc);
+			force.divide(VVV(distance - attractor.radius,distance - attractor.radius));
+			force = force.multiply(VVV(attractor.force,attractor.force));
+			ret.add(force);
+		}else if(distance>0 && distance <= attractor.radius){
+			var force = loc.clone().subtract(otherloc);
+			force = force.multiply(VVV(attractor.force * 5,attractor.force * 5));
+			ret.add(force);
+		}	
+	};
+	return ret;
+}
 
-BoidImplementation3.prototype.flockForce = function(boid, neighbors, data) {
-	var separation = VVV(0,0); 
-	var cohesion = VVV(0,0); 
-	var alignement = VVV(0,0); 
+BoidImplementation3.prototype.goal = function (boid, attractors) {
+	var ret = VVV(0,0);
+	var startPos = utils.v(boid.getPosition().x,boid.getPosition().y,0);
+	var loc = V(boid);
+	for (var i = attractors.length - 1; i >= 0; i--) {
+		var attractor = attractors[i];
+		var aPos = utils.v(attractor.getPosition().x, attractor.getPosition().y, 0);
+		var dist = startPos.distanceFrom(aPos);
+		var otherloc = V(attractor);
+		var distance = V(boid).subtract(otherloc).magnitude();
+		var distanceLimit = attractor.distance + attractor.radius;		
+		var force = loc.clone().subtract(otherloc);
+		force.divide(VVV(distance - attractor.radius,distance - attractor.radius));
+		force = force.multiply(VVV(attractor.force,attractor.force));
+		ret.add(force.normalize());
+	};
+	return ret;
+}
 
-	var sepW = VVV(data.sepW,data.sepW);
-	var cohW = VVV(data.cohW,data.cohW);
-	var aliW = VVV(data.aliW,data.aliW);
-
-
-	var pos = V(boid);
-	var spd = VV(boid.getSpeed());
-	for (var i = neighbors.length - 1; i >= 0; i--) {
-		var other = neighbors[i];			
+BoidImplementation3.prototype.sca = function (boid, boids, data) {
+	var separation = VVV(0,0) ;
+	var cohesion = VVV(0,0) ;
+	var alignement = VVV(0,0) ;
+	for (var i = boids.length - 1; i >= 0; i--) {
+		var other = boids[i];
 		if (other.id != boid.id){
-			var distance = Math.sqrt(pos.distanceSq(V(other)));			
-			if (distance == 0){
-				//TODO: 
-			}else if (distance < data.sepD){
-				separation = separation.add(pos.subtract(V(other)));	
-			}else{
-				if (distance < data.cohD){
-					cohesion = cohesion.add(pos.subtract(V(other)));									
-				}
-				if (distance < data.aliD){
-					alignement = alignement.add(spd.subtract(VV(other.getSpeed())));	
-				}
-
-				
-			}
+      		var distance = V(boid).subtract(V(other)).magnitude();
+      		if (distance < data.sepD){
+      			separation.add(V(boid).subtract(V(other)));
+      		}else{
+	      		if (distance < data.cohD){cohesion.add(V(boid).subtract(V(other)));}
+    	  		if (distance < data.aliD){alignement.add( VV(other.getSpeed()) );}      			
+	      	}
 		}
-	}
-	/*Sum all contributions*/
-	var ret = VVV(0,0,0);
-	if (separation.length()>0) 
-		separation.normalize().multiply(sepW);
-	if (cohesion.length()>0) 
-		cohesion.normalize().multiply(cohW);
-	if (alignement.length()>0) 
-		alignement.normalize().multiply(aliW);
-	ret = ret.add(separation).subtract(cohesion).subtract(alignement);
-	return ret;	
-};
+	};
+	var force = VVV(0,0);
+	if (separation.magnitude()>0){force = force.add(separation.normalize().multiply(VVV(data.sepW,data.sepW) ) );}
+	if (cohesion.magnitude()>0){force = force.subtract(  cohesion.normalize().multiply(VVV(data.cohW,data.cohW))  );}
+	if (alignement.magnitude()>0){	force = force.subtract( alignement.normalize().multiply(VVV(data.aliW,data.aliW)));}
+	return force;
+}
 
-
-
-
-BoidImplementation3.prototype.applyForces = function (boid, force, data) {
-	var speed = VV(boid.getSpeed()).add(force);
-	var ret = V(boid).add(speed);
-    boid.setPosition(ret.x,ret.y);
-};
-
-
+var limit = function (vector, max) {
+	var ret = vector.clone();
+	if (ret.magnitude() > max) {
+      ret.normalize().multiply(VVV(max,max));
+    }
+    return ret;
+}
 
 var V = function (boid) {
 	let pos = boid.getPosition();
@@ -91,5 +127,8 @@ var VV = function (vec) {
 }
 var VVV = function (x,y) {
 	return new Victor(x,y);
+}
+var VVVV = function (arr) {
+	return new Victor(arr[0],arr[1]);
 }
 module.exports = BoidImplementation3;

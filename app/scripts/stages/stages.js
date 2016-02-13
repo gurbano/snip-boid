@@ -1,11 +1,13 @@
 var PAttractor = require('../pixi/PAttractor');
 var PWall = require('../pixi/PWall');
+var PGoal = require('../pixi/PGoal');
 var BoidGenerator = require('../pixi/BoidGenerator');
 var FlockFactory = require('../boids/FlockFactory');
 var conf = require('../configurations/experiment1');
 
 var IMPL1 = require('../boids/impl/B1')({});
 var IMPL2 = require('../boids/impl/B2')({});
+var IMPL3 = require('../boids/impl/B3')({});
 
 module.exports = {
 	'LOADING' : {
@@ -16,26 +18,32 @@ module.exports = {
 	'EXP2' : {
 		name: 'EXP2',
 		description: 'two flocks implementations, walls around, 50 bouncers, ',
-		next: 'GEN1',
 		populateWorld : function (stage) {			
-			addWalls.bind(this)(stage);
+			//addWalls.bind(this)(stage);
 			addMouseBouncer.bind(this)(stage, 
 					{radius:30, 
 					force_zero: 0, 
 					force: -100, 
 					distance: 3000} );
-			addBouncers.bind(this)(stage, { force: 1500, distance:60}, 50);
+
+			stage.addEntity(
+				new PGoal($.extend({},{force:-10, radius:30, x: 40, y: 80}) ), 
+				function (obj) {
+					
+				}
+			);	
+			addBouncers.bind(this)(stage, { force: 5500, distance:20}, 360);
 			//add the flock
 			var flock = new FlockFactory({}).generate(
 				$.extend(conf.FLOCK,{
-					SIZE: 10,
+					SIZE: 1 ,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: false, //generate boids at random position
-					IMPL: IMPL1,
+					IMPL: IMPL3,
 					boids :{
 						render: function  () {
-							this.beginFill(0xffffff);
+							this.beginFill(0x123456);
 							this.moveTo(0,0);    
 							this.lineTo(-10, 15);
 					        this.lineTo(10, 0);
@@ -48,30 +56,7 @@ module.exports = {
 					stage.addFlock(_flock);
 				}
 			);
-			var flock = new FlockFactory({}).generate(
-				$.extend(conf.FLOCK,{
-					SIZE: 10,
-					WIDTH: this.width, //flock max x (coordinates - same as the screen)
-					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
-					RANDOM: false, //generate boids at random position
-					IMPL: IMPL2,
-					boids :{
-						render: function  () {
-							this.beginFill(0x000000);
-							this.moveTo(0,0);    
-					        this.lineTo(-10, 15);
-					        this.lineTo(10, 0);
-					        this.lineTo(-10, -15);
-					        this.endFill();
-							this.endFill();
-						}
-					},
-					sRatio: 0.9,
-				}),
-				function(_flock){
-					stage.addFlock(_flock);
-				}
-			);
+			
 			//5 dat.gui
 			var gui = new dat.GUI();				
 			var f1 = gui.addFolder('Distances');
@@ -82,11 +67,92 @@ module.exports = {
 			f2.add(flock, 'sepW',1,100);
 			f2.add(flock, 'cohW',1,100);
 			f2.add(flock, 'aliW',1,100);
+			var f3 = gui.addFolder('speed');
+			f3.add(flock, 'sLimit',0.1,10);
+			f3.add(flock, 'aLimit',0.1,10);
+			
+
+		}
+	},
+	'WALL1' : {
+		name: 'WALL1',
+		description: 'two flocks implementations, walls around, 50 bouncers, ',		
+		populateWorld : function (stage) {			
+			//addWalls.bind(this)(stage);
+			addWalls.bind(this)(stage);
+			addRandomWalls.bind(this)(stage,{}, 10);
+			/*addMouseBouncer.bind(this)(stage, 
+					{radius:30, 
+					force_zero: 0, 
+					force: -100, 
+					distance: 3000} );*/
+			//add the flock
+			var flock = new FlockFactory({}).generate(
+				$.extend(conf.FLOCK,{
+					SIZE: 0 ,
+					WIDTH: this.width, //flock max x (coordinates - same as the screen)
+					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
+					RANDOM: false, //generate boids at random position
+					IMPL: IMPL3,
+					boids :{
+						render: function  () {
+							this.beginFill(gu.color());
+							this.moveTo(0,0);    
+							this.lineTo(-10, 15);
+					        this.lineTo(10, 0);
+					        this.lineTo(-10, -15);
+					        this.endFill();
+
+						}
+					}
+				}),
+				function(_flock){
+					stage.addFlock(_flock);
+				}
+			);
+
+			var generator = new BoidGenerator(
+				{	IMPL: IMPL3,
+					x: this.width/2,//gu.random(pad, this.width - pad),
+					y: this.height/2,//gu.random(pad, this.height - pad),
+					N: function(){return 1;}, //how many boids are generated per click
+					max: function(){return 10;},
+					flock: function(){return flock;}, //target flock ,
+					delay: function(){return 100 * gu.random(1,10);}
+				}
+			);
+			
+
+			var self = this;
+			stage.addEntity(generator, function(obj){
+				var gen = function() {
+					if (self.running){
+						obj.generate();
+					}
+					setTimeout(gen, obj.delay());	
+				}
+				setTimeout(gen, obj.delay());
+			});
+			
+			//5 dat.gui
+			var gui = new dat.GUI();				
+			var f1 = gui.addFolder('Distances');
+			f1.add(flock, 'sepD',10,1000);
+			f1.add(flock, 'cohD',10,1000);
+			f1.add(flock, 'aliD',10,1000);
+			var f2 = gui.addFolder('Forces');
+			f2.add(flock, 'sepW',1,100);
+			f2.add(flock, 'cohW',1,100);
+			f2.add(flock, 'aliW',1,100);
+			var f3 = gui.addFolder('speed');
+			f3.add(flock, 'sLimit',0.1,10);
+			f3.add(flock, 'aLimit',0.1,10);
+			
 
 		}
 	},
 	'GEN1': {
-		name: '',
+		name: 'GEN1',
 		description: 'Boids and a bunch of obstacles',
 		next: '',
 		populateWorld : function (stage) {
@@ -116,7 +182,7 @@ module.exports = {
 					sRatio: 1,
 					IMPL: IMPL2,
 
-					SIZE: 50,
+					SIZE: 0,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: true, //generate boids at random position
@@ -138,13 +204,13 @@ module.exports = {
 			);
 		
 			var generator = new BoidGenerator(
-				{	
-					x: gu.random(pad, this.width - pad),
-					y: gu.random(pad, this.height - pad),
-					N: function(){return 0;}, //how many boids are generated per click
-					max: function(){return 0;},
+				{	IMPL: IMPL3,
+					x: this.width/2,//gu.random(pad, this.width - pad),
+					y: this.height/2,//gu.random(pad, this.height - pad),
+					N: function(){return 1;}, //how many boids are generated per click
+					max: function(){return 100;},
 					flock: function(){return flock;}, //target flock ,
-					delay: function(){return 10 * gu.random(10,100);}
+					delay: function(){return 1 * gu.random(10,100);}
 				}
 			);
 			 
@@ -346,6 +412,21 @@ var addBouncers = function(stage, options, number, cb){
 				if (cb)cb();
 			}
 		);					
+	};	
+};
+
+var addRandomWalls = function(stage, options, number, cb){
+	for (var i = 0; i < number; i++) {
+		var rx = gu.random(pad, this.width - pad);
+		var ry = gu.random(pad, this.height - pad);
+		var _rx = rx + gu.random(-pad*5 , pad*5 );
+		var _ry = ry + gu.random(-pad*5 , pad*5 );
+		
+		var opts = {start: {x: rx,y: ry },end: {x:  _rx, y: _ry }, force: 200, distance:100}
+		stage.addEntity(
+			new PWall(opts), 
+			function (obj) {
+		});					
 	};	
 };
 

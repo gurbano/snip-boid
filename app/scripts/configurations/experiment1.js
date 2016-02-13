@@ -1,5 +1,5 @@
 module.exports = {
-	BACKGROUND : 0x66FF99,
+	BACKGROUND : 0x000000,
 	FACTORY: {},
 	FLOCK: {
 		SIZE: 100,
@@ -12,8 +12,8 @@ module.exports = {
 		cohW: 75, //0 -> 100
 		aliW: 50,
 
-		aLimit: 1.5,
-		sLimit: 6,
+		aLimit: 0.3,
+		sLimit: 4,
 		sRatio: 1,
 	}
 }

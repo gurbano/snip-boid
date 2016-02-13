@@ -27,7 +27,7 @@ var PWall = function (opts) {
 	this.animate = opts.animate;
     this.render = opts.render || function () {
     	this.beginFill();
-        this.lineStyle(3, BLACK);    
+        this.lineStyle(3, WHITE);    
 	    this.moveTo(opts.start.x,opts.start.y);
 	    this.lineTo(opts.end.x,opts.end.y);
 		this.endFill(); 

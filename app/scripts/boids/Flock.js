@@ -101,8 +101,8 @@ var Flock = function (opts) {
 					}));
 				}else{
 					self.addBoid($.extend(opts,{
-						px: Math.floor(mx/2), //gu.random(0,mx), 
-						py: Math.floor(my/2), //gu.random(0,my), 
+						px: Math.floor(mx/2) + gu.random(-10,10), //gu.random(0,mx), 
+						py: Math.floor(my/2) + gu.random(-10,10), //gu.random(0,my), 
 						sx: gu.randomReal(-MAX_FORCE,MAX_FORCE), 
 						sy: gu.randomReal(-MAX_FORCE,MAX_FORCE),
 						sz: gu.randomReal(-MAX_FORCE,MAX_FORCE),
