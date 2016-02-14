@@ -16,6 +16,7 @@ var Stage = function (opts) {
 	var walls = [];
 	if (!(this instanceof Stage)) return new Stage(opts);
 	PIXI.Container.call(this); //extends pixi.container
+	this.debug = false;
 	this.addFlock = function (flock) {
 		flocks.push(flock);	
 		pBoids.push([]);
@@ -47,9 +48,11 @@ var Stage = function (opts) {
 	}
 
 	this.update = function () {
+		var self = this;
 		//update attractors
 		attractors.forEach(function(attractor){
 			if (attractor.update){
+				attractor.debug = self.debug;
 				attractor.update();
 			}
 		});
@@ -68,9 +71,11 @@ var Stage = function (opts) {
 		for (var i = 0; i < flocks.length; i++) {
 			var f = flocks[i];
 			var p = pBoids[i];
+			f.debug = this.debug;
 			f.step({attractors: attractors, goals: goals, walls: walls});
 			synchronizeFlock(p,f);
 		};
+
 		
 	}
 

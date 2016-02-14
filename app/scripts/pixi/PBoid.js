@@ -16,8 +16,10 @@ var PBoidW = function (opts) {
     }
     this.animate = function (boid) {
         this.clear();
-        this.drawLine(0xFFFFFF, this.acc[0] ,this.acc[1], 150);
-        this.drawLine(RED, this.speed[0] ,this.speed[1], 10);
+        if (boid.debug){
+            this.drawLine(0xFFFFFF, this.acc[0] ,this.acc[1], 150);
+            this.drawLine(RED, this.speed[0] ,this.speed[1], 10);
+        }
         this.body.animate(boid);
     }
     this.update = function  (boid) {
@@ -37,7 +39,8 @@ var PBoidW = function (opts) {
 PBoidW.prototype = Object.create(PIXI.Graphics.prototype);
 PBoidW.prototype.constructor = PIXI.Graphics;
 PBoidW.prototype.drawLine = function (color, x,y, ratio) {
-    this.lineStyle(2,color);
+    this.lineStyle(1,color);
+    this.fillAlpha = 0.06;
     this.beginFill();
     this.moveTo(0,0);
     var acc = new Victor(x,y);

@@ -89,7 +89,7 @@ var BoidImplementation1 = function (opts) {
           acc.x =  acc.x * ratio;
           acc.y =  acc.y * ratio;
         }       
-
+		boid.setAcc(acc.x,acc.y);
 		var sx = boid.getSpeed().x + acc.x;
 		var sy = boid.getSpeed().y + acc.y;		
 		//todo: limit speed
@@ -105,6 +105,7 @@ var BoidImplementation1 = function (opts) {
 		var px = boid.getPosition().x + boid.getSpeed().x;
     	var py = boid.getPosition().y + boid.getSpeed().y;
     	boid.setPosition(px,py);
+
 		
 	}
 	var calculateForces = function(boid, neighbors, data) {

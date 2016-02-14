@@ -21,12 +21,13 @@ StageFactory.prototype.addMouseBouncer = function (stage, options) {
 					obj.position.x = document.pageX;
 					obj.position.y = document.pageY;
 					if (!document.mousedown){
-							obj.force = options.force_zero || 0;
-						}else{
-							obj.force = options.force;
-						}
+						obj.force = options.force_zero || 0;
+					}else{
+						obj.force = options.force;
 					}
-		});	
+					obj.animate();
+				};
+		});
 }
 StageFactory.prototype.addBouncers = function(stage, width, height, options, number){
 	for (var i = 0; i < number; i++) {
@@ -40,4 +41,9 @@ StageFactory.prototype.addBouncers = function(stage, width, height, options, num
 		);					
 	};	
 };
+StageFactory.prototype.getGUI = function (stage) {
+	var gui = new dat.GUI();	
+	gui.add(stage, 'debug');		
+	return gui;
+}
 module.exports = StageFactory;

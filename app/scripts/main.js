@@ -101,7 +101,7 @@ $(window).mouseup(function (e) {
   	document.mousedown = false;
 });
 
-document.onmousemove = handleMouseMove;
+
 function handleMouseMove(event) {
 	var dot, eventDoc, doc, body, pageX, pageY;
     event = event || window.event; 
@@ -119,5 +119,6 @@ function handleMouseMove(event) {
     // Use event.pageX / event.pageY here
     document.pageX = event.pageX;
     document.pageY = event.pageY;
-    //console.info(document.pageX,document.pageY,window.innerWidth);
+    //console.info(document.pageX,document.pageY);
 }
+document.onmousemove = handleMouseMove;

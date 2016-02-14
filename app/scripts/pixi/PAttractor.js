@@ -8,15 +8,24 @@ var PAttractor = function (opts) {
 	if (!(this instanceof PAttractor)) return new PAttractor(opts);
 	PIXI.Graphics.call(this); //extends pixi.container
 
-    this.animate = opts.animate;
-    this.render = opts.render || function () {
-        this.lineStyle(2,0x000000);
-        this.beginFill(0x888888);
-        this.drawCircle(0,0, Math.abs(opts.radius || 10) );
+    this.animate = opts.animate || function  (argument) {
+        this.clear();
+        this.lineStyle(0,0x000000);
+        if (this.debug){
+            this.beginFill(0x888888);
+            this.fillAlpha = 0.06;
+            this.drawCircle(0,0, Math.abs(this.radius + this.distance || 10) );
+            this.endFill(); 
+        }        
+        this.beginFill(RED);
+        this.lineStyle(1,0x000000);
+        this.drawCircle(0,0, Math.abs(this.radius || 10) );
+        this.endFill();   
+    };
+    this.render = opts.render || function () {      
         this.position.x = opts.x || 0;
         this.position.y = opts.y || 0; 
-        this.position.z = opts.z || 0; 
-        this.endFill(); 
+        this.position.z = opts.z || 0;         
     };
     this.render();
     
@@ -31,7 +40,6 @@ var PAttractor = function (opts) {
 	this.getDistanceFrom = function (x,y) {
     	return gu.distToPoint({x: x, y:y}, this.position);
     }
-
     return this;		
 }
 
@@ -41,8 +49,7 @@ var PAttractor = function (opts) {
 PAttractor.prototype = Object.create(PIXI.Graphics.prototype);
 PAttractor.prototype.constructor = PIXI.Graphics;
 PAttractor.prototype.update = function () {
-    //this.clear();
-    //this.animate();
+    this.animate();
 }
 
 module.exports = PAttractor;

@@ -15,6 +15,10 @@ var Flock = function (opts) {
 	this.cohW = opts.cohW || 1;
 	this.aliW = opts.aliW || 1;
 
+	this.scaWP = opts.scaWP || 1;
+	this.attrWP = opts.attrWP || 1;
+	this.goalWP = opts.goalWP || 1;
+
 	this.aLimit = opts.aLimit || 1;
 	this.sLimit = opts.sLimit || 1;
 	this.sRatio = opts.sRatio || 10;
@@ -63,6 +67,7 @@ var Flock = function (opts) {
 
 	/*STEP - advance the simulation one step*/
 	this.step = function (data) {	
+		var self = this;
 		var opts = $.extend(data, {
 			sepD: this.sepD,
 			cohD: this.cohD,
@@ -72,11 +77,16 @@ var Flock = function (opts) {
 			cohW: this.cohW,
 			aliW: this.aliW,
 
+			scaWP: this.scaWP,
+			attrWP: this.attrWP,
+			goalWP: this.goalWP,
+
 			aLimit: this.aLimit,
 			sLimit: this.sLimit,
 			sRatio: this.sRatio
 		});
 		_b.forEach(function (boid) {
+			boid.debug = self.debug;
 			boid.step(_b, opts);
 		});
 	}	

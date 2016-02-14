@@ -23,19 +23,27 @@ BoidImplementation3.prototype.step = function(boid, boids, data) {
 	var maxforce = data.aLimit;
 	
 	/*Separation, Cohesion, Alignement*/
-	var sca = this.sca(boid, boids, data);	
-	acc.add(sca);	
+	var sca = this.sca(boid, boids, data);
+	sca = limit(sca, maxforce * data.scaWP);	
+	acc.add(sca.clone().multiply(VVV(data.scaWP,data.scaWP) ));
+
 	/*attractors/bouncers*/
 	var attractors = this.attractor(boid, data.attractors || []);
-	acc.add( attractors );	
+	attractors = limit(attractors, maxforce * data.attrWP);
+	acc.add( attractors.clone().multiply(VVV(data.attrWP,data.attrWP)) );	
+	
 	/*goals*/
 	var goals = this.goal(boid, data.goals || []);
-	acc.add( goals );	
+	goals = limit(goals, maxforce * data.goalWP);
+	acc.add( goals.clone().multiply(VVV(data.goalWP,data.goalWP)) );	
+	/**/
+	var walls = this.cwall(boid, data.walls || []);
+	walls = limit(walls, maxforce*data.attrWP);
+	acc.add( walls.clone().multiply(VVV(data.attrWP,data.attrWP)) );	
 
+	
 
 	acc = limit(acc, maxforce);
-
-
 	vel = vel.clone().add(acc);
     vel = limit(vel, maxspeed);
     loc = loc.clone().add(vel);
@@ -46,12 +54,10 @@ BoidImplementation3.prototype.step = function(boid, boids, data) {
 
 BoidImplementation3.prototype.attractor = function (boid, attractors) {
 	var ret = VVV(0,0);
-	var startPos = utils.v(boid.getPosition().x,boid.getPosition().y,0);
-	var loc = V(boid);
+	var loc = V(boid).add(VV(boid.getAcc()));
 	for (var i = attractors.length - 1; i >= 0; i--) {
 		var attractor = attractors[i];
 		var aPos = utils.v(attractor.getPosition().x, attractor.getPosition().y, 0);
-		var dist = startPos.distanceFrom(aPos);
 		var otherloc = V(attractor);
 		var distance = V(boid).subtract(otherloc).magnitude();
 		var distanceLimit = attractor.distance + attractor.radius;
@@ -61,22 +67,118 @@ BoidImplementation3.prototype.attractor = function (boid, attractors) {
 			force = force.multiply(VVV(attractor.force,attractor.force));
 			ret.add(force);
 		}else if(distance>0 && distance <= attractor.radius){
-			var force = loc.clone().subtract(otherloc);
+			var force = V(boid).subtract(otherloc);
 			force = force.multiply(VVV(attractor.force * 5,attractor.force * 5));
 			ret.add(force);
 		}	
 	};
 	return ret;
 }
+function sign(x) {
+    return typeof x === 'number' ? x ? x < 0 ? -1 : 1 : x === x ? 0 : NaN : NaN;
+}
+
+var isInside =  function (p, start, end) {
+        return ((start.x <= p.x && end.x >= p.x) || (start.x >= p.x && end.x <= p.x) ) &&
+        		((start.y <= p.y && end.y >= p.y) || (start.y >= p.y && end.y <= p.y));
+    };
+BoidImplementation3.prototype.cwall = function (boid, walls) {
+	var ret = VVV(0,0);
+	var loc = V(boid);
+	
+	for (var i = walls.length - 1; i >= 0; i--) {
+		var wall = walls[i];
+
+		var spd = VV(boid.getSpeed());
+		var locSpeed = V(boid).add(spd.clone().multiply(VVV(wall.distance,wall.distance)));		
+		var distance = wall.getDistanceFrom(loc.x+spd.x,loc.y+spd.y);
+		var distanceCheck = wall.distance;
+		var proj = utils.getLineEq(
+			{x: boid.getPosition().x, y: boid.getPosition().y},
+			{x: boid.getPosition().x + boid.getSpeed().x, y: boid.getPosition().y + boid.getSpeed().y},
+		);
+		var inter = utils.lineInterception(proj, wall.getLineEq());
+
+		if (inter && wall.isInside(inter) && isInside(inter, loc, locSpeed) && distance<distanceCheck){
+			wall.intersection = inter;
+			var norm;
+			var norm0 = VVV((wall.end.y - wall.start.y), -(wall.end.x - wall.start.x)).normalize().multiply(VVV(100,100));
+			var norm1 = VVV( - (wall.end.y - wall.start.y), (wall.end.x - wall.start.x)).normalize().multiply(VVV(100,100));
+			var t0 = {x: inter.x + norm0.x, y: inter.y + norm0.y};
+			var t1 = {x: inter.x + norm1.x, y: inter.y + norm1.y};
+			if (utils.distToPoint(loc,t0)<utils.distToPoint(loc,t1)){
+				norm = norm0;	
+			}else{
+				norm = norm1;
+			}	
+			wall.norm = norm.clone();
+			var distanceFromIntersection = utils.distToPoint(inter, {x: boid.getPosition().x, y: boid.getPosition().y});
+
+			var v = locSpeed.clone().subtract(loc).normalize();
+			var n = norm.clone().normalize();
+			var u1 = (v.clone().dot(n) / n.clone().dot(n)); //this should be 1 if normalized
+			var u = n.clone().multiply(VVV(u1,u1)); //u = (v · n / n · n) n 
+			var w = v.clone().subtract(u); //w = v − u			
+			var ret0 = w.clone().subtract(u); //v′ = w − u
+			ret = ret.add(ret0.clone().multiply( VVV(wall.force, wall.force) ));
+			/*
+			if (spd.magnitude()<1){
+				spd.normalize();
+			}
+			if (wall.isVertical){							
+				if (loc.x<wall.start.x){
+					ret = ret.add(VVV(-wall.force,0)).divide(VVV(distance,distance));
+				}else{
+					ret = ret.add(VVV(+wall.force,0)).divide(VVV(distance,distance));
+				}				
+			}else if(wall.isHorizontal){
+				if (loc.y<wall.start.y){
+					ret = ret.add(VVV(0,-wall.force)).divide(VVV(distance,distance));
+				}else{
+					ret = ret.add(VVV(0,+wall.force)).divide(VVV(distance,distance));
+				}
+			}else{				
+			
+			}*/
+		}else{
+			wall.intersection = undefined;
+			wall.norm = undefined;
+		}
+		
+	};
+	return ret;
+}
+
+
+
+
+var lineSegmentIntersection = function(r0,r1,a,b)
+{
+    var s1, s2;
+    s1 = r1.clone().subtract(r0); 
+    s2 = b.clone().subtract(a);
+
+    var s, t;
+    s = (-s1.y * (r0.x - a.x) + s1.x * (r0.x - a.x)) / (-s2.x * s1.y + s1.x * s2.y);
+    t = (s2.y * (r0.y - a.y) - s2.y * (r0.x - a.x)) / (-s2.x * s1.y + s1.x * s2.y);
+
+    if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
+    {
+        return VVV(r0.x + (t * s1.x), r0.y + (t * s1.y));
+    }
+
+    return null; // No collision
+}
+
+
+
 
 BoidImplementation3.prototype.goal = function (boid, attractors) {
 	var ret = VVV(0,0);
-	var startPos = utils.v(boid.getPosition().x,boid.getPosition().y,0);
 	var loc = V(boid);
 	for (var i = attractors.length - 1; i >= 0; i--) {
 		var attractor = attractors[i];
 		var aPos = utils.v(attractor.getPosition().x, attractor.getPosition().y, 0);
-		var dist = startPos.distanceFrom(aPos);
 		var otherloc = V(attractor);
 		var distance = V(boid).subtract(otherloc).magnitude();
 		var distanceLimit = attractor.distance + attractor.radius;		

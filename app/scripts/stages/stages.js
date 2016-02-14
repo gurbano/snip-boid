@@ -77,45 +77,49 @@ module.exports = {
 	},
 	'WALL1' : {
 		name: 'WALL1',
-		description: 'two flocks implementations, walls around, 50 bouncers, ',		
+		description: '',		
 		populateWorld : function (stage) {			
-			//addWalls.bind(this)(stage);
 			addWalls.bind(this)(stage);
 			addRandomWalls.bind(this)(stage,{}, 10);
+			//addBouncers.bind(this)(stage, { force: 50, distance:30}, 10);
 			addMouseBouncer.bind(this)(stage, 
 					{radius:30, 
 					force_zero: 0, 
 					force: -100, 
-					distance: 3000} );
-			//add the flock
-			stage.addEntity(
-				new PGoal($.extend({},{force:-10, radius:30, x: 40, y: 80}) ), 
-				function (obj) {
-					
-				}
-			);	
+					distance: 3000
+				});
+			//GOAL
+			//stage.addEntity(new PGoal($.extend({},{distance: 1000, force:-10, radius:10, x: pad, y: pad}) ), function (obj) {});
 			var flock = new FlockFactory({}).generate(
 				$.extend(conf.FLOCK,{
-					SIZE: 1 ,
+					SIZE: 0 ,
 					WIDTH: this.width, //flock max x (coordinates - same as the screen)
 					HEIGHT: this.height, //flock max y (coordinates - same as the screen)
 					RANDOM: false, //generate boids at random position
 					IMPL: IMPL3,
-					boids :{						
-						
+					boids :{
+						render: function _render () {
+							this.beginFill(gu.color());
+							this.moveTo(0,0);    
+							this.lineTo(-10, 15);
+					        this.lineTo(10, 0);
+					        this.lineTo(-10, -15);
+					        this.endFill();
+						}
 					}
 				}),
 				function(_flock){
 					stage.addFlock(_flock);
+					stage.debug = false;
 				}
 			);
 
 			var generator = new BoidGenerator(
 				{	IMPL: IMPL3,
-					x: this.width/2,//gu.random(pad, this.width - pad),
-					y: this.height/2,//gu.random(pad, this.height - pad),
+					x: this.width-pad*5,//gu.random(pad, this.width - pad),
+					y: this.height-pad*5,//gu.random(pad, this.height - pad),
 					N: function(){return 1;}, //how many boids are generated per click
-					max: function(){return 0;},
+					max: function(){return 50;},
 					flock: function(){return flock;}, //target flock ,
 					delay: function(){return 100 * gu.random(1,10);}
 				}
@@ -134,7 +138,8 @@ module.exports = {
 			});
 			
 			//5 dat.gui
-			var gui = new dat.GUI();				
+			var gui = new dat.GUI();	
+			gui.add(stage, 'debug');			
 			var f1 = gui.addFolder('Distances');
 			f1.add(flock, 'sepD',10,1000);
 			f1.add(flock, 'cohD',10,1000);
@@ -145,7 +150,13 @@ module.exports = {
 			f2.add(flock, 'aliW',1,100);
 			var f3 = gui.addFolder('speed');
 			f3.add(flock, 'sLimit',0.1,10);
-			f3.add(flock, 'aLimit',0.1,10);
+			f3.add(flock, 'aLimit',0.00,2).step(0.1);
+			f3.open();
+			var f4 = gui.addFolder('WP');
+			f4.add(flock, 'scaWP',0.1,2).step(0.1);
+			f4.add(flock, 'attrWP',0.1,2).step(0.1);
+			f4.add(flock, 'goalWP',0.1,2).step(0.1);
+			f4.open();
 			
 
 		}
@@ -360,20 +371,19 @@ var addWalls = function(stage, cb){
 	var right = {start: {x: this.width - pad, y: pad },end: {x: this.width - pad, y: this.height -pad }, force: 200, distance:100};
 	var up = {start: {x: pad,y: pad },end: {x: this.width - pad, y: pad }, force: 200, distance:100};
 	var down ={start: {x: pad,y: this.height - pad },end: {x: this.width - pad, y: this.height - pad }, force: 200, distance:100};
-	var _anim = function () {
+	var _anim = function () {		
 		this.clear();
 		if (this.intersection){
-			this.lineStyle(2,0x000000);
+			this.lineStyle(2,0xf05522);
 			this.beginFill(0xf05522);
 		    this.drawCircle(this.intersection.x,this.intersection.y,6);				    
 		    this.endFill();
 		    if (this.norm){
-		    	debugger;
 				this.moveTo(this.intersection.x,this.intersection.y);
-				this.lineTo(this.intersection.x, this.norm.Y(this.intersection.x));
+				this.lineTo(this.intersection.x + this.norm.x, this.intersection.y + this.norm.y);
+				this.moveTo(this.intersection.x,this.intersection.y);
 			}
 		}
-
 		this.render();
 	};
 	stage.addEntity(
@@ -414,6 +424,7 @@ var addBouncers = function(stage, options, number, cb){
 };
 
 var addRandomWalls = function(stage, options, number, cb){
+	var pad = 50;
 	for (var i = 0; i < number; i++) {
 		var rx = gu.random(pad, this.width - pad);
 		var ry = gu.random(pad, this.height - pad);
@@ -424,6 +435,21 @@ var addRandomWalls = function(stage, options, number, cb){
 		stage.addEntity(
 			new PWall(opts), 
 			function (obj) {
+				obj.animate = function () {
+					this.clear();
+					if (this.intersection){
+						this.lineStyle(2,0xf05522);
+						this.beginFill(0xf05522);
+					    this.drawCircle(this.intersection.x,this.intersection.y,6);				    
+					    this.endFill();
+					    if (this.norm){
+							this.moveTo(this.intersection.x,this.intersection.y);
+							this.lineTo(this.intersection.x + this.norm.x, this.intersection.y + this.norm.y);
+							this.moveTo(this.intersection.x,this.intersection.y);
+						}
+					}
+					this.render();
+				}
 		});					
 	};	
 };
@@ -443,6 +469,7 @@ var addMouseBouncer = function (stage, options) {
 							obj.force = options.force;
 						}
 					}
+					obj.animate();
 		});	
 }
 
