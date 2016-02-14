@@ -38,7 +38,7 @@ BoidImplementation3.prototype.step = function(boid, boids, data) {
 	acc.add( goals.clone().multiply(VVV(data.goalWP,data.goalWP)) );	
 	/**/
 	var walls = this.cwall(boid, data.walls || []);
-	walls = limit(walls, maxforce*data.attrWP);
+	walls = limit(walls, maxforce*data.attrWP*10);
 	acc.add( walls.clone().multiply(VVV(data.attrWP,data.attrWP)) );	
 
 	
@@ -54,7 +54,7 @@ BoidImplementation3.prototype.step = function(boid, boids, data) {
 
 BoidImplementation3.prototype.attractor = function (boid, attractors) {
 	var ret = VVV(0,0);
-	var loc = V(boid).add(VV(boid.getAcc()));
+	var loc = V(boid).add(VV(boid.getSpeed()));
 	for (var i = attractors.length - 1; i >= 0; i--) {
 		var attractor = attractors[i];
 		var aPos = utils.v(attractor.getPosition().x, attractor.getPosition().y, 0);
@@ -120,26 +120,7 @@ BoidImplementation3.prototype.cwall = function (boid, walls) {
 			var u = n.clone().multiply(VVV(u1,u1)); //u = (v · n / n · n) n 
 			var w = v.clone().subtract(u); //w = v − u			
 			var ret0 = w.clone().subtract(u); //v′ = w − u
-			ret = ret.add(ret0.clone().multiply( VVV(wall.force, wall.force) ));
-			/*
-			if (spd.magnitude()<1){
-				spd.normalize();
-			}
-			if (wall.isVertical){							
-				if (loc.x<wall.start.x){
-					ret = ret.add(VVV(-wall.force,0)).divide(VVV(distance,distance));
-				}else{
-					ret = ret.add(VVV(+wall.force,0)).divide(VVV(distance,distance));
-				}				
-			}else if(wall.isHorizontal){
-				if (loc.y<wall.start.y){
-					ret = ret.add(VVV(0,-wall.force)).divide(VVV(distance,distance));
-				}else{
-					ret = ret.add(VVV(0,+wall.force)).divide(VVV(distance,distance));
-				}
-			}else{				
-			
-			}*/
+			ret = ret.add(ret0.clone().multiply( VVV(wall.force, wall.force) ).divide(VVV(distance,distance)));
 		}else{
 			wall.intersection = undefined;
 			wall.norm = undefined;

@@ -7,21 +7,21 @@ var Flock = function (opts) {
 
 	this.name = opts.name || 'flock';
 
-	this.sepD = opts.sepD || 1;
-	this.cohD = opts.cohD || 1;
-	this.aliD = opts.aliD || 1;
+	this.sepD = opts.sepD || 0;
+	this.cohD = opts.cohD || 0;
+	this.aliD = opts.aliD || 0;
 
-	this.sepW = opts.sepW || 1;
-	this.cohW = opts.cohW || 1;
-	this.aliW = opts.aliW || 1;
+	this.sepW = opts.sepW || 0;
+	this.cohW = opts.cohW || 0;
+	this.aliW = opts.aliW || 0;
 
-	this.scaWP = opts.scaWP || 1;
-	this.attrWP = opts.attrWP || 1;
-	this.goalWP = opts.goalWP || 1;
+	this.scaWP = opts.scaWP || 0;
+	this.attrWP = opts.attrWP || 0;
+	this.goalWP = opts.goalWP || 0;
 
-	this.aLimit = opts.aLimit || 1;
-	this.sLimit = opts.sLimit || 1;
-	this.sRatio = opts.sRatio || 10;
+	this.aLimit = opts.aLimit || 0;
+	this.sLimit = opts.sLimit || 0;
+	this.sRatio = opts.sRatio || 0;
 
 	this.opts = opts; //flock option. contains info about boids as well
 

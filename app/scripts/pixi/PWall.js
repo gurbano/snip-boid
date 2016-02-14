@@ -33,7 +33,21 @@ var PWall = function (opts) {
 		return this.M * x;
 	};
 
-	this.animate = opts.animate;
+	this.animate = opts.animate || function () {
+		this.clear();
+		if (this.intersection&&this.debug){
+			this.lineStyle(2,0xf05522);
+			this.beginFill(0xf05522);
+		    this.drawCircle(this.intersection.x,this.intersection.y,6);				    
+		    this.endFill();
+		    if (this.norm){
+				this.moveTo(this.intersection.x,this.intersection.y);
+				this.lineTo(this.intersection.x + this.norm.x, this.intersection.y + this.norm.y);
+				this.moveTo(this.intersection.x,this.intersection.y);
+			}
+		}
+		this.render();
+	};
     this.render = opts.render || function () {
     	this.beginFill();
         this.lineStyle(3, WHITE);    
