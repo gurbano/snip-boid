@@ -14,7 +14,7 @@ module.exports = {
 		cohW: 40, //0 -> 100
 		aliW: 80,
 
-		aLimit: 0.6,
+		aLimit: 1.5,
 		sLimit: 6,
 		sRatio: 1,
 

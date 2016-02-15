@@ -29,7 +29,7 @@ var Flock = function (opts) {
 	if (!(this instanceof Flock)) return new Flock(opts);	
 
 	/*INTERNAL*/
-	var _b = []; //array of boids
+	var _b = []; //array of boids 
 
 	/*DEFAULT VALUES*/
 	var mx = opts.WIDTH || 2000; 
