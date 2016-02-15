@@ -16,24 +16,29 @@ var AbstractEntity = function(opts){
 	this.type = this.opts.type || this.TYPES.AbstractEntity;
 	this.id = this.opts.id || randomUUID();
 	this.parent = undefined;
-	this.renderTargets = [];
+	this.renderTargets = undefined;
 	return this;
 }
 AbstractEntity.prototype.update = function(data) {
 	console.error(this.type + ' update not implemented', data);
+	this.updateTargets(data);
 };
 AbstractEntity.prototype.addTarget = function(target) {
-	this.renderTargets.push(target);
+	this.renderTargets = target;//.push(target);
 };
 AbstractEntity.prototype.updateTargets = function(data) {
-	for (var i = this.renderTargets.length - 1; i >= 0; i--) {
+	/*for (var i = this.renderTargets.length - 1; i >= 0; i--) {
 		var target = this.renderTargets[i];
 		if (target.update){
 			target.update(this, data);
 		}else{
-			console.error(target.type + ' update not implemented', target);
+			//console.error(target.type + ' update not implemented', target);
 		}
-	};
+	};*/
+	if (this.renderTargets && this.renderTargets.update){this.renderTargets.update(this, data);}else{
+		console.error(this.renderTargets.type + ' target update not implemented');
+
+	}
 };
 
 AbstractEntity.prototype.TYPES = {};
@@ -41,6 +46,7 @@ AbstractEntity.prototype.TYPES.AbstractEntity = 'AbstractEntity';
 AbstractEntity.prototype.TYPES.Flock = 'Flock';
 AbstractEntity.prototype.TYPES.Boid = 'Boid';
 AbstractEntity.prototype.TYPES.Wall = 'Wall';
+AbstractEntity.prototype.TYPES.Bouncer = 'Bouncer';
 
 
 

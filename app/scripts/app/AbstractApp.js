@@ -14,6 +14,9 @@ AbstractApp.prototype.info = function() {
 AbstractApp.prototype.setWorld = function(world) {
 	this.world = world;
 };
+AbstractApp.prototype.getWorld = function() {
+	return this.world;
+};
 AbstractApp.prototype.update = function(data) {
 	console.error('update not implemented');
 	this.world.update(data);

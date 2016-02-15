@@ -15,7 +15,7 @@ var sqrt = Math.sqrt
 
 var Boid = function(opts){
 	var self = this;	
-	if (!(this instanceof Boid)) return new Boid(this.opts);
+	if (!(this instanceof Boid)) return new Boid(opts);
 	AbstractEntity.call(this); //extends pixi.container   
 	this.opts = opts || {};
 	this.type = this.TYPES.Boid;

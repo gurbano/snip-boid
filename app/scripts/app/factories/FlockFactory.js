@@ -13,6 +13,7 @@ var FlockFactory = function (opts) {
 	this.generate = function (fopts, cb) {
 		fopts = fopts || {};
 		var f =  new Flock($.extend(opts, fopts));		
+		if (opts.targetFactory){f.addTarget(opts.targetFactory.generate(f));}
 		if (cb){
 			cb(f);
 		}

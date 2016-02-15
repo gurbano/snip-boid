@@ -3,9 +3,14 @@ var World = function(opts){
 	this.opts = opts || {};
 	if (!(this instanceof World)) return new World(this.opts);	
 	this.entities = {}; // [type][id]
+	this.type = 'World';
+	this.targetFactory = opts.targetFactory;
+	this.stage = undefined;
 }
 World.prototype.init = function() {
 	console.info('Init world', this.opts);
+	this.stage = this.targetFactory.generate(this); //new PixiWorld
+	console.info('Stage ready', this.stage.info);
 };
 World.prototype.addEntity = function(options, entity) {
 	console.info('adding ' + entity.type, entity,);
@@ -14,6 +19,9 @@ World.prototype.addEntity = function(options, entity) {
 			this.entities[entity.type] = [];
 		}		
 		this.entities[entity.type].push(entity);
+		if (this.stage){
+			this.stage.addEntity(entity);
+		}
 	}else{
 		console.error('Entity id missing; check the entity.id field', entity);
 	}
@@ -36,10 +44,15 @@ World.prototype.update = function(data) {
 	for(var key in this.entities){
 		for (var i = this.entities[key].length - 1; i >= 0; i--) {
 			var ent = this.entities[key][i];
-			ent.update(data);
+			ent.update({
+				attractors: this.getEntitiesByType('Bouncer'),
+				goals: [], 
+				walls: []
+			});
 		};	
 	}
-	
+
+	this.stage.update();	
 };
 
 module.exports = World;

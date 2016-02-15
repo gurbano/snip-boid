@@ -10,5 +10,4 @@ var experiment = new function() {
 	console.info(app.info());
 	app.setWorld(WorldLoader.load(level1));
 	app.start();
-
 }

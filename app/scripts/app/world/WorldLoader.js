@@ -5,9 +5,10 @@ var WorldLoader = function(opts){
 	if (!(this instanceof WorldLoader)) return new WorldLoader(this.opts);	
 
 }
-WorldLoader.prototype.load = function(worldSpec) {
-	var world = new World(worldSpec);
+WorldLoader.prototype.load = function(opts) {
+	var world = new World(opts);
 	world.init();
+	var worldSpec = opts.WORLD;
 	if (worldSpec.entities){//add entities
 		for (var i = worldSpec.entities.length - 1; i >= 0; i--) {
 			var entity = worldSpec.entities[i];

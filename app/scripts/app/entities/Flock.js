@@ -9,11 +9,14 @@ var Flock = function(opts){
 	if (!(this instanceof Flock)) return new Flock(this.opts);
 	AbstractEntity.call(this); //extends pixi.container   
 	this.type = this.TYPES.Flock;
+	this.boids = [];
 	this.init(opts);
 }
 Flock.prototype = Object.create(AbstractEntity.prototype);
 Flock.prototype.constructor = AbstractEntity;
 Flock.prototype.init = function(opts) {
+	this.targetFactory = opts.targetFactory;
+
 	this.sepD = opts.sepD || 0;
 	this.cohD = opts.cohD || 0;
 	this.aliD = opts.aliD || 0;
@@ -35,7 +38,7 @@ Flock.prototype.init = function(opts) {
 	this.width = opts.width || $(window).width();
 	this.height = opts.height || $(window).height();
 
-	this.boids = [];
+	
 	generateInitialBoids.bind(this)(opts);
 
 };
@@ -48,6 +51,9 @@ Flock.prototype.addBoid = function(opts) {
 			})
 		);
 	this.boids.push(b);
+	if (this.targetFactory){
+		b.addTarget(this.targetFactory.generate(b));
+	}
 	return b;
 };
 
@@ -76,7 +82,7 @@ Flock.prototype.update = function(data) {
 		boid.step(self.boids, opts); //move boids
 		boid.updateTargets(data);  //update
 	});
-
+	this.updateTargets(data);
 };
 
 
