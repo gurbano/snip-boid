@@ -1,10 +1,10 @@
-
+var GREEN = 0x00fa9a;
 
 module.exports = {
-	simRatio: 1,
+	speed: 10,
 	width: $(window).width(),
 	height: $(window).height(),
-	BACKGROUND : 0x0D0C0C,
+	BACKGROUND : GREEN,
 	FLOCKFACTORY: {
 		sepD: 150, //try to keep this distance
 		cohD: 600, //try to stick with ppl inside this radius
@@ -19,8 +19,8 @@ module.exports = {
 		sRatio: 1,
 
 		scaWP:  0.5,
-		attrWP: 2,
-		goalWP: 1,
+		attrWP: 1.2,
+		goalWP: 0.2,
 		RANDOM: false
 	},
 	FLOCK: {

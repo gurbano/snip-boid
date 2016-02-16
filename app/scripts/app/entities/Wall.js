@@ -21,12 +21,15 @@ var Wall = function(opts){
 
 	this.start = this.opts.start;
 	this.end = this.opts.end;
-	this.A = this.end.y - this.start.y;
-	this.B = this.start.x - this.end.x;
-	this.C = this.A * this.start.x+this.B*this.start.y;
-	this.M = (this.end.y - this.start.y) / (this.end.x - this.start.x );		
-	this.isVertical = Math.abs(this.end.x - this.start.x) < 0.00001 ;	
-	this.isHorizontal = Math.abs(this.end.y - this.start.y) < 0.00001 ;
+	this._init = function () {
+		this.A = this.end.y - this.start.y;
+		this.B = this.start.x - this.end.x;
+		this.C = this.A * this.start.x+this.B*this.start.y;
+		this.M = (this.end.y - this.start.y) / (this.end.x - this.start.x );		
+		this.isVertical = Math.abs(this.end.x - this.start.x) < 0.00001 ;	
+		this.isHorizontal = Math.abs(this.end.y - this.start.y) < 0.00001 ;
+	}
+	this._init;
 
 	function dd(P1, P2, P0) {
 		var x1 = P1.x, x2=P2.x, y1 = P1.y, y2 = P2.y, x0 = P0.x, y0 = P0.y;
@@ -60,8 +63,23 @@ var Wall = function(opts){
 }
 Wall.prototype = Object.create(AbstractEntity.prototype);
 Wall.prototype.constructor = AbstractEntity;
+
 Wall.prototype.update = function(data) {
 	this.updateTargets(data);
 };
 
+Wall.prototype.onTargetUpdate = function (target, data) {
+    //console.info(this.type + ' updated by its target ' + target.type, data);
+    if (data.type && data.type==='start'){
+    	this.start.x = target.position.x;
+    	this.start.y = target.position.y;
+    	this._init();
+    }
+    if (data.type && data.type==='end'){
+    	this.end.x = target.position.x;
+    	this.end.y = target.position.y;
+    	this._init();
+    }
+}
+    
 module.exports = Wall;

@@ -1,12 +1,16 @@
 var victor = require('victor');
+var AbstractPixiTarget = require('./AbstractPixiTarget');
 var V = function (x,y) {
 	return new victor(x,y);
 }
+
+
+
 var RED = 0xFF0000;
-var PixiFlock = function (opts) {
+var PixiFlock = function (source) {
 	var self = this;	
-	if (!(this instanceof PixiFlock)) return new PixiFlock(opts);
-	PIXI.Graphics.call(this); //extends pixi.container    
+	if (!(this instanceof PixiFlock)) return new PixiFlock(source);
+	AbstractPixiTarget.call(this, source); //extends pixi.container    
 	this.type = 'PixiFlock';
 	this.position = {x:0, y:0};
 	this.radius = 0;
@@ -14,8 +18,8 @@ var PixiFlock = function (opts) {
     return this;		
 }
 /*PROTO INHERITANCE*/
-PixiFlock.prototype = Object.create(PIXI.Graphics.prototype);
-PixiFlock.prototype.constructor = PIXI.Graphics;
+PixiFlock.prototype = Object.create(AbstractPixiTarget.prototype);
+PixiFlock.prototype.constructor = AbstractPixiTarget;
 PixiFlock.prototype.render = function () {
 	this.clear();
 	if (this.debug){		

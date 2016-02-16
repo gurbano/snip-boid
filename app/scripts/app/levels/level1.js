@@ -1,10 +1,12 @@
 var AA = require('../entities/AbstractEntity');
 var Bouncer = require('../entities/Bouncer');
 var Wall = require('../entities/Wall');
+var Goal = require('../entities/Goal');
 var FlockFactory = require('../factories/FlockFactory');
 var conf = require('./level1.config');
 var PixiTargetFactory = require('../factories/PixiTargetFactory');
 var gu = require('../../utils.js');
+
 
 
 var targetFactory = conf.FLOCKFACTORY.targetFactory = conf.targetFactory = new PixiTargetFactory({});
@@ -17,7 +19,8 @@ conf.WORLD.entities = [flock];
 
 
 for (var i = 0; i < 40; i++) {
-		var bouncer = new Bouncer({
+	var bouncer = new Bouncer({
+		draggable: true,
 		x: gu.random(0, conf.width),
 		y: gu.random(0, conf.height),
 		radius: gu.random(10, 20),
@@ -25,11 +28,13 @@ for (var i = 0; i < 40; i++) {
 		distance: gu.random(10, 50)
 	});
 	targetFactory.apply(bouncer);	
-	conf.WORLD.entities.push(bouncer);
+	//conf.WORLD.entities.push(bouncer);
 };
 
-for (var i = 0; i < 5; i++) {
+
+for (var i = 0; i < 1; i++) {
 		var wall = new Wall({
+		draggable: true,
 		start: {x: gu.random(0, conf.width),
 				y: gu.random(0, conf.height)},
 		end: {x: gu.random(0, conf.width),
@@ -41,7 +46,26 @@ for (var i = 0; i < 5; i++) {
 	conf.WORLD.entities.push(wall);
 };
 
+var goal = new Goal({
+	draggable: true,
+	x: 100,
+	y: 100,
+	radius: 20,
+	force: -1,
+	distance: 1
+});
+targetFactory.apply(goal);	
+conf.WORLD.entities.push(goal);
 
+
+conf.UI = {
+	controls:
+	[
+
+
+
+	]	
+}
 
 
 module.exports = conf;

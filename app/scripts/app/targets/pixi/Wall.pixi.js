@@ -1,20 +1,46 @@
 var RED = 0xFF0000;
 var WHITE = 0xFFFFFF;
+var AbstractPixiTarget = require('./AbstractPixiTarget');
+var PCircle = require('./components/Circle.pixi');
 
-
-var PixiWall = function (opts) {
+var PixiWall = function (source) {
 	var self = this;	
-	if (!(this instanceof PixiWall)) return new PixiWall(opts);
-	PIXI.Graphics.call(this); //extends pixi.container    
+	if (!(this instanceof PixiWall)) return new PixiWall(source);
+	AbstractPixiTarget.call(this, source); //extends pixi.container    
 	this.type = 'PixiWall';
 	this.position = {x:0, y:0};
+    this.pstart = new PCircle(source, {
+        draggable: true,
+        radius: 5,
+        color: WHITE,
+    });
+    this.pend = new PCircle(source, {
+        draggable: true,
+        radius: 5,
+        color: RED,
+    });
+    this.addChild(this.pstart);
+    this.pstart.updateSource = function(data) {
+        var new_position = this.position;
+        if (this.source.onTargetUpdate){
+            this.source.onTargetUpdate(this, {type:'start'});
+        }
+    };
+    this.pend.updateSource = function(data) {
+        var new_position = this.position;
+        if (this.source.onTargetUpdate){
+            this.source.onTargetUpdate(this, {type:'end'});
+        }
+    };
+    this.addChild(this.pend);
     return this;		
 }
 /*PROTO INHERITANCE*/
-PixiWall.prototype = Object.create(PIXI.Graphics.prototype);
-PixiWall.prototype.constructor = PIXI.Graphics;
+PixiWall.prototype = Object.create(AbstractPixiTarget.prototype);
+PixiWall.prototype.constructor = AbstractPixiTarget;
 PixiWall.prototype.render = function () {
 	this.clear();
+
     if (this.intersection&&this.debug){
         this.lineStyle(2,0xf05522);
         this.beginFill(0xf05522);
@@ -31,22 +57,22 @@ PixiWall.prototype.render = function () {
     this.moveTo(this.start.x,this.start.y);
     this.lineTo(this.end.x,this.end.y);     
     this.endFill();
-
-    this.beginFill(0xf05522);
-    this.lineStyle(4, WHITE);   
-    this.drawCircle(this.start.x,this.start.y, 2 );//start edge 
-    this.lineStyle(4, RED);
-    this.drawCircle(this.end.x,this.end.y, 2 );//end edge 
-
-    this.endFill();  
 }
 PixiWall.prototype.update = function (source, data) {
     this.debug  =data.debug;
 	this.start = source.start;
 	this.end = source.end;
-    this.intersection = source.intersection;
-    this.norm = source.norm;
+    if (!this.dragging){    
+        this.pstart.position.x = source.start.x;
+        this.pstart.position.y = source.start.y;
+        this.pend.position.x = source.end.x;
+        this.pend.position.y = source.end.y;
+        this.intersection = source.intersection;
+        this.norm = source.norm;
+    }
 	this.render();
+    this.pstart.render();
+    this.pend.render();
 };
 
 

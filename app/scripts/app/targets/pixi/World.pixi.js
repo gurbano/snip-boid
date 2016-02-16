@@ -43,6 +43,10 @@ PixiWorld.prototype.addEntity = function(entity) {
 			var stage = this.getStage(entity.type);
 			stage.addChild(entity.renderTargets);
 			break;
+		case 'Goal':
+			var stage = this.getStage(entity.type);
+			stage.addChild(entity.renderTargets);
+			break;
 		default:
 			console.warn('Missing implementation');
 			break;

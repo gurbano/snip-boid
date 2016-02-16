@@ -39,6 +39,10 @@ AbstractEntity.prototype.updateTargets = function(data) {
 		console.error(this.type + ' target update not implemented');
 	}
 };
+AbstractEntity.prototype.onTargetUpdate = function (target, data) {
+	console.info(this.type + ' updated by its target ' + target.type);
+	this.setPosition(target.position.x, target.position.y);
+}
 
 AbstractEntity.prototype.TYPES = {};
 AbstractEntity.prototype.TYPES.AbstractEntity = 'AbstractEntity';
@@ -46,6 +50,7 @@ AbstractEntity.prototype.TYPES.Flock = 'Flock';
 AbstractEntity.prototype.TYPES.Boid = 'Boid';
 AbstractEntity.prototype.TYPES.Wall = 'Wall';
 AbstractEntity.prototype.TYPES.Bouncer = 'Bouncer';
+AbstractEntity.prototype.TYPES.Goal = 'Goal';
 
 
 

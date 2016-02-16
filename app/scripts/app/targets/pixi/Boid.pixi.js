@@ -1,19 +1,22 @@
-var RED = 0xFF0000;
 var Victor = require('victor');
-var PixiBoid = function (opts) {
+var AbstractPixiTarget = require('./AbstractPixiTarget');
+
+var RED = 0xFF0000;
+
+var PixiBoid = function (source) {
 	var self = this;	
-	if (!(this instanceof PixiBoid)) return new PixiBoid(opts);
-	PIXI.Graphics.call(this); //extends pixi.container    
+	if (!(this instanceof PixiBoid)) return new PixiBoid(source);
+	AbstractPixiTarget.call(this, source); //extends pixi.container    
 	this.type = 'PixiBoid';
 	this.position = {x:0, y:0};
-	this.body = new PixiBoidBody(opts);
+	this.body = new PixiBoidBody(source);
     this.addChild(this.body);
     //this.render();
     return this;		
 }
 /*PROTO INHERITANCE*/
-PixiBoid.prototype = Object.create(PIXI.Graphics.prototype);
-PixiBoid.prototype.constructor = PIXI.Graphics;
+PixiBoid.prototype = Object.create(AbstractPixiTarget.prototype);
+PixiBoid.prototype.constructor = AbstractPixiTarget;
 PixiBoid.prototype.render = function () {
 	this.clear();
 	if (this.debug){
@@ -50,11 +53,10 @@ PixiBoid.prototype.drawLine = function (color, x,y, ratio) {
 
 
 /*-------------------------------------BODY */
-var PixiBoidBody = function (opts) {
+var PixiBoidBody = function (source) {
 	var self = this;
-    opts = opts || {};
-	if (!(this instanceof PixiBoidBody)) return new PixiBoidBody(opts);
-	PIXI.Graphics.call(this); //extends pixi.container    
+	if (!(this instanceof PixiBoidBody)) return new PixiBoidBody(source);
+	AbstractPixiTarget.call(this, source); //extends pixi.container    
     this.update = function (boid) {
         //Update rotation of the pBoid accordin to the speed (direction) of the boid
         this.debug = boid.debug;
@@ -70,8 +72,8 @@ var PixiBoidBody = function (opts) {
     return this;		
 }
 
-PixiBoidBody.prototype = Object.create(PIXI.Graphics.prototype);
-PixiBoidBody.prototype.constructor = PIXI.Graphics;
+PixiBoidBody.prototype = Object.create(AbstractPixiTarget.prototype);
+PixiBoidBody.prototype.constructor = AbstractPixiTarget;
 PixiBoidBody.prototype.render = function() {
 	this.clear();
 	this.beginFill(RED);

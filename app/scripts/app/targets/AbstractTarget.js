@@ -1,7 +1,7 @@
-var AbstractTarget = function(){
+var AbstractTarget = function(opts){	
+	if (!(this instanceof AbstractTarget)) return new AbstractTarget(opts);	
 	var self = this;
-	this.opts = opts || {};
-	if (!(this instanceof AbstractTarget)) return new AbstractTarget(this.opts);	
+	this.opts = opts || {};	
 	this.type = 'AbstractTarget';
 	return this;
 }
