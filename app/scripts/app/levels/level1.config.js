@@ -23,6 +23,6 @@ module.exports = {
 		goalWP: 1
 	},
 	FLOCK: {
-		SIZE: 40,
+		SIZE: 3,
 	}
 }

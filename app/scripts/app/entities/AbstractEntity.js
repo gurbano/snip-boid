@@ -36,8 +36,7 @@ AbstractEntity.prototype.updateTargets = function(data) {
 		}
 	};*/
 	if (this.renderTargets && this.renderTargets.update){this.renderTargets.update(this, data);}else{
-		console.error(this.renderTargets.type + ' target update not implemented');
-
+		console.error(this.type + ' target update not implemented');
 	}
 };
 

@@ -6,6 +6,7 @@ var World = function(opts){
 	this.type = 'World';
 	this.targetFactory = opts.targetFactory;
 	this.stage = undefined;
+	this.debug = false;
 }
 World.prototype.init = function() {
 	console.info('Init world', this.opts);
@@ -41,14 +42,17 @@ World.prototype.getEntitiesByType = function(key) {
 };
 
 World.prototype.update = function(data) {
+	var opts = {
+		debug: this.debug,
+		attractors: this.getEntitiesByType('Bouncer'),
+		goals:  this.getEntitiesByType('Goal'), 
+		walls:  this.getEntitiesByType('Wall')
+	};
+
 	for(var key in this.entities){
 		for (var i = this.entities[key].length - 1; i >= 0; i--) {
 			var ent = this.entities[key][i];
-			ent.update({
-				attractors: this.getEntitiesByType('Bouncer'),
-				goals: [], 
-				walls: []
-			});
+			ent.update(opts);
 		};	
 	}
 

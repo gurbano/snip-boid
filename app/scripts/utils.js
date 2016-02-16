@@ -9,6 +9,8 @@ Array.prototype.remove = function() {
     return this;
 };
 var randomcolor  = require('randomcolor');
+var V = require('victor');
+
 var Util = function () {
 	var self = this;
 	if (!(this instanceof Util)) return new Util(opts);
@@ -17,9 +19,7 @@ var Util = function () {
 	this.info = function () {
 		console.info(this);
 	}
-	this.v = function (x,y,z) {
-		return $V([x,y,z]);
-	}
+
 	/**
 	 * Returns a random integer between min (inclusive) and max (inclusive)
 	 * Using Math.round() will give you a non-uniform distribution!

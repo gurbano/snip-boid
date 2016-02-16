@@ -18,26 +18,34 @@ PixiFlock.prototype = Object.create(PIXI.Graphics.prototype);
 PixiFlock.prototype.constructor = PIXI.Graphics;
 PixiFlock.prototype.render = function () {
 	this.clear();
-	this.beginFill(0xffffff);
-    this.fillAlpha = 0.06;
-    this.drawCircle(0,0, Math.abs(this.radius) );
-    this.endFill(); 
+	if (this.debug){		
+		this.beginFill(0xffffff);
+	    this.fillAlpha = 0.06;
+	    this.drawCircle(0,0, Math.abs(this.radius) );
+	    this.endFill(); 
+	}
 }
-PixiFlock.prototype.update = function (source) {
+PixiFlock.prototype.update = function (source, data) {
 	var boids = source.boids;
 	var ret = V(0,0); var count = 0;
-	var maxDistance = 10;
-	for (var i = boids.length - 1; i >= 0; i--) {
-		var b = V(boids[i].getPosition().x,boids[i].getPosition().y);
-		ret = ret.add(b);
-		maxDistance = Math.max(maxDistance, Math.sqrt(b.distanceSq(V(this.position.x, this.position.y))) );
-		count++
-	};
-	ret = ret.divide(V(count,count));
+	var maxDistance = 0;
+	this.debug = data.debug;
+	if (this.debug){		
+		for (var i = boids.length - 1; i >= 0; i--) {
+			var b = V(boids[i].getPosition().x,boids[i].getPosition().y);
+			ret = ret.add(b);
+			maxDistance = Math.max(maxDistance, Math.sqrt(b.distanceSq(V(this.position.x, this.position.y))) );
+			count++
+		};
+		ret = ret.divide(V(count,count));		
+		
+	}
+	this.radius = maxDistance * 1.1;
 	//console.info(arg);
 	this.position.x = ret.x;
 	this.position.y = ret.y;
-	this.radius = maxDistance + 50;
+	
+
 	this.render();
 };
 

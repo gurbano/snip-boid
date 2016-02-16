@@ -78,7 +78,7 @@ Flock.prototype.update = function(data) {
 		sRatio: this.sRatio
 	});
 	this.boids.forEach(function (boid) {
-		boid.debug = self.debug || false;
+		boid.debug = data.debug || false;
 		boid.step(self.boids, opts); //move boids
 		boid.updateTargets(data);  //update
 	});

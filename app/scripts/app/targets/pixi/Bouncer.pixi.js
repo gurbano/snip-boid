@@ -1,4 +1,6 @@
-var RED = 0xFFFFFF;
+var RED = 0xFF0000;
+
+
 var PixiBouncer = function (opts) {
 	var self = this;	
 	if (!(this instanceof PixiBouncer)) return new PixiBouncer(opts);
@@ -16,18 +18,22 @@ PixiBouncer.prototype.render = function () {
     this.lineStyle(0,0x000000);
     if (this.debug){
         this.beginFill(0x888888);
-        this.fillAlpha = 0.06;
+        this.fillAlpha = 0.05;// * this.force/500 ;
         this.drawCircle(0,0, Math.abs(this.radius + this.distance || 10) );
         this.endFill(); 
     }        
     this.beginFill(RED);
+    this.fillAlpha = 0.66;
     this.lineStyle(1,0x000000);
     this.drawCircle(0,0, Math.abs(this.radius || 10) );
     this.endFill();   
 }
-PixiBouncer.prototype.update = function (source) {
+PixiBouncer.prototype.update = function (source,data) {
 	//console.info(arg);
 	this.radius = source.radius;
+    this.distance = source.distance;
+    this.force = source.force;
+    this.debug = data.debug;
 	this.position.x = source.getPosition().x;
 	this.position.y = source.getPosition().y;
 	this.render();

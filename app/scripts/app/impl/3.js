@@ -57,7 +57,6 @@ BoidImplementation3.prototype.attractor = function (boid, attractors) {
 	var loc = V(boid).add(VV(boid.getSpeed()));
 	for (var i = attractors.length - 1; i >= 0; i--) {
 		var attractor = attractors[i];
-		var aPos = utils.v(attractor.getPosition().x, attractor.getPosition().y, 0);
 		var otherloc = V(attractor);
 		var distance = V(boid).subtract(otherloc).magnitude();
 		var distanceLimit = attractor.distance + attractor.radius;
@@ -99,7 +98,7 @@ BoidImplementation3.prototype.cwall = function (boid, walls) {
 		);
 		var inter = utils.lineInterception(proj, wall.getLineEq());
 
-		if (inter && wall.isInside(inter) && isInside(inter, loc, locSpeed) && distance<distanceCheck){
+		if (inter && wall.isInside(inter) && isInside(inter, loc, locSpeed) && distance<distanceCheck){			
 			wall.intersection = inter;
 			var norm;
 			var norm0 = VVV((wall.end.y - wall.start.y), -(wall.end.x - wall.start.x)).normalize().multiply(VVV(100,100));

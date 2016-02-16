@@ -1,10 +1,13 @@
 var RED = 0xFF0000;
+var Victor = require('victor');
 var PixiBoid = function (opts) {
 	var self = this;	
 	if (!(this instanceof PixiBoid)) return new PixiBoid(opts);
 	PIXI.Graphics.call(this); //extends pixi.container    
 	this.type = 'PixiBoid';
 	this.position = {x:0, y:0};
+	this.body = new PixiBoidBody(opts);
+    this.addChild(this.body);
     //this.render();
     return this;		
 }
@@ -13,15 +16,67 @@ PixiBoid.prototype = Object.create(PIXI.Graphics.prototype);
 PixiBoid.prototype.constructor = PIXI.Graphics;
 PixiBoid.prototype.render = function () {
 	this.clear();
-	this.beginFill(RED);
-    this.drawCircle(0,0, Math.abs(3) );
-	this.endFill(); 
+	if (this.debug){
+        this.drawLine(0xFFFFFF, this.acc[0] ,this.acc[1], 100);
+    	this.drawLine(RED, this.speed[0] ,this.speed[1], 10);
+    }
 }
 PixiBoid.prototype.update = function (source) {
 	//console.info(arg);
+	this.debug = source.debug;
 	this.position.x = source.getPosition().x;
 	this.position.y = source.getPosition().y;
+	this.speed = [source.getSpeed().x, source.getSpeed().y];
+    this.acc = [source.getAcc().x, source.getAcc().y];
 	this.render();
+	this.body.update(source);
+};
+PixiBoid.prototype.drawLine = function (color, x,y, ratio) {
+    this.lineStyle(1,color);
+    this.fillAlpha = 0.06;
+    this.beginFill();
+    this.moveTo(0,0);
+    var acc = new Victor(x,y);
+    var m = (ratio || 30) * acc.magnitude();
+    //s = new Victor(1, 0);
+    acc.normalize().multiply(new Victor(m,m));
+    //s = s.rotateBy(-rad);
+    this.lineTo(acc.x,acc.y);
+    this.lineTo(0,0);
+    this.endFill();                         
+}
+
+
+
+
+/*-------------------------------------BODY */
+var PixiBoidBody = function (opts) {
+	var self = this;
+    opts = opts || {};
+	if (!(this instanceof PixiBoidBody)) return new PixiBoidBody(opts);
+	PIXI.Graphics.call(this); //extends pixi.container    
+    this.update = function (boid) {
+        //Update rotation of the pBoid accordin to the speed (direction) of the boid
+        this.debug = boid.debug;
+        this.render();
+    }
+    this.pivot.set(0,0);
+    this.position.x = 0;
+    this.position.y = 0;
+    this.position.z = 0;
+
+    this.speed = [];
+    
+    return this;		
+}
+
+PixiBoidBody.prototype = Object.create(PIXI.Graphics.prototype);
+PixiBoidBody.prototype.constructor = PIXI.Graphics;
+PixiBoidBody.prototype.render = function() {
+	this.clear();
+	this.beginFill(RED);
+    this.drawCircle(0,0, Math.abs(3) );
+	this.endFill(); 
 };
 
 

@@ -2,6 +2,7 @@ var BaseTargetFactory = require('./BaseTargetFactory');
 var PWorld = require('../targets/pixi/World.pixi');
 var PBoid = require('../targets/pixi/Boid.pixi');
 var PBouncer = require('../targets/pixi/Bouncer.pixi');
+var PWall = require('../targets/pixi/Wall.pixi');
 var PFlock = require('../targets/pixi/Flock.pixi');
 
 
@@ -30,6 +31,9 @@ PixiTargetFactory.prototype.generate = function(entity) {
 			break;
 		case 'Bouncer': 
 			return new PBouncer(entity);
+			break;
+		case 'Wall': 
+			return new PWall(entity);
 			break;
 		default: 
 			return BaseTargetFactory.prototype.generate.call(this,entity);
