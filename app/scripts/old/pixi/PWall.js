@@ -1,7 +1,7 @@
 var RED = 0xFF0000;
 var WHITE = 0xFFFFFF;
 var BLACK = 0x000000;
-var gu = require('../utils');
+var gu = require('../../utils');
 
 
 var fixOpts = function (opts) {
@@ -27,8 +27,7 @@ var PWall = function (opts) {
 	this.isVertical = Math.abs(this.end.x - this.start.x) < 0.00001 ;	
 	this.isHorizontal = Math.abs(this.end.y - this.start.y) < 0.00001 ;
 	
-	this.line = Line.create([opts.start.x,opts.start.y], [opts.end.x,opts.end.y]);
-
+	
 	this.Y = function (x) {
 		return this.M * x;
 	};

@@ -6,11 +6,11 @@ console.info('random' , gu.random(-100,100));
 
 
 
-var conf = require('./configurations/experiment1');
+var conf = require('./old/configurations/experiment1');
 var raf = require('raf');
-var Stage = require('./pixi/Stage');
-var stages = require('./stages/stages');
-var cities = require('./stages/cities');
+var Stage = require('./old/pixi/Stage');
+var stages = require('./old/stages/stages');
+var cities = require('./old/stages/cities');
 
 
 var experiment = new function () {

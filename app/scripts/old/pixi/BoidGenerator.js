@@ -1,6 +1,6 @@
 var RED = 0xFF0000;
 var LGRAY = 0x999999;
-var gu = require('../utils');
+var gu = require('../../utils');
 var Flock = require('../boids/Flock');
 
 var BoidGenerator = function (opts) {

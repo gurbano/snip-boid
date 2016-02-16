@@ -1,4 +1,4 @@
-var utils = require('../../utils');
+var utils = require('../../../utils');
 var Victor = require('victor'); //http://victorjs.org/
 
 
@@ -57,7 +57,6 @@ BoidImplementation3.prototype.attractor = function (boid, attractors) {
 	var loc = V(boid).add(VV(boid.getSpeed()));
 	for (var i = attractors.length - 1; i >= 0; i--) {
 		var attractor = attractors[i];
-		var aPos = utils.v(attractor.getPosition().x, attractor.getPosition().y, 0);
 		var otherloc = V(attractor);
 		var distance = V(boid).subtract(otherloc).magnitude();
 		var distanceLimit = attractor.distance + attractor.radius;

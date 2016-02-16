@@ -1,6 +1,6 @@
 var RED = 0xFF0000;
 var WHITE = 0xFFFFFF;
-var gu = require('../utils');
+var gu = require('../../utils');
 
 var PAttractor = function (opts) {
 	var self = this;
