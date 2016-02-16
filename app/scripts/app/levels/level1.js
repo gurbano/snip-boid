@@ -24,17 +24,17 @@ for (var i = 0; i < 40; i++) {
 		force: gu.random(100, 500),
 		distance: gu.random(10, 50)
 	});
-	//targetFactory.apply(bouncer);	
-	//conf.WORLD.entities.push(bouncer);
+	targetFactory.apply(bouncer);	
+	conf.WORLD.entities.push(bouncer);
 };
 
-for (var i = 0; i < 1; i++) {
+for (var i = 0; i < 5; i++) {
 		var wall = new Wall({
 		start: {x: gu.random(0, conf.width),
 				y: gu.random(0, conf.height)},
 		end: {x: gu.random(0, conf.width),
 				y: gu.random(0, conf.height)},
-		force: gu.random(100, 500),
+		force: 500,
 		distance: 100
 	});
 	targetFactory.apply(wall);	

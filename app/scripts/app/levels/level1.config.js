@@ -14,15 +14,16 @@ module.exports = {
 		cohW: 140, //0 -> 100
 		aliW: 80,
 
-		aLimit: 0.1,
-		sLimit: 1,
+		aLimit: 0.5,
+		sLimit: 3,
 		sRatio: 1,
 
 		scaWP:  0.5,
 		attrWP: 2,
-		goalWP: 1
+		goalWP: 1,
+		RANDOM: false
 	},
 	FLOCK: {
-		SIZE: 3,
+		SIZE: 30,
 	}
 }
