@@ -10,16 +10,32 @@ UI.prototype.init = function() {
 	console.info('Init UI', this.opts);
 	this.stage = $('<div />', {
     	"class": 'ui-canvas',
-    	text: "UI-CANVAS",
     	click: function(e){
-        	e.preventDefault();
-        	alert("test")
+        	//e.preventDefault();
+        	//alert("test")
     	}
     });
 	$(document.body).prepend(this.stage);
 };
 UI.prototype.addEntity = function(options, entity) {
-	console.info('adding ' + entity.type, entity,);	
+	console.info('adding ' + entity.key, entity);	
+	this.stage.prepend(entity);
+	this.controls[entity.key]= entity;
 };
-
+UI.prototype.getEntity = function(key) {
+	if(this.controls[key]){
+		return this.controls[key];
+	}else{
+		//return UIFactory.getErrorComponent('get entity ' + key);
+		console.error(key + ' component not registered');
+		return $("<div />");
+	}
+};
+UI.prototype.bindToApp = function(app) {
+	for (var k in this.controls) {
+		if(this.controls[k].onBind){
+			this.controls[k].onBind(this,app);
+		}
+	};	
+}
 module.exports = UI;

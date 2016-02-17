@@ -163,7 +163,7 @@ gulp.task('serve', ['styles','watchify', 'fonts'], () => {
     '.tmp/fonts/**/*'
   ]).on('change', reload);
 
-  gulp.watch(['app/styles/**/*.scss', '/bower_components'], ['styles']);
+  gulp.watch(['app/styles/**/*.css', '/bower_components'], ['styles']);
   gulp.watch('app/fonts/**/*', ['fonts']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
@@ -189,7 +189,7 @@ gulp.task('wiredep', () => {
 });
 
 
-gulp.task('build', ['scripts', 'html', 'images', 'audio','fonts', 'extras'], () => {
+gulp.task('build', ['scripts', 'styles', 'html', 'images', 'audio','fonts', 'extras'], () => {
   return gulp.src('dist/**/*').pipe($.size({
     title: 'build',
     gzip: true

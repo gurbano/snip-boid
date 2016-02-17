@@ -6,6 +6,7 @@ var FlockFactory = require('../factories/FlockFactory');
 var conf = require('./level1.config');
 var PixiTargetFactory = require('../factories/PixiTargetFactory');
 var gu = require('../../utils.js');
+var UIFactory = require('../UI/UIFactory.js');
 
 
 
@@ -28,7 +29,7 @@ for (var i = 0; i < 40; i++) {
 		distance: gu.random(10, 50)
 	});
 	targetFactory.apply(bouncer);	
-	//conf.WORLD.entities.push(bouncer);
+	conf.WORLD.entities.push(bouncer);
 };
 
 
@@ -57,13 +58,29 @@ var goal = new Goal({
 targetFactory.apply(goal);	
 conf.WORLD.entities.push(goal);
 
+var pbControl = UIFactory.getBox('PB-CONTROLS');
+var pbControls = UIFactory.getButtonGroup('playback-controls-group');
+pbControl.append(pbControls);
+pbControl.onBind = function (ui, app) {
+	var bStop = UIFactory.getButton('STOP',function () {
+		app.speed = 0;
+	}); 
+	var bStart= UIFactory.getButton('PLAY',function () {
+		app.speed = 1;
+	});	
+	var bSlow= UIFactory.getButton('SLOW',function () {
+		app.speed = 10;
+	}); 
+	pbControls.append(bStop);
+	pbControls.append(bStart);
+	pbControls.append(bSlow);
+}
+
 
 conf.UI = {
 	controls:
 	[
-
-
-
+		pbControl
 	]	
 }
 

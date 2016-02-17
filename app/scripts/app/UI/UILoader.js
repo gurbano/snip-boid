@@ -12,7 +12,7 @@ UILoader.prototype.load = function(opts) {
 	if (spec.controls){//add controls
 		for (var i = spec.controls.length - 1; i >= 0; i--) {
 			var entity = spec.controls[i];
-			_ui.addEntity({id: entity.id, type: entity.type}, entity);
+			_ui.addEntity({key: entity.key},entity);
 		};
 	}
 	return _ui;

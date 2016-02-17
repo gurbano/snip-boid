@@ -12,7 +12,7 @@ var ZombieLandStartupper = new function() {
 	app.setWorld(WorldLoader.load(level1));
 	app.start();
 	app.ui = UILoader.load(level1);
-
+	app.ui.bindToApp(app); 
 
 	deb(app, app.getWorld(), app.getWorld().getEntitiesByType('Flock')[0]);
 
@@ -42,4 +42,5 @@ function deb (app, world, flock) {
 	f4.add(flock, 'scaWP',0.1,2).step(0.1);
 	f4.add(flock, 'attrWP',0.1,2).step(0.1);
 	f4.add(flock, 'goalWP',0.1,2).step(0.1);
+	gui.close();
 }

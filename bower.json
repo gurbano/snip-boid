@@ -5,7 +5,8 @@
     "bootstrap": "~3.3.5",
     "modernizr": "~2.8.1",
     "fabric.js": "fabric#~1.5.0",
-    "pixi.js": "pixi#~3.0.8"
+    "pixi.js": "pixi#~3.0.8",
+    "jquery-ui": "~1.11.4"
   },
   "overrides": {
     "bootstrap": {

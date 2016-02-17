@@ -1,9 +1,14 @@
 /*UI*/
 .ui-canvas{
 	position: absolute;
+	width: 100%;
+	height: 100%;
 }
+
 .ui-box{
 	padding:10px;
 	position: absolute;
-	border: 2px dotted gray;
+	display: inline-block;
+	left:100px;
+	top:100px;
 }

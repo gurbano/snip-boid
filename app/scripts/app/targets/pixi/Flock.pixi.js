@@ -23,8 +23,8 @@ PixiFlock.prototype.constructor = AbstractPixiTarget;
 PixiFlock.prototype.render = function () {
 	this.clear();
 	if (this.debug){		
-		this.beginFill(0xffffff);
-	    this.fillAlpha = 0.06;
+		this.beginFill(0x000000);
+	    this.fillAlpha = 0.2;
 	    this.drawCircle(0,0, Math.abs(this.radius) );
 	    this.endFill(); 
 	}
@@ -34,7 +34,7 @@ PixiFlock.prototype.update = function (source, data) {
 	var ret = V(0,0); var count = 0;
 	var maxDistance = 0;
 	this.debug = data.debug;
-	if (this.debug){		
+	if (this.debug){	
 		for (var i = boids.length - 1; i >= 0; i--) {
 			var b = V(boids[i].getPosition().x,boids[i].getPosition().y);
 			ret = ret.add(b);
