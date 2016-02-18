@@ -52,7 +52,16 @@ AbstractEntity.prototype.TYPES.Wall = 'Wall';
 AbstractEntity.prototype.TYPES.Bouncer = 'Bouncer';
 AbstractEntity.prototype.TYPES.Goal = 'Goal';
 
+AbstractEntity.prototype.serialize = function () {
+	return{
+		//opts: this.opts,
+		type: this.type,
+		parent: this.parent,
+		id: this.id,
+		position: this.position,
 
+	}
+};
 
 module.exports = AbstractEntity;
 

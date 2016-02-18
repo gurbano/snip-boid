@@ -1,7 +1,8 @@
+var PixiTargetFactory = require('../factories/PixiTargetFactory');
 var GREEN = 0x00fa9a;
-
 module.exports = {
-	speed: 10,
+	targetFactory: new PixiTargetFactory({}),
+	speed: 1,
 	width: $(window).width(),
 	height: $(window).height(),
 	BACKGROUND : GREEN,

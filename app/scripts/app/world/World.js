@@ -1,7 +1,7 @@
-var World = function(opts){
+var World = function(opts){	
+	if (!(this instanceof World)) return new World(opts);	
 	var self = this;
 	this.opts = opts || {};
-	if (!(this instanceof World)) return new World(this.opts);	
 	this.entities = {}; // [type][id]
 	this.type = 'World';
 	this.targetFactory = opts.targetFactory;
@@ -40,6 +40,9 @@ World.prototype.getEntitiesByType = function(key) {
 		ret = ret.concat(this.entities[key]);	
 	return ret;
 };
+World.prototype.getEntityKeys = function(key) {
+	return Object.keys(this.entities);
+};
 
 World.prototype.update = function(data) {
 	var opts = {
@@ -48,7 +51,6 @@ World.prototype.update = function(data) {
 		goals:  this.getEntitiesByType('Goal'), 
 		walls:  this.getEntitiesByType('Wall')
 	};
-
 	for(var key in this.entities){
 		for (var i = this.entities[key].length - 1; i >= 0; i--) {
 			var ent = this.entities[key][i];
@@ -57,6 +59,16 @@ World.prototype.update = function(data) {
 	}
 
 	this.stage.update();	
+};
+
+World.prototype.serialize = function () {
+	return{
+		//opts: this.opts,
+		type: this.type,
+		id: this.id,
+		debug: this.debug,
+		entities: []
+	}
 };
 
 module.exports = World;

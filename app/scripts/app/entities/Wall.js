@@ -21,7 +21,7 @@ var Wall = function(opts){
 
 	this.start = this.opts.start;
 	this.end = this.opts.end;
-	this._init = function () {
+	var _init = function () {
 		this.A = this.end.y - this.start.y;
 		this.B = this.start.x - this.end.x;
 		this.C = this.A * this.start.x+this.B*this.start.y;
@@ -29,7 +29,7 @@ var Wall = function(opts){
 		this.isVertical = Math.abs(this.end.x - this.start.x) < 0.00001 ;	
 		this.isHorizontal = Math.abs(this.end.y - this.start.y) < 0.00001 ;
 	}
-	this._init;
+	_init.bind(this)();
 
 	function dd(P1, P2, P0) {
 		var x1 = P1.x, x2=P2.x, y1 = P1.y, y2 = P2.y, x0 = P0.x, y0 = P0.y;
@@ -73,13 +73,28 @@ Wall.prototype.onTargetUpdate = function (target, data) {
     if (data.type && data.type==='start'){
     	this.start.x = target.position.x;
     	this.start.y = target.position.y;
-    	this._init();
+    	//this._init();
+    	return;
     }
     if (data.type && data.type==='end'){
     	this.end.x = target.position.x;
     	this.end.y = target.position.y;
-    	this._init();
+    	//this._init();
+    	return;
     }
 }
     
+
+Wall.prototype.serialize = function () {
+	return{
+		//opts: this.opts,
+		type: this.type,
+		parent: this.parent,
+		id: this.id,
+		start: this.start,
+		end: this.end
+	}
+};
+
+
 module.exports = Wall;
