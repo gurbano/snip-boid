@@ -1,7 +1,8 @@
 var ZombieLand = require('./app/ZombieLand');
 var WorldLoader = require('./app/world/WorldLoader');
 var UILoader = require('./app/UI/UILoader');
-//var level1 = require('./app/levels/level1');
+var level1 = require('./app/levels/level1');
+var level1ui = require('./app/levels/level1.UI');
 var conf = require('./app/levels/level1.config');
 
 var level1JSON = require('./app/levels/level1.JSON');
@@ -11,13 +12,13 @@ var ZombieLandStartupper = new function() {
 	var app = new ZombieLand({speed: conf.speed});
 	console.info(app.info());
 	
-	//app.setWorld(WorldLoader.load(level1, level1.WORLD)); //load from programmatic configuration
-	app.setWorld(WorldLoader.loadFromJSON(conf, level1JSON)); //load from serialized world
+	app.setWorld(WorldLoader.load(level1, level1.WORLD)); //load from programmatic configuration
+	//app.setWorld(WorldLoader.loadFromJSON(conf, level1JSON)); //load from serialized world
 
 	app.start();
 	
-	//app.ui = UILoader.load(level1);
-	//app.ui.bindToApp(app); 
+	app.ui = UILoader.load(level1ui);
+	app.ui.bindToApp(app); 
 	//deb(app, app.getWorld(), app.getWorld().getEntitiesByType('Flock')[0]);
 }
 

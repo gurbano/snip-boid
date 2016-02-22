@@ -10,6 +10,7 @@ var World = function(opts){
 }
 World.prototype.init = function() {
 	console.info('Init world', this.opts);
+
 	this.stage = this.targetFactory.generate(this); //new PixiWorld
 	console.info('Stage ready', this.stage.info);
 };
@@ -25,7 +26,7 @@ World.prototype.addEntity = function(options, entity) {
 		}
 	}else{
 		console.error('Entity id missing; check the entity.id field', entity);
-	}
+	} 
 };
 World.prototype.getEntities = function() {
 	var ret = [];
@@ -59,6 +60,12 @@ World.prototype.update = function(data) {
 	}
 
 	this.stage.update();	
+};
+World.prototype.remove = function() {
+	console.info('removing world');
+	if (this.stage){
+		this.stage.destroy();
+	}
 };
 
 World.prototype.serialize = function () {

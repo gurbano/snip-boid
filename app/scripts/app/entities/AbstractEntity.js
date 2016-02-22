@@ -9,7 +9,7 @@
 
 */
 
-var AbstractEntity = function(opts){
+var AbstractEntity = function(opts ){
 	var self = this;
 	this.opts = opts || {};
 	if (!(this instanceof AbstractEntity)) return new AbstractEntity(this.opts);	
@@ -17,6 +17,10 @@ var AbstractEntity = function(opts){
 	this.id = this.opts.id || randomUUID();
 	this.parent = undefined;
 	this.renderTargets = undefined;
+	this.position = this.opts.position ||{
+		x: this.opts.x || 0,
+		y: this.opts.y ||0
+	};
 	return this;
 }
 AbstractEntity.prototype.update = function(data) {

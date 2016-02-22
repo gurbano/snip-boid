@@ -10,12 +10,12 @@ var PixiWall = function (source) {
 	this.type = 'PixiWall';
 	this.position = {x:0, y:0};
     this.pstart = new PCircle(source, {
-        draggable: true,
+        draggable: source.opts.draggable || false,
         radius: 5,
         color: WHITE,
     });
     this.pend = new PCircle(source, {
-        draggable: true,
+        draggable: source.opts.draggable || false,
         radius: 5,
         color: RED,
     });

@@ -13,6 +13,9 @@ AbstractApp.prototype.info = function() {
 	return this.name + ' ' + this.version;
 };
 AbstractApp.prototype.setWorld = function(world) {
+	if (this.world){
+		this.world.remove();
+	}
 	this.world = world;
 };
 AbstractApp.prototype.getWorld = function() {

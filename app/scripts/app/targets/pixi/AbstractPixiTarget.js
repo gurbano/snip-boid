@@ -1,10 +1,13 @@
 
-var AbstractPixiTarget = function(source){	
-	if (!(this instanceof AbstractPixiTarget)) return new AbstractPixiTarget(source);	
+var AbstractPixiTarget = function(source, opts){	
+	if (!(this instanceof AbstractPixiTarget)) return new AbstractPixiTarget(source, opts);	
 	PIXI.Graphics.call(this); //extends pixi.container 
 	var self = this;
 	this.source = source;	
 	this.type = 'AbstractPixiTarget';
+    opts = opts || {};
+    this.source.opts = this.source.opts || {};
+    this.source.opts = $.extend(this.source.opts, opts)
 	this.buttonMode = source.opts.draggable || false;
 	this.interactive = source.opts.draggable || false;
 	this// events for drag start

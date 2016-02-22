@@ -1,4 +1,4 @@
-
+ 
 
 var PixiWorld = function (source) {	
 	if (!(this instanceof PixiWorld)) return new PixiWorld(source);	
@@ -18,6 +18,9 @@ PixiWorld.prototype.getStage = function (type) {
 	}
 	return this.stages[type];
 }
+PixiWorld.prototype.destroy = function() {
+	document.body.removeChild(this.renderer.view);
+};
 /******************
 STAGE:
 	(stages)

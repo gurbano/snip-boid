@@ -3,17 +3,13 @@ var AbstractEntity = require('./AbstractEntity');
 var V = require('victor');
 var Bouncer = function(opts){
 	var self = this;	
-	if (!(this instanceof Bouncer)) return new Bouncer(this.opts);
-	AbstractEntity.call(this); //extends pixi.container   
+	if (!(this instanceof Bouncer)) return new Bouncer(opts);
+	AbstractEntity.call(this, opts); //extends pixi.container   
 	this.opts = opts || {};
 	this.type = this.TYPES.Bouncer;
 	this.radius = opts.radius || 10;
 	this.force = opts.force || 10;
 	this.distance = opts.distance || 1; //distance multip	
-	this.position = {
-		x:opts.x || 0,
-		y: opts.y ||0
-	};
 	this.setPosition = function (x,y) {this.position.x = x; this.position.y = y;};
     this.getPosition = function () {return this.position};
 	this.getDistanceFrom = function (x,y) {

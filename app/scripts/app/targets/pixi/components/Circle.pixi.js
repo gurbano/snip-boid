@@ -5,7 +5,7 @@ var AbstractPixiTarget = require('./../AbstractPixiTarget');
 var PixiCircle = function (source, opts) {
 	var self = this;	
 	if (!(this instanceof PixiCircle)) return new PixiCircle(source);
-	AbstractPixiTarget.call(this, source); //extends pixi.container    
+	AbstractPixiTarget.call(this, source); //extends pixi.container        
 	this.type = 'PixiCircle';
 	this.position = {x:0, y:0};
     this.color = opts.color || gu.color();

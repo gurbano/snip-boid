@@ -7,6 +7,7 @@ var WorldLoader = function(opts){
 
 }
 WorldLoader.prototype.load = function(opts, worldSpec) {
+	worldSpec = $.extend(true, {}, worldSpec);
 	var world = new World(opts);
 	world.init();
 	//var worldSpec = opts.WORLD;
@@ -18,9 +19,9 @@ WorldLoader.prototype.load = function(opts, worldSpec) {
 	}
 	return world;
 };
-
 WorldLoader.prototype.loadFromJSON = function(opts, worldJSON) {
 	console.info('imported object' ,worldJSON);	
+	worldJSON = $.extend(true, {}, worldJSON);
 	var world = new World(opts);
 	world.init();
 	if (worldJSON.entities){//add entities
@@ -28,7 +29,9 @@ WorldLoader.prototype.loadFromJSON = function(opts, worldJSON) {
 			var entity = worldJSON.entities[i];
 			console.info(entity);
 			eFactory.generate(entity, opts, function (e) {
-				world.addEntity({id: e.id, type: e.type}, e);
+				if (e){
+					world.addEntity({id: e.id, type: e.type}, e);
+				}
 			});
 			
 		};
