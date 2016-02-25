@@ -30,7 +30,7 @@ for (var i = 0; i < 40; i++) {
 		distance: gu.random(10, 50)
 	});
 	targetFactory.apply(bouncer);	
-	//conf.WORLD.entities.push(bouncer);
+	conf.WORLD.entities.push(bouncer);
 };
 
 
@@ -45,7 +45,7 @@ for (var i = 0; i < 5; i++) {
 			distance: 100
 		});
 	targetFactory.apply(wall);	
-	conf.WORLD.entities.push(wall);
+	//conf.WORLD.entities.push(wall);
 };
 
 var goal = new Goal({

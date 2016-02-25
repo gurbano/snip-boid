@@ -10,17 +10,22 @@
 */
 
 var AbstractEntity = function(opts ){
+	if (!(this instanceof AbstractEntity)) return new AbstractEntity(opts);	
 	var self = this;
-	this.opts = opts || {};
-	if (!(this instanceof AbstractEntity)) return new AbstractEntity(this.opts);	
+	this.opts = opts || {};	
 	this.type = this.opts.type || this.TYPES.AbstractEntity;
 	this.id = this.opts.id || randomUUID();
 	this.parent = undefined;
 	this.renderTargets = undefined;
+	this.draggable = this.opts.draggable;
 	this.position = this.opts.position ||{
 		x: this.opts.x || 0,
 		y: this.opts.y ||0
 	};
+	this.setPosition = function (x,y) {
+		this.position.x = x;
+		this.position.y = y;
+	}
 	return this;
 }
 AbstractEntity.prototype.update = function(data) {
@@ -57,13 +62,16 @@ AbstractEntity.prototype.TYPES.Bouncer = 'Bouncer';
 AbstractEntity.prototype.TYPES.Goal = 'Goal';
 
 AbstractEntity.prototype.serialize = function () {
+	return this._serialize();
+}
+AbstractEntity.prototype._serialize = function () {
 	return{
 		//opts: this.opts,
 		type: this.type,
 		parent: this.parent,
 		id: this.id,
 		position: this.position,
-
+		draggable: this.draggable
 	}
 };
 

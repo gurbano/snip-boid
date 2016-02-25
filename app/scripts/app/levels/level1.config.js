@@ -25,6 +25,6 @@ module.exports = {
 		RANDOM: false
 	},
 	FLOCK: {
-		SIZE: 50,
+		SIZE: 500,
 	}
 }

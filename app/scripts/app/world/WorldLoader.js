@@ -27,7 +27,7 @@ WorldLoader.prototype.loadFromJSON = function(opts, worldJSON) {
 	if (worldJSON.entities){//add entities
 		for (var i = worldJSON.entities.length - 1; i >= 0; i--) {
 			var entity = worldJSON.entities[i];
-			console.info(entity);
+			console.debug("generating entity for descriptor: ",entity);
 			eFactory.generate(entity, opts, function (e) {
 				if (e){
 					world.addEntity({id: e.id, type: e.type}, e);

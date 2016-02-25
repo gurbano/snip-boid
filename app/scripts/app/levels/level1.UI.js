@@ -31,16 +31,23 @@ var level1JSON = require('./level1.JSON');
 /*SAVE AND LOAD*/
 var pbControl = UIFactory.getBox('FILE-CONTROLS');
 var pbControls = UIFactory.getButtonGroup('file-controls-group');
+var buffer = undefined;
 pbControl.append(pbControls);
 pbControl.onBind = function (ui, app) {
 	var bSave = UIFactory.getButton('SAVE',function () {
-		console.info('saving', WorldLoader.saveToJSON(app.world, {}));
-		
+		console.info('saving', app.world);
+		buffer = WorldLoader.saveToJSON(app.world, {});
 	}); 
 	var bLoad= UIFactory.getButton('LOAD',function () {
-		var ret = WorldLoader.loadFromJSON(conf, level1JSON);
+		var ret;
+		if (buffer){
+			ret = WorldLoader.loadFromJSON(conf, JSON.parse(buffer));
+		}else{
+			ret = WorldLoader.loadFromJSON(conf, level1JSON);
+		} 
 		//var ret = WorldLoader.loadFromJSON(WorldLoader.saveToJSON(app.world, {}),{});
 		app.setWorld(ret);
+		app.start();
 		console.info('loading',ret);
 	});	
 	

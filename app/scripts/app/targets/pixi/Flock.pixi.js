@@ -48,9 +48,8 @@ PixiFlock.prototype.update = function (source, data) {
 	//console.info(arg);
 	this.position.x = ret.x;
 	this.position.y = ret.y;
-	
-
 	this.render();
+	this.updateSource();
 };
 
 

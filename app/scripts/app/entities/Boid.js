@@ -16,7 +16,7 @@ var sqrt = Math.sqrt
 var Boid = function(opts){
 	var self = this;	
 	if (!(this instanceof Boid)) return new Boid(opts);
-	AbstractEntity.call(this); //extends pixi.container   
+	AbstractEntity.call(this, opts); //extends pixi.container   
 	this.opts = opts || {};
 	this.type = this.TYPES.Boid;
 	this.implementation =  this.opts.impl;
@@ -37,15 +37,20 @@ var Boid = function(opts){
 	this.getSpeed = function () {return  {x: _[sx], y: _[sy], z:_[sz] }};
 	this.getAcc = function () {return  {x: _[fx], y: _[fy], z:_[fz] }};
 
-	this.setPosition = function (x,y,z) { _[px] = x; _[py] = y; _[pz] = z};
+	this.setPosition = function (x,y,z) {  _[px] = x; _[py] = y; _[pz] = z};
 	this.setSpeed = function (x,y,z) { _[sx] = x; _[sy] = y; _[sz] = z};
 	this.setAcc = function (x,y,z) { _[fx] = x; _[fy] = y; _[fz] = z};
+
+	this.getRawData = function () {
+		return _;
+	}
 }
 Boid.prototype = Object.create(AbstractEntity.prototype);
 Boid.prototype.constructor = AbstractEntity;
 Boid.prototype.step = function (neighb, data) {
 	//apply the rules
 	this.implementation.step(this, neighb, data || {});
+	this.position = this.getPosition();
+	this.speed = this.getSpeed();
 }
-
 module.exports = Boid;

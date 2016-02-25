@@ -13,7 +13,7 @@ var fixOpts = function (opts) {
 var Wall = function(opts){
 	var self = this;	
 	if (!(this instanceof Wall)) return new Wall(this.opts);
-	AbstractEntity.call(this); //extends pixi.container   
+	AbstractEntity.call(this, opts); //extends pixi.container   
 	this.type = this.TYPES.Wall;
 	this.opts = opts || {};
 	this.opts  =fixOpts(this.opts);

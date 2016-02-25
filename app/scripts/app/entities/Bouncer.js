@@ -21,5 +21,15 @@ Bouncer.prototype.constructor = AbstractEntity;
 Bouncer.prototype.update = function(data) {
 	this.updateTargets(data);
 };
+Bouncer.prototype.serialize = function () {
+	return $.extend(
+			this._serialize(), // 'parent' serialize
+			{
+				radius: this.radius,
+				force: this.force,
+				distance: this.distance				
+			}
+		);
+}
 
 module.exports = Bouncer;

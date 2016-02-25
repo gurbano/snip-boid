@@ -5,15 +5,39 @@ var defaultImpl = require('./../impl/3')();
 
 var Flock = function(opts){
 	var self = this;
-	this.opts = opts || {};
 	if (!(this instanceof Flock)) return new Flock(this.opts);
-	AbstractEntity.call(this); //extends pixi.container   
+	AbstractEntity.call(this, opts); //extends pixi.container   
+	this.opts = opts || {};
 	this.type = this.TYPES.Flock;
 	this.boids = [];
 	this.init(opts);
 }
 Flock.prototype = Object.create(AbstractEntity.prototype);
 Flock.prototype.constructor = AbstractEntity;
+Flock.prototype.serialize = function () {
+	return $.extend(
+			this._serialize(), // 'parent' serialize
+			{
+				SIZE: this.boids.length,
+				RANDOM: true,
+				sepD   : this.sepD || 0,
+				cohD   : this.cohD || 0,
+				aliD   : this.aliD || 0,
+
+				sepW   : this.sepW || 0,
+				cohW   : this.cohW || 0,
+				aliW   : this.aliW || 0,
+
+				scaWP  : this.scaWP || 0,
+				attrWP : this.attrWP || 0,
+				goalWP : this.goalWP || 0,
+
+				aLimit : this.aLimit || 0,
+				sLimit : this.sLimit || 0,
+				sRatio : this.sRatio || 0,
+			}
+		);
+}
 Flock.prototype.init = function(opts) {
 	this.targetFactory = opts.targetFactory;
 
@@ -56,9 +80,13 @@ Flock.prototype.addBoid = function(opts) {
 	}
 	return b;
 };
-
+Flock.prototype.onTargetUpdate = function (target, data) {
+	this.setPosition(target.position.x, target.position.y);
+	this.radius = target.radius || 0;
+}
 /*onUpdate, the Flock updates itself and then call the update, step and updateTarget on each boid*/
 Flock.prototype.update = function(data) {
+	console.info("Flock (" + this.id + ") update");
 	var self = this;
 	var opts = $.extend(data, {
 		sepD: this.sepD,
@@ -93,7 +121,18 @@ var generateInitialBoids = function  (opts) {
 	var mx = this.width;
 	var my = this.height;
 	var MAX_FORCE = this.sLimit;
-	if (opts.SIZE){
+	if (opts.boids){
+		for (var i = opts.boids.length - 1; i >= 0; i--) {
+			var b = opts.boids[i];
+			this.addBoid($.extend(opts,{
+				px: Math.floor(mx/2) + gu.random(-10,10), //gu.random(0,mx), 
+				py: Math.floor(my/2) + gu.random(-10,10), //gu.random(0,my), 
+				sx: gu.randomReal(-MAX_FORCE,MAX_FORCE), 
+				sy: gu.randomReal(-MAX_FORCE,MAX_FORCE),
+				sz: gu.randomReal(-MAX_FORCE,MAX_FORCE),
+			}));
+		}
+	}else if (opts.SIZE){
 		for (var i = 0; i < opts.SIZE; i++) {
 			if (opts.RANDOM){
 				this.addBoid($.extend(opts,{
@@ -108,7 +147,7 @@ var generateInitialBoids = function  (opts) {
 				this.addBoid($.extend(opts,{
 					px: Math.floor(mx/2) + gu.random(-10,10), //gu.random(0,mx), 
 					py: Math.floor(my/2) + gu.random(-10,10), //gu.random(0,my), 
-					sx: gu.randomReal(-MAX_FORCE,MAX_FORCE), 
+						sx: gu.randomReal(-MAX_FORCE,MAX_FORCE), 
 					sy: gu.randomReal(-MAX_FORCE,MAX_FORCE),
 					sz: gu.randomReal(-MAX_FORCE,MAX_FORCE),
 				}));

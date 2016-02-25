@@ -18,7 +18,7 @@ var PixiTargetFactory = function(opts){
 PixiTargetFactory.prototype = Object.create(BaseTargetFactory.prototype);
 PixiTargetFactory.prototype.constructor = BaseTargetFactory;
 PixiTargetFactory.prototype.generate = function(entity) {
-	console.info(this.name + ' - generating target for ' + entity.type );
+	console.debug(this.name + ' - generating target for ' + entity.type );
 	var ret = undefined;
 	switch(entity.type){
 		case 'World': 

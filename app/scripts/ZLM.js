@@ -19,7 +19,7 @@ var ZombieLandStartupper = new function() {
 	
 	app.ui = UILoader.load(level1ui);
 	app.ui.bindToApp(app); 
-	//deb(app, app.getWorld(), app.getWorld().getEntitiesByType('Flock')[0]);
+	deb(app, app.getWorld(), app.getWorld().getEntitiesByType('Flock')[0]);
 }
 
 

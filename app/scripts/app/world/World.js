@@ -15,7 +15,7 @@ World.prototype.init = function() {
 	console.info('Stage ready', this.stage.info);
 };
 World.prototype.addEntity = function(options, entity) {
-	console.info('adding ' + entity.type, entity,);
+	console.debug('adding ' + entity.type, entity,);
 	if (entity.id){
 		if (!this.entities[entity.type]){
 			this.entities[entity.type] = [];
@@ -52,22 +52,34 @@ World.prototype.update = function(data) {
 		goals:  this.getEntitiesByType('Goal'), 
 		walls:  this.getEntitiesByType('Wall')
 	};
+	this.forEachEntity(function (entity) {
+		entity.update(opts);
+	});
+	/*
 	for(var key in this.entities){
 		for (var i = this.entities[key].length - 1; i >= 0; i--) {
-			var ent = this.entities[key][i];
-			ent.update(opts);
+			var ent = this.entities[key][i];			
 		};	
-	}
+	}*/
 
 	this.stage.update();	
 };
 World.prototype.remove = function() {
-	console.info('removing world');
+	console.info('removing world');	
 	if (this.stage){
 		this.stage.destroy();
 	}
+	this.entities = {}; 
 };
-
+World.prototype.forEachEntity = function(cb) {
+	for(var key in this.entities){
+		for (var i = this.entities[key].length - 1; i >= 0; i--) {
+			var ent = this.entities[key][i];
+			cb.bind(this)(ent);
+		};	
+	}
+	
+}
 World.prototype.serialize = function () {
 	return{
 		//opts: this.opts,
