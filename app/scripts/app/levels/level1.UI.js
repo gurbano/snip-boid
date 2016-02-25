@@ -59,7 +59,7 @@ pbControl.onBind = function (ui, app) {
 conf.UI = {
 	controls:
 	[
-		pbControl
+		//pbControl
 	]	
 }
 

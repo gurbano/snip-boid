@@ -7,24 +7,25 @@ module.exports = {
 	height: $(window).height(),
 	BACKGROUND : GREEN,
 	FLOCKFACTORY: {
-		sepD: 150, //try to keep this distance
+		sepD: 70, //try to keep this distance
 		cohD: 600, //try to stick with ppl inside this radius
 		aliD: 400,
 
-		sepW: 100,
+		sepW: 500,
 		cohW: 140, //0 -> 100
-		aliW: 80,
+		aliW: 180,
 
-		aLimit: 0.5,
+		aLimit: 0.8,
 		sLimit: 3,
 		sRatio: 1,
 
-		scaWP:  0.5,
+		scaWP:  0.6,
 		attrWP: 1.2,
-		goalWP: 0.2,
+		goalWP: 0.8,
+
 		RANDOM: false
 	},
 	FLOCK: {
-		SIZE: 500,
+		SIZE: 100,
 	}
 }
