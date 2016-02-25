@@ -188,6 +188,10 @@ gulp.task('wiredep', () => {
     .pipe(gulp.dest('app'));
 });
 
+gulp.task('deploy', ['build'], function() {
+  return gulp.src('./dist/**/*')
+    .pipe($.ghPages()); // https://www.npmjs.com/package/gulp-gh-pages
+});
 
 gulp.task('build', ['scripts', 'styles', 'html', 'images', 'audio','fonts', 'extras'], () => {
   return gulp.src('dist/**/*').pipe($.size({
