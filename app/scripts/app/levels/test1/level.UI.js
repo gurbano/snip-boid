@@ -1,10 +1,6 @@
 var UIFactory = require('../../UI/UIFactory.js');
-var conf = require('./level.config');
-var WorldLoader = require('../../world/WorldLoader');
 
 
-
-/*PLAYBACK CONTROL*/
 var pbControl = UIFactory.getBox('PB-CONTROLS');
 var pbControls = UIFactory.getButtonGroup('playback-controls-group');
 pbControl.append(pbControls);
@@ -21,7 +17,34 @@ pbControl.onBind = function (ui, app) {
 	pbControls.append(bStop);
 	pbControls.append(bStart);
 	pbControls.append(bSlow);
+	UIFactory.center(pbControl);
 }
+var _conf = {
+	controls:[pbControl]	
+};
+
+
+module.exports = function (conf, key) {
+	if (key){
+		conf[key] = _conf;
+		return conf;
+	}else{
+		return $.extend(conf, _conf);
+	}
+}	
+
+
+
+/*PLAYBACK CONTROL*/
+
+
+/*
+
+var UIFactory = require('../../UI/UIFactory.js');
+var conf = require('./level.config');
+var WorldLoader = require('../../world/WorldLoader');
+
+
 
 
 
@@ -31,7 +54,6 @@ pbControl.onBind = function (ui, app) {
 
 
 var level1JSON = require('./level.world');
-/*SAVE AND LOAD*/
 var saveInterface = UIFactory.getBox('FILE-CONTROLS');
 var saveInterfaces = UIFactory.getButtonGroup('file-controls-group');
 var buffer = undefined;
@@ -59,13 +81,14 @@ saveInterface.onBind = function (ui, app) {
 }
 
 
-conf.UI = {
+conf = {
 	controls:
 	[
-		//pbControl
+		pbControl
 	]	
 }
 
 
 
 module.exports = conf;
+*/

@@ -21,6 +21,13 @@ AbstractApp.prototype.setWorld = function(world) {
 	}
 	this.world = world;
 };
+AbstractApp.prototype.setUI = function(ui) {
+	if (this.ui){ //tear down the old ui
+		this.ui.remove();
+	}
+	this.ui = ui;
+	this.ui.bindToApp(this); 
+};
 AbstractApp.prototype.getWorld = function() {
 	return this.world;
 };
@@ -69,8 +76,11 @@ AbstractApp.prototype.activateLevel = function(name) {
 	this.currentLevel = name;
 	this.setWorld(this.levels[name].world); 
 	this.getWorld().display();
-	this.ui = UILoader.load(this.levels[name].ui);
-	this.ui.bindToApp(this); 
+
+	this.setUI(UILoader.load(this.levels[name].ui)); 
+	this.getWorld().display();
+
+	
 };
 
 module.exports = AbstractApp;

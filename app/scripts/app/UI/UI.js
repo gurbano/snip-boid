@@ -17,6 +17,10 @@ UI.prototype.init = function() {
     });
 	$(document.body).prepend(this.stage);
 };
+UI.prototype.remove = function() {
+	this.stage.remove();	
+	this.stage = undefined;
+};
 UI.prototype.addEntity = function(options, entity) {
 	console.info('adding ' + entity.key, entity);	
 	this.stage.prepend(entity);
