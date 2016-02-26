@@ -1,6 +1,6 @@
-var UIFactory = require('../UI/UIFactory.js');
-var conf = require('./level1.config');
-var WorldLoader = require('../world/WorldLoader');
+var UIFactory = require('../../UI/UIFactory.js');
+var conf = require('./level.config');
+var WorldLoader = require('../../world/WorldLoader');
 
 
 
@@ -27,13 +27,16 @@ pbControl.onBind = function (ui, app) {
 
 
 
-var level1JSON = require('./level1.JSON');
+
+
+
+var level1JSON = require('./level.world');
 /*SAVE AND LOAD*/
-var pbControl = UIFactory.getBox('FILE-CONTROLS');
-var pbControls = UIFactory.getButtonGroup('file-controls-group');
+var saveInterface = UIFactory.getBox('FILE-CONTROLS');
+var saveInterfaces = UIFactory.getButtonGroup('file-controls-group');
 var buffer = undefined;
-pbControl.append(pbControls);
-pbControl.onBind = function (ui, app) {
+saveInterface.append(saveInterfaces);
+saveInterface.onBind = function (ui, app) {
 	var bSave = UIFactory.getButton('SAVE',function () {
 		console.info('saving', app.world);
 		buffer = WorldLoader.saveToJSON(app.world, {});
@@ -51,8 +54,8 @@ pbControl.onBind = function (ui, app) {
 		console.info('loading',ret);
 	});	
 	
-	pbControls.append(bSave);
-	pbControls.append(bLoad);
+	saveInterfaces.append(bSave);
+	saveInterfaces.append(bLoad);
 }
 
 

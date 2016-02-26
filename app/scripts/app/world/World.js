@@ -10,7 +10,6 @@ var World = function(opts){
 }
 World.prototype.init = function() {
 	console.info('Init world', this.opts);
-
 	this.stage = this.targetFactory.generate(this); //new PixiWorld
 	console.info('Stage ready', this.stage.info);
 };
@@ -88,6 +87,10 @@ World.prototype.serialize = function () {
 		debug: this.debug,
 		entities: []
 	}
+};
+
+World.prototype.display = function(target) {
+	this.stage.display(target);	
 };
 
 module.exports = World;

@@ -7,10 +7,21 @@ var PixiWorld = function (source) {
 	this.type = 'PixiWorld';
 	this.stage = new PIXI.Container();
 	this.stages = {};
-	this.renderer = PIXI.autoDetectRenderer(source.opts.width, source.opts.height, {backgroundColor: source.opts.BACKGROUND});	
-	document.body.appendChild(this.renderer.view);
+	this.targetDiv = undefined;
+	this.renderer = PIXI.autoDetectRenderer(source.opts.width, source.opts.height, {backgroundColor: source.opts.BACKGROUND});		
     return this;		
 }
+
+PixiWorld.prototype.display = function(target) {
+	if(target!=undefined){
+		this.targetDiv = target;		
+	}else{
+		this.targetDiv = document.body;
+	}	
+	this.targetDiv.appendChild(this.renderer.view);
+	
+};
+
 PixiWorld.prototype.getStage = function (type) {
 	if (!this.stages[type]){
 		this.stages[type] = new PIXI.Container();
@@ -20,7 +31,7 @@ PixiWorld.prototype.getStage = function (type) {
 }
 PixiWorld.prototype.destroy = function() {
 	this.stages = undefined;
-	document.body.removeChild(this.renderer.view);
+	this.targetDiv.removeChild(this.renderer.view);
 };
 /******************
 STAGE:

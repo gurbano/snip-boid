@@ -1,6 +1,8 @@
-var PixiTargetFactory = require('../factories/PixiTargetFactory');
+var PixiTargetFactory = require('../../factories/PixiTargetFactory');
 var GREEN = 0x00fa9a;
-module.exports = {
+
+
+var _conf = {
 	targetFactory: new PixiTargetFactory({}),
 	speed: 1,
 	width: $(window).width(),
@@ -29,3 +31,13 @@ module.exports = {
 		SIZE: 100,
 	}
 }
+
+
+module.exports = function (conf, key) {
+	if (key){
+		conf[key] = _conf;
+		return conf;
+	}else{
+		return $.extend(conf, _conf);
+	}
+}	

@@ -1,9 +1,12 @@
 var fps = require('fps');
 var raf = require('raf');
+var UILoader = require('./UI/UILoader');
 
 var AbstractApp = function(opts){
 	var self = this;
 	this.opts = opts || {};
+	this.currentLevel = undefined;
+	this.levels = {};
 	if (!(this instanceof AbstractApp)) return new AbstractApp(this.opts);	
 	this.name = 'Abstract app';
 	this.version = '0.0.1';
@@ -35,6 +38,39 @@ AbstractApp.prototype.start = function() {
 	};
 	tmp(); 	
  };
-
+AbstractApp.prototype.pushLevel = function(name, conf, world, ui, next) {
+	this.levels[name] = {
+		conf: conf,
+		world: world,
+		ui: ui,
+		next: next
+	};
+};
+AbstractApp.prototype.getCurrentLevel = function() {
+	if(this.currentLevel != undefined){
+		return this.levels[this.currentLevel];
+	}else{
+		console.error('Currently no level loaded');
+		return undefined;
+	}
+};
+AbstractApp.prototype.getNextLevel = function() {
+	var curr = this.getCurrentLevel();
+	if (curr && curr.next){
+		return curr.next;
+	}else{
+		return undefined;
+	}
+};
+AbstractApp.prototype.getLevels = function() {
+	return this.levels;
+};
+AbstractApp.prototype.activateLevel = function(name) {
+	this.currentLevel = name;
+	this.setWorld(this.levels[name].world); 
+	this.getWorld().display();
+	this.ui = UILoader.load(this.levels[name].ui);
+	this.ui.bindToApp(this); 
+};
 
 module.exports = AbstractApp;
