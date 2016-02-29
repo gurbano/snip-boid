@@ -1,10 +1,12 @@
 var PixiTargetFactory = require('../../factories/PixiTargetFactory');
+var GREEN = 0x00fa9a;
 
 
 var _conf = {
 	targetFactory: new PixiTargetFactory({}),
 	width: $(window).width(),
-	height: $(window).height()
+	height: $(window).height(),
+	BACKGROUND : GREEN,
 };
 
 

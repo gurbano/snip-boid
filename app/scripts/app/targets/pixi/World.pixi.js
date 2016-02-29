@@ -29,24 +29,31 @@ var PixiWorld = function (source) {
 	this.info = 'Pixi.js implementation';
 	this.type = 'PixiWorld';
 	this.stage = new PIXI.Container();
-	var params  = bcook(source.opts);
+	var params  = bcook(source.opts);	
 	this.world = new pixicam.World({
 	    screenWidth: params.stage.width,
 	    screenHeight: params.stage.height,
 	    width: params.world.width,
 	    height: params.world.height,
 	    x: params.world.x
-	});
-
+	});	
   	this.camera = this.world.camera;
   	this.stage.addChild(this.world);
-
-
 	this.stages = {};
+
+	this.bg = this.initBG(source.opts);
 	this.targetDiv = undefined;	
 	this.renderer = PIXI.autoDetectRenderer(source.opts.width, source.opts.height, {backgroundColor: source.opts.BACKGROUND});		
     return this;		
 }
+PixiWorld.prototype.initBG = function(opts) {
+	if (opts.bg){
+		var bg = new PIXI.Sprite(PIXI.Texture.fromImage(opts.bg));
+		bg.position.x = 0;
+		bg.position.y = 0;
+		this.getStage('background').addChild(bg);
+	}
+};
 
 PixiWorld.prototype.display = function(target) {
 	if(target!=undefined){
@@ -104,6 +111,7 @@ PixiWorld.prototype.addEntity = function(entity) {
 	}
 }
 PixiWorld.prototype.update = function () {
+	this.camera.x = this.camera.x +1;
 	this.world.update();
 	this.renderer.render(this.stage);
 }
