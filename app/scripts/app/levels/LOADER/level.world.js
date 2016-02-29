@@ -1,7 +1,12 @@
+var util = require('../../../utils');
+
 var _conf = {
 	"type":"World",
 	"debug":false,
-	"entities":[{"type":"Bouncer", draggable:true, "id":"4e85a629-06f9-4789-97c6-eec5ba75b5cc","position":{"x":100,"y":100}}]
+	"entities":[
+		{"type":"Bouncer", draggable:true, "id":util.randomUUID(),"position":{"x":100,"y":100}},
+		{"type":"Flock", "id":util.randomUUID(),"position":{"x":100,"y":100}},
+	]
 };
 
 

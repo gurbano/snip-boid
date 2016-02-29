@@ -86,7 +86,7 @@ Flock.prototype.onTargetUpdate = function (target, data) {
 }
 /*onUpdate, the Flock updates itself and then call the update, step and updateTarget on each boid*/
 Flock.prototype.update = function(data) {
-	console.info("Flock (" + this.id + ") update");
+	//console.info("Flock (" + this.id + ") update");
 	var self = this;
 	var opts = $.extend(data, {
 		sepD: this.sepD,
