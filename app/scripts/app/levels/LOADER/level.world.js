@@ -1,7 +1,14 @@
+var utils = require('../../../utils.js');
+var templates = require('../../configurations/configurations');
+var templateBirds=  templates.FLOCK.BIRDS_01;
+
 var _conf = {
 	"type":"World",
 	"debug":false,
-	"entities":[{"type":"Bouncer", draggable:true, "id":"4e85a629-06f9-4789-97c6-eec5ba75b5cc","position":{"x":100,"y":100}}]
+	"entities":[
+		$.extend(templateBirds, {"type":"Flock","position":{"x":100,"y":100}, "FLOCK": {"SIZE": 100}  } ),
+		//{"type":"Goal", draggable:true,"position":{"x":500,"y":500}, "radius":20, "force": -1, "distance":1}
+	]
 };
 
 
