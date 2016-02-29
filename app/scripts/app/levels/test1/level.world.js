@@ -2,6 +2,14 @@
 var _conf = {
 	"type":"World",
 	"debug":false,
+	"bg" : [ //background 
+		{
+			layer: 'back',  //name of the layer
+			order: 0,  //z-index (0 bottom )
+			type: 'repeat', //array 
+			data: {src: '/images/sky.jpg', size:512, repeat:true, position:{x:0, y:0}}
+		}		
+	],
 	"entities":
 		[
 			{"type":"Bouncer", draggable:true, "id":"4e85a629-06f9-4789-97c6-eec5ba75b5cc","position":{"x":100,"y":100}},

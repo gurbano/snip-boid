@@ -7,7 +7,7 @@ var WorldLoader = function(opts){
 
 }
 WorldLoader.prototype.load = function(opts, worldSpec) {
-	worldSpec = $.extend(true, {}, worldSpec);
+	worldSpec = $.extend(true, opts, worldSpec);
 	var world = new World(opts);
 	world.init();
 	//var worldSpec = opts.WORLD;
@@ -21,7 +21,7 @@ WorldLoader.prototype.load = function(opts, worldSpec) {
 };
 WorldLoader.prototype.loadFromJSON = function(opts, worldJSON) {
 	console.info('imported object' ,worldJSON);	
-	worldJSON = $.extend(true, {}, worldJSON);
+	worldJSON = $.extend(true, opts, worldJSON);
 	var world = new World(opts);
 	world.init();
 	if (worldJSON.entities){//add entities

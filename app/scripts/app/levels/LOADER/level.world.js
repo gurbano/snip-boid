@@ -1,11 +1,14 @@
-var util = require('../../../utils');
+var util = require('../../../utils'); //util.randomUUID()
 
+var templates = require('../../configurations/configurations');
+var templateBirds=  templates.FLOCK.BIRDS_01;
 var _conf = {
 	"type":"World",
 	"debug":false,
+	"bg" : '/images/world.jpg',
 	"entities":[
-		{"type":"Bouncer", draggable:true, "id":util.randomUUID(),"position":{"x":100,"y":100}},
-		{"type":"Flock", "id":util.randomUUID(),"position":{"x":100,"y":100}},
+		$.extend(templateBirds, {"type":"Flock","position":{"x":100,"y":100}, "FLOCK": {"SIZE": 50}  } ),
+		//{"type":"Goal", draggable:true,"position":{"x":500,"y":500}, "radius":20, "force": -1, "distance":1}
 	]
 };
 
