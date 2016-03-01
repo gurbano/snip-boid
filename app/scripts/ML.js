@@ -4,8 +4,20 @@ var WorldLoader = require('./app/world/WorldLoader');
 
 
 var loader = require('./app/levels/LOADER/level');
-var test1 = require('./app/levels/test1/level');
 
+
+var AppEvent = require('./app/events/AppEvent');
+//var test1 = require('./app/levels/test1/level');
+
+var playMusicEvent = new AppEvent({
+	start:0,
+	end:-1,
+	type: "update",
+	onTrigger : function (data) {
+		//console.info('event triggered',this, data);	
+		//this.app.trigger('started')
+	}
+});
 
 
 var MusicLandStartupper = new function() {
@@ -15,10 +27,11 @@ var MusicLandStartupper = new function() {
 	var app = new MusicLand({speed: conf.speed});
 	console.info(app.info());
 	app.pushLevel("LOADER", loader.CONF, WorldLoader.loadFromJSON(loader.CONF, loader.WORLD), loader.UI, "LEVEL1");
-	app.pushLevel("LEVEL1", test1.CONF,  WorldLoader.loadFromJSON(test1.CONF, test1.WORLD), test1.UI);
+	//app.pushLevel("LEVEL1", test1.CONF,  WorldLoader.loadFromJSON(test1.CONF, test1.WORLD), test1.UI);
 	app.activateLevel("LOADER");
-
-	app.start();
+	app.start();	
+	app.register(playMusicEvent);
+	app.trigger('started');
 	
 }
 

@@ -10,7 +10,7 @@ var bcook = function (opts) {
 	    height: opts.height *10
 	  }
 	}
-	return params;
+	return $.extend(opts,params);
 };
 
 /*
@@ -29,29 +29,47 @@ var PixiWorld = function (source) {
 	this.info = 'Pixi.js implementation';
 	this.type = 'PixiWorld';
 	this.stage = new PIXI.Container();
-	var params  = bcook(source.opts);	
+	this.opts =  bcook(source.opts);
 	this.world = new pixicam.World({
-	    screenWidth: params.stage.width,
-	    screenHeight: params.stage.height,
-	    width: params.world.width,
-	    height: params.world.height,
-	    x: params.world.x
+	    screenWidth: this.opts.stage.width,
+	    screenHeight: this.opts.stage.height,
+	    width: this.opts.world.width,
+	    height: this.opts.world.height,
+	    x: this.opts.world.x
 	});	
   	this.camera = this.world.camera;
   	this.stage.addChild(this.world);
 	this.stages = {};
-
-	this.bg = this.initBG(source.opts);
+	this.bg = this.initBG(this.opts);
 	this.targetDiv = undefined;	
 	this.renderer = PIXI.autoDetectRenderer(source.opts.width, source.opts.height, {backgroundColor: source.opts.BACKGROUND});		
     return this;		
 }
 PixiWorld.prototype.initBG = function(opts) {
 	if (opts.bg){
-		var bg = new PIXI.Sprite(PIXI.Texture.fromImage(opts.bg));
-		bg.position.x = 0;
-		bg.position.y = 0;
-		this.getStage('background').addChild(bg);
+		if (typeof opts.bg === 'string'){ //simple, deprecated
+			var bg = new PIXI.Sprite(PIXI.Texture.fromImage(opts.bg));
+			bg.position.x = 0;
+			bg.position.y = 0;
+			this.getStage('background').addChild(bg);
+		}else if (typeof opts.bg === typeof []){ //Array
+			for (var i = opts.bg.length - 1; i >= 0; i--) {
+				var bg = opts.bg[i];
+				var layer = bg.layer || 'background';
+				var data = bg.data;
+				var bgStage = this.getStage(layer);
+				if (bg.type === 'repeat'){
+					for (var x = 0; x < this.opts.width; x = x+data.size ) {
+						for (var y = 0; y < this.opts.height; y = y+data.size) {
+							var tmp = new PIXI.Sprite(PIXI.Texture.fromImage(data.src));
+							tmp.position.x = x ;
+							tmp.position.y = y;
+							this.getStage(layer).addChild(tmp);
+						};				
+					};
+				}	
+			};			
+		}
 	}
 };
 
@@ -111,7 +129,7 @@ PixiWorld.prototype.addEntity = function(entity) {
 	}
 }
 PixiWorld.prototype.update = function () {
-	this.camera.x = this.camera.x +1;
+	//this.camera.x = this.camera.x +1;
 	this.world.update();
 	this.renderer.render(this.stage);
 }

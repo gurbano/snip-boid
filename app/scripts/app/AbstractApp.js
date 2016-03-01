@@ -1,6 +1,7 @@
 var fps = require('fps');
 var raf = require('raf');
 var UILoader = require('./UI/UILoader');
+var BlackBoard = require('./events/BlackBoard');
 
 var AbstractApp = function(opts){
 	var self = this;
@@ -10,6 +11,7 @@ var AbstractApp = function(opts){
 	if (!(this instanceof AbstractApp)) return new AbstractApp(this.opts);	
 	this.name = 'Abstract app';
 	this.version = '0.0.1';
+	this.blackboard = BlackBoard;
 	this.speed = (opts.speed == undefined) ? 1 : opts.speed; // 0 = stop, 1 = speed 100%, 2 = 50%, 3 = 33%, .. ,n = 1/n%
 }
 AbstractApp.prototype.info = function() {
@@ -78,9 +80,19 @@ AbstractApp.prototype.activateLevel = function(name) {
 	this.getWorld().display();
 
 	this.setUI(UILoader.load(this.levels[name].ui)); 
-	this.getWorld().display();
-
-	
+	this.getWorld().display();	
 };
+AbstractApp.prototype.subscribe = function(evName, target, cb) {
+	this.blackboard.on(evName, cb.bind(target));
+};
+AbstractApp.prototype.trigger = function(evName, params) {
+	this.blackboard.emit(evName, params || {});
+};
+AbstractApp.prototype.register = function(eventObj) {
+	eventObj.app = this;
+	this.blackboard.on(eventObj.type, eventObj.onTrigger.bind(eventObj));
+};
+
+
 
 module.exports = AbstractApp;

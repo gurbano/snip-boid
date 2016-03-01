@@ -10,6 +10,7 @@ var MusicLand = function(opts){
 MusicLand.prototype = Object.create(AbstractApp.prototype);
 MusicLand.prototype.constructor = AbstractApp;
 MusicLand.prototype.update = function(time) {
+	this.trigger('update',{i:0});
 	/*1- Update controls*/
 
 	/*2- Update world - cascading update all the entities*/
