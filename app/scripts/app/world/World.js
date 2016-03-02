@@ -20,6 +20,7 @@ World.prototype.addEntity = function(options, entity) {
 			this.entities[entity.type] = [];
 		}		
 		this.entities[entity.type].push(entity);
+		entity.world = this;
 		if (this.stage){
 			this.stage.addEntity(entity);
 		}
@@ -54,13 +55,6 @@ World.prototype.update = function(data) {
 	this.forEachEntity(function (entity) {
 		entity.update(opts);
 	});
-	/*
-	for(var key in this.entities){
-		for (var i = this.entities[key].length - 1; i >= 0; i--) {
-			var ent = this.entities[key][i];			
-		};	
-	}*/
-
 	this.stage.update();	
 };
 World.prototype.remove = function() {

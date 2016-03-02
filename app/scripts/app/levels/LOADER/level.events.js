@@ -1,19 +1,34 @@
 var util = require('../../../utils'); //util.randomUUID()
+var AppEvent = require('../../events/AppEvent');
 
-
-var playMusicEvent = new AppEvent({
+var cameraMover = new AppEvent({
 	start:0,
 	end:-1,
-	type: "music",
-	onTrigger : function (ev, data) {
-		console.info('event triggered',this, ev, data);	
+	type: "update",
+	onTrigger : function (data) {
+		//console.info('event triggered',this, data);	
+		//this.app.trigger('started')
+		var tresh = 0.1;
+		if (document.pageX <= ($(document).width() *  tresh)   ){
+			this.app.getWorld().stage.moveCam(-10,0);	
+		}
+		if (document.pageX >= ($(document).width()* (1-tresh) )   ){
+			this.app.getWorld().stage.moveCam(10,0);
+		}
+		if (document.pageY <= ($(document).height() *  tresh)   ){
+			this.app.getWorld().stage.moveCam(0,-10);
+		}
+		if (document.pageY >= ($(document).height()* (1-tresh) )   ){
+			this.app.getWorld().stage.moveCam(0,10);
+		}
+
 	}
 });
 
 var _conf = {
 	"type":"Events",
 	"debug":false,
-	"events":[playMusicEvent]
+	"events":[]
 };
 
 

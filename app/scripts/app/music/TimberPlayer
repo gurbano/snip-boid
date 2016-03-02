@@ -1,0 +1,80 @@
+
+
+var TimberPlayer = function (opts) {
+   var self = this; 
+    if (!(this instanceof TimberPlayer)) return new PG(opts);
+    this.recording = false;
+    this.playing = false;
+    this.theme = false;
+    this.dirty = false;
+    this.notes = [69, 70, 71, 72, 73, 74, 75, 76];
+}
+
+TimberPlayer.prototype.addNote = function(note) {
+    this.notes.push(note);
+    this.dirty = true;
+    if (this.playing){
+        this.stop();
+        this.play();
+    }
+};
+TimberPlayer.prototype.stop = function() {
+    if (this.theme && this.playing){        
+        this.playing = false;
+        this.theme.pause();        
+    }
+}
+TimberPlayer.prototype.play = function() {
+    var self = this;
+    if (!this.theme || this.dirty ){
+        this.rec(function(res){
+            self.stop();
+            self.play();
+        });
+    }else{ 
+        if(!this.playing){
+            this.playing = true;
+            this.theme.play();        
+        }
+    }
+};
+
+
+var msec  = timbre.timevalue("bpm120 l8");
+var synth = T("OscGen", {env:T("perc", {r:msec, ar:true})});
+TimberPlayer.prototype.rec = function(cb) {
+    var self = this;
+    if (!this.recording){
+        this.recording = true;
+        timbre.rec(function(output) {
+            var midis = self.notes;       
+            T("interval", {interval:msec}, function(count) {
+                if (count < midis.length) {
+                    synth.noteOn(midis[count], 100);
+                } else {
+                    output.done();
+                }
+            }).start();
+            output.send(synth);
+        }).then(function(result) {
+          var L = T("buffer", {buffer:result, loop:true});
+          var R = T("buffer", {buffer:result, loop:true});
+
+          var num = 400;
+          var duration = L.duration;
+
+          R.pitch = (duration * (num - 1)) / (duration * num);
+
+          result = T("delay", {time:"bpm120 l16", fb:0.1, cross:true},
+            T("pan", {pos:-0.6}, L), T("pan", {pos:+0.6}, R)
+          );
+          self.theme = result;
+          self.recording = false;
+          cb(result);
+        });
+    }
+    return this;
+};
+
+
+module.exports = TimberPlayer;

@@ -5,6 +5,7 @@ var PBouncer = require('../targets/pixi/Bouncer.pixi');
 var PWall = require('../targets/pixi/Wall.pixi');
 var PFlock = require('../targets/pixi/Flock.pixi');
 var PGoal = require('../targets/pixi/Goal.pixi');
+var PG = require('../targets/pixi/PG.pixi');
 
 
 var PixiTargetFactory = function(opts){
@@ -38,6 +39,9 @@ PixiTargetFactory.prototype.generate = function(entity) {
 			break;
 		case 'Goal': 
 			return new PGoal(entity);
+			break;
+		case 'PG': 
+			return new PG(entity);
 			break;
 		default: 
 			return BaseTargetFactory.prototype.generate.call(this,entity);

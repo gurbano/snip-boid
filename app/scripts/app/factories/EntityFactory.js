@@ -1,6 +1,7 @@
 var Flock = require('../entities/Flock');
 var Wall = require('../entities/Wall');
 var Goal = require('../entities/Goal');
+var PG = require('../entities/PG');
 var Bouncer = require('../entities/Bouncer');
 var FlockFactory = require('./FlockFactory');
 
@@ -26,6 +27,10 @@ var EntityFactory = function (opts) {
 				break;
 			case "Goal":
 				ret = new Goal($.extend(opts,entityDesc));
+				opts.targetFactory.apply(ret);	
+				break;
+			case "PG":
+				ret = new PG($.extend(opts,entityDesc));
 				opts.targetFactory.apply(ret);	
 				break;
 			case "Flock":

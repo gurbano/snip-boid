@@ -6,8 +6,9 @@ var bcook = function (opts) {
 	  },
 	  world: {
 	    x: 0,
-	    width: opts.width *10,
-	    height: opts.height *10
+	    y: 0,
+	    width: 5000,//opts.width *10,
+	    height: 5000,//opts.height *10
 	  }
 	}
 	return $.extend(opts,params);
@@ -35,7 +36,8 @@ var PixiWorld = function (source) {
 	    screenHeight: this.opts.stage.height,
 	    width: this.opts.world.width,
 	    height: this.opts.world.height,
-	    x: this.opts.world.x
+	    x: this.opts.world.x,
+	    y: this.opts.world.y
 	});	
   	this.camera = this.world.camera;
   	this.stage.addChild(this.world);
@@ -59,8 +61,8 @@ PixiWorld.prototype.initBG = function(opts) {
 				var data = bg.data;
 				var bgStage = this.getStage(layer);
 				if (bg.type === 'repeat'){
-					for (var x = 0; x < this.opts.width; x = x+data.size ) {
-						for (var y = 0; y < this.opts.height; y = y+data.size) {
+					for (var x = -data.size; x <= this.opts.world.width; x = x+data.size ) {
+						for (var y = -data.size; y <= this.opts.world.height; y = y+data.size) {
 							var tmp = new PIXI.Sprite(PIXI.Texture.fromImage(data.src));
 							tmp.position.x = x ;
 							tmp.position.y = y;
@@ -123,6 +125,10 @@ PixiWorld.prototype.addEntity = function(entity) {
 			var stage = this.getStage(entity.type);
 			stage.addChild(entity.renderTargets);
 			break;
+		case 'PG':
+			var stage = this.getStage(entity.type);
+			stage.addChild(entity.renderTargets);
+			break;
 		default:
 			console.warn('Missing implementation');
 			break;
@@ -137,7 +143,14 @@ PixiWorld.prototype.update = function () {
 PixiWorld.prototype.lookAt = function(x,y) {
 	this.camera.x = x;
 	this.camera.y = y;
+	this.world.update();
 };
+PixiWorld.prototype.moveCam = function(x,y) {
+	this.camera.x += x;
+	this.camera.y += y;
+	this.world.update();
+};
+
 
 
 module.exports = PixiWorld;

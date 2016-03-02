@@ -22,6 +22,7 @@ AbstractApp.prototype.setWorld = function(world) {
 		this.world.remove();
 	}
 	this.world = world;
+	this.world.display();
 };
 AbstractApp.prototype.setUI = function(ui) {
 	if (this.ui){ //tear down the old ui
@@ -47,11 +48,12 @@ AbstractApp.prototype.start = function() {
 	};
 	tmp(); 	
  };
-AbstractApp.prototype.pushLevel = function(name, conf, world, ui, next) {
+AbstractApp.prototype.pushLevel = function(name, conf, world, ui, events, next) {
 	this.levels[name] = {
 		conf: conf,
 		world: world,
 		ui: ui,
+		events: events,
 		next: next
 	};
 };
@@ -76,11 +78,10 @@ AbstractApp.prototype.getLevels = function() {
 };
 AbstractApp.prototype.activateLevel = function(name) {
 	this.currentLevel = name;
+	/*Set world*/
 	this.setWorld(this.levels[name].world); 
-	this.getWorld().display();
-
 	this.setUI(UILoader.load(this.levels[name].ui)); 
-	this.getWorld().display();	
+	this.setEvents(this.levels[name].events); 
 };
 AbstractApp.prototype.subscribe = function(evName, target, cb) {
 	this.blackboard.on(evName, cb.bind(target));
@@ -92,6 +93,13 @@ AbstractApp.prototype.register = function(eventObj) {
 	eventObj.app = this;
 	this.blackboard.on(eventObj.type, eventObj.onTrigger.bind(eventObj));
 };
+AbstractApp.prototype.setEvents = function(events) {
+	for (var i = 0; i < events.length; i++) {
+		var ev = events[i];
+		this.register(ev);
+	};
+};
+
 
 
 

@@ -26,8 +26,13 @@ var AbstractEntity = function(opts ){
 		this.position.x = x;
 		this.position.y = y;
 	}
+	this.behaviours = [];
 	return this;
 }
+AbstractEntity.prototype.moveBy = function(x,y) {
+	this.position.x += x;
+	this.position.y += y;
+};
 AbstractEntity.prototype.update = function(data) {
 	console.error(this.type + ' update not implemented', data);
 	this.updateTargets(data);
@@ -36,14 +41,6 @@ AbstractEntity.prototype.addTarget = function(target) {
 	this.renderTargets = target;//.push(target);
 };
 AbstractEntity.prototype.updateTargets = function(data) {
-	/*for (var i = this.renderTargets.length - 1; i >= 0; i--) {
-		var target = this.renderTargets[i];
-		if (target.update){
-			target.update(this, data);
-		}else{
-			//console.error(target.type + ' update not implemented', target);
-		}
-	};*/
 	if (this.renderTargets && this.renderTargets.update){this.renderTargets.update(this, data);}else{
 		console.error(this.type + ' target update not implemented');
 	}
@@ -60,6 +57,7 @@ AbstractEntity.prototype.TYPES.Boid = 'Boid';
 AbstractEntity.prototype.TYPES.Wall = 'Wall';
 AbstractEntity.prototype.TYPES.Bouncer = 'Bouncer';
 AbstractEntity.prototype.TYPES.Goal = 'Goal';
+AbstractEntity.prototype.TYPES.PG = 'PG';
 
 AbstractEntity.prototype.serialize = function () {
 	return this._serialize();

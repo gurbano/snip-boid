@@ -7,17 +7,24 @@ var fileControl = UIFactory.getBox('FILE-CONTROLS');
 var fileControlGroup = UIFactory.getButtonGroup('file-controls-group');
 fileControl.append(fileControlGroup);
 fileControl.onBind = function (ui, app) {
-	var bSave = UIFactory.getButton('NEXT',function () {
-		var next = app.getNextLevel();
-		if(next){
-			console.info('loading stage', next);
-			app.activateLevel(next);	
-		}else{
-			console.error('Cannot find next level');
-		}
-		
+
+	/*---------------------------PLAY*/
+	var bPlay = UIFactory.getButton('PLAY',function () {
+		window.app.trigger('play_music');		
+	}); 
+	fileControlGroup.append(bPlay);
+	/*------------------------STOP*/
+	var bSave = UIFactory.getButton('PAUSE',function () {
+		window.app.trigger('pause_music');		
 	}); 
 	fileControlGroup.append(bSave);
+	/*------------------------ADD NOTE*/
+	var bAdd = UIFactory.getButton('ADD_NOTE',function () {
+		window.app.trigger('add_note',70);
+	}); 
+	fileControlGroup.append(bAdd);
+
+
 	UIFactory.center(fileControl);
 }
 var _conf = {

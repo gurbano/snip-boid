@@ -87,3 +87,45 @@ function distToSegmentSquared(p, v, w) {
 
 
 module.exports = new Util();
+
+
+
+
+var mousedown = false;
+$(window).keypress(function (e) {
+  if (e.keyCode === 0 || e.keyCode === 32) {
+    e.preventDefault();
+    experiment.pause();
+    console.log('Space pressed');
+	}
+});
+
+$(window).mousedown(function (e) {
+  	document.mousedown = true;
+});
+$(window).mouseup(function (e) {
+  	document.mousedown = false;
+});
+
+
+function handleMouseMove(event) {
+	//console.info( document.pageX,  document.pageY);
+	var dot, eventDoc, doc, body, pageX, pageY;
+    event = event || window.event; 
+    if (event.pageX == null && event.clientX != null) {
+        eventDoc = (event.target && event.target.ownerDocument) || document;
+        doc = eventDoc.documentElement;
+        body = eventDoc.body;
+        event.pageX = event.clientX +
+            (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
+            (doc && doc.clientLeft || body && body.clientLeft || 0);
+        event.pageY = event.clientY +
+            (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
+            (doc && doc.clientTop  || body && body.clientTop  || 0 );
+    }
+    // Use event.pageX / event.pageY here
+    document.pageX = event.pageX;
+    document.pageY = event.pageY;
+    //console.info(document.pageX,document.pageY);
+}
+document.onmousemove = handleMouseMove;
