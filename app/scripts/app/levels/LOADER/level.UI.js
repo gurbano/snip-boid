@@ -25,7 +25,8 @@ fileControl.onBind = function (ui, app) {
 	fileControlGroup.append(bAdd);
 
 
-	UIFactory.center(fileControl);
+	//UIFactory.center(fileControl);
+	UIFactory.top(UIFactory.left(fileControl));
 }
 var _conf = {
 	controls:[fileControl]	

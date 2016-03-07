@@ -5,6 +5,8 @@ var PG = require('../entities/PG');
 var Bouncer = require('../entities/Bouncer');
 var FlockFactory = require('./FlockFactory');
 
+
+/*ENTITY FACTORY*/
 var EntityFactory = function (opts) {
 	var self = this;
 	opts = opts || {};

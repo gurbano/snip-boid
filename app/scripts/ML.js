@@ -12,7 +12,7 @@ var MusicLandStartupper = new function() {
 	var conf = loader;
 	window.app = new MusicLand({speed: conf.speed});
 	console.info(app.info());
-	window.app.pushLevel("LOADER", loader.CONF, WorldLoader.loadFromJSON(loader.CONF, loader.WORLD), loader.UI, loader.EVENTS.events, "LEVEL1");
+	window.app.pushLevel("LOADER", loader.CONF, WorldLoader.loadFromJSON(loader.CONF, loader.WORLD), loader.UI, loader.EVENTS.events, loader.POST.cb, "LEVEL1");
 	//app.pushLevel("LEVEL1", test1.CONF,  WorldLoader.loadFromJSON(test1.CONF, test1.WORLD), test1.UI);
 	window.app.activateLevel("LOADER");
 	window.app.start();	

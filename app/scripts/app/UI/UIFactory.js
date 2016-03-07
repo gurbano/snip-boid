@@ -22,14 +22,35 @@ var UIFactory = function () {
 	}
 	this.centerH = function (control) {
 		control.offset({top: $(document.body).height()/2 - control.height()/2 });
+		return control;
 	}
 	this.centerW = function (control) {
 		control.offset({left: $(document.body).width()/2 - control.width()/2 });
+		return control;
 	}
 	this.center = function (control) {
-		this.centerW(control);
-		this.centerH(control);
+		control = this.centerW(control);
+		control = this.centerH(control);
+		return control;
 	}
+	this.top = function (control) {
+		control.offset({top: 0});	
+		return control;
+	}
+	this.bottom = function (control) {
+		control.offset({bottom: 0});	
+		return control;
+	}
+	this.right = function (control) {
+		control.offset({right: 0});	
+		return control;
+	}
+	this.left = function (control) {
+		control.offset({left: 0});	
+		return control;
+	}
+
+
 
 };
 

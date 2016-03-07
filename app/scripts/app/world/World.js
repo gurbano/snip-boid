@@ -41,6 +41,14 @@ World.prototype.getEntitiesByType = function(key) {
 		ret = ret.concat(this.entities[key]);	
 	return ret;
 };
+World.prototype.getEntityById = function(id) {
+	var tmp = this.getEntities();
+	for (var i = tmp.length - 1; i >= 0; i--) {
+		var ent = tmp[i];
+		if (ent.id === id)return ent;
+	};
+	return undefined;
+};
 World.prototype.getEntityKeys = function(key) {
 	return Object.keys(this.entities);
 };
