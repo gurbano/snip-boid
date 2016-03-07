@@ -21,8 +21,8 @@ var _conf = {
 		}		
 	],*/
 	"entities":[
-		$.extend(templateBirds, {"type":"Flock","position":{"x":100,"y":100}, "FLOCK": {"SIZE": 200, id: "PG_FLOCK"}  } ),
-		{"type":"Bouncer", id: "PG_GOAL", draggable:false,"position":{"x":0,"y":0}, "radius":50, "force": -100, "distance":230},
+		$.extend(templateBirds, {"type":"Flock","position":{"x":100,"y":100}, "FLOCK": {"SIZE": 2, id: "PG_FLOCK"}  } ),
+		{"type":"Goal", id: "PG_GOAL", draggable:false,"position":{"x":0,"y":0}, "radius":50, "force": -100, "distance":230},
 		{"type":"PG", id: "PG", draggable:false,"position":{"x":800,"y":800}, "radius":20, "force": -1, "distance":1},
 		//{"type":"Bouncer", draggable:true,"position":{"x":300,"y":300}, "radius":20, "force": 10, "distance":10},
 		//{"type":"Bouncer", draggable:true,"position":{"x":400,"y":400}, "radius":20, "force": 10, "distance":10},

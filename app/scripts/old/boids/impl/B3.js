@@ -166,6 +166,7 @@ BoidImplementation3.prototype.goal = function (boid, attractors) {
 		force.divide(VVV(distance - attractor.radius,distance - attractor.radius));
 		force = force.multiply(VVV(attractor.force,attractor.force));
 		ret.add(force.normalize());
+		
 	};
 	return ret;
 }

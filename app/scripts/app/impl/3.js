@@ -161,10 +161,12 @@ BoidImplementation3.prototype.goal = function (boid, attractors) {
 		var otherloc = V(attractor);
 		var distance = V(boid).subtract(otherloc).magnitude();
 		var distanceLimit = attractor.distance + attractor.radius;		
-		var force = loc.clone().subtract(otherloc);
-		force.divide(VVV(distance - attractor.radius,distance - attractor.radius));
-		force = force.multiply(VVV(attractor.force,attractor.force));
-		ret.add(force);
+		if (distance<distanceLimit){
+			var force = loc.clone().subtract(otherloc);		
+			force = force.multiply(VVV(attractor.force,attractor.force));
+			force.divide(VVV(distance - attractor.radius,distance - attractor.radius));
+			ret.add(force);
+		}
 	};
 	return ret;
 }
