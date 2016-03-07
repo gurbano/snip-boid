@@ -3,12 +3,6 @@ var bcook = function (opts) {
 	  stage: {
 	    width: opts.width,
 	    height: opts.height
-	  },
-	  world: {
-	    x: 0,
-	    y: 0,
-	    width: 5000,//opts.width *10,
-	    height: 5000,//opts.height *10
 	  }
 	}
 	return $.extend(opts,params);

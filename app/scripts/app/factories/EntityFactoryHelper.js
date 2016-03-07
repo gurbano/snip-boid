@@ -12,6 +12,9 @@ var EntityFactoryHelper = function (opts) {
 	var self = this;
 	opts = opts || {};
 	if (!(this instanceof EntityFactoryHelper)) return new EntityFactoryHelper(opts);
+	this.opts = opts;
+	this.limitX = opts.limitX || $(document).width();	
+	this.limitY = opts.limitY || $(document).height();	
 	this.name = 'EntityFactoryHelper';	
 	this.info = function () {
 		console.info(this);
@@ -23,8 +26,8 @@ EntityFactoryHelper.prototype.generate = function(number, base, cb) {
 	while(ret.length < number){
 		var _base = $.extend({}, base);
 		_base.position = {};
-		_base.position.x = util.random(0,$(document).width());
-		_base.position.y = util.random(0, $(document).height());
+		_base.position.x = util.random(0,this.limitX );
+		_base.position.y = util.random(0, this.limitY );
 		ret.push(_base);
 	}
 	if (cb){cb(ret);}
@@ -37,4 +40,4 @@ EntityFactoryHelper.prototype.generate = function(number, base, cb) {
 
 
 
-module.exports = new EntityFactoryHelper({});
+module.exports = EntityFactoryHelper;

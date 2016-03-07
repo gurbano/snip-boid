@@ -28,6 +28,11 @@ fileControl.onBind = function (ui, app) {
 	//UIFactory.center(fileControl);
 	UIFactory.top(UIFactory.left(fileControl));
 }
+
+
+
+
+
 var _conf = {
 	controls:[
 		//fileControl

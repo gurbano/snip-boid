@@ -134,7 +134,16 @@ var generateInitialBoids = function  (opts) {
 		}
 	}else if (opts.SIZE){
 		for (var i = 0; i < opts.SIZE; i++) {
-			if (opts.RANDOM){
+			if (opts.position){
+				this.addBoid($.extend(opts,{
+					px: opts.position.x, 
+					py: opts.position.y, 
+					pz: 0, 
+					sx: gu.randomReal(-MAX_FORCE,MAX_FORCE), 
+					sy: gu.randomReal(-MAX_FORCE,MAX_FORCE),
+					sz: gu.randomReal(-MAX_FORCE,MAX_FORCE),
+				}));
+			}else if (opts.RANDOM){
 				this.addBoid($.extend(opts,{
 					px: gu.random(0,mx), 
 					py: gu.random(0,my), 
