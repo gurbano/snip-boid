@@ -3,18 +3,17 @@ var WorldLoader = require('./app/world/WorldLoader');
 
 
 
-var loader = require('./app/levels/LOADER/level');
+var exp1 = require('./app/levels/experiment1/level');
 
 
 
 window.app = undefined;
 var MusicLandStartupper = new function() {
-	var conf = loader;
+	var conf = exp1;
 	window.app = new MusicLand({speed: conf.speed});
 	console.info(app.info());
-	window.app.pushLevel("LOADER", loader.CONF, WorldLoader.loadFromJSON(loader.CONF, loader.WORLD), loader.UI, loader.EVENTS.events, loader.POST.cb, "LEVEL1");
-	//app.pushLevel("LEVEL1", test1.CONF,  WorldLoader.loadFromJSON(test1.CONF, test1.WORLD), test1.UI);
-	window.app.activateLevel("LOADER");
+	window.app.pushLevel("LEVEL1", exp1.CONF, WorldLoader.loadFromJSON(exp1.CONF, exp1.WORLD), exp1.UI, exp1.EVENTS.events, exp1.POST.cb, "");
+	window.app.activateLevel("LEVEL1");
 	window.app.start();	
 	window.app.trigger('started');
 	
