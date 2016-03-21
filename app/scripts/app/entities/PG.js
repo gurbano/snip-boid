@@ -20,24 +20,28 @@ var PG = function(opts){
 	this.getDistanceFrom = function (x,y) {
     	return Math.sqrt(new V(this.position.x, this.position.y).distanceSq(new V(x,y)));
     }
-    //this.behaviours.push(new Controllable(this,{}));
+    this.behaviours.push(new Controllable(this,{}));
     var target = this;
-    window.app.register (new AppEvent({
+    /*window.app.register (new AppEvent({
             start:0,
             end:-1,
             type: "keypress",
             onTrigger : function (data) {
                 if (data){
                     switch(parseInt(data)){
+                        case document.K_A:
                         case document.K_LEFT:
                             target.moveBy(-10,0);  
                             break;
+                        case document.K_D:
                         case document.K_RIGHT:
                             target.moveBy(10,0);  
                             break;
+                        case document.K_W:
                         case document.K_UP:
                             target.moveBy(0,-10);  
                             break;
+                        case document.K_S:
                         case document.K_DOWN:
                             target.moveBy(0,10);  
                             break;
@@ -45,7 +49,7 @@ var PG = function(opts){
                 }
             }
         })
-    );
+    );*/
     this.behaviours.push(new CamMover(this,{}));
     window.app.register(
     	new AppEvent({

@@ -150,6 +150,11 @@ document.K_UP = 38;
 document.K_RIGHT = 39;
 document.K_DOWN = 40;
 
+document.K_A = 65;
+document.K_D = 68;
+document.K_W = 87;
+document.K_S = 83;
+
 document.keydown = false;
 document.keypressed = {};
 $(window).keydown(function( event ) {

@@ -1,7 +1,7 @@
 var util = require('../../../utils'); //util.randomUUID()
 
 var templates = require('../../configurations/configurations');
-var templateBirds=  templates.FLOCK.BIRDS_01;
+
 
 var HelperFactory = require('../../factories/EntityFactoryHelper');
 var worldX = 2048;
@@ -12,6 +12,7 @@ var helper = new HelperFactory({limitX: worldX, limitY: worldY});
 
 
 var bouncers = helper.generate(20,{"type":"Bouncer", draggable:true, "radius":20, "force": 10, "distance":10}, function (entities) {});
+
 
 var _conf = {
 	"type":"World",
@@ -31,13 +32,25 @@ var _conf = {
 	    height: worldY,//opts.height *10
 	},
 	"entities":[
-		$.extend(templateBirds, {"type":"Flock", "FLOCK": {"position":{"x":800,"y":800}, "SIZE": 50, id: "PG_FLOCK"}  } ),
-		{"type":"Goal", id: "PG_GOAL", draggable:false,"position":{"x":800,"y":800}, "radius":50, "force": -100, "distance":530},
+		//$.extend(templates.FLOCK.BIRDS_01, {"type":"Flock", "FLOCK": {"position":{"x":800,"y":800}, "SIZE": 50, id: "PG_FLOCK"}  } ),
+		$.extend(templates.FLOCK.ZOMBIES_01, {"type":"Flock", "FLOCK": {"SIZE": 5, random:true, id: "PG_FLOCK"}  } ),
+
+		{"type":"Wall", id: "WALL_1", draggable:false,"start":{"x":580,"y":100}, "end":{"x":920,"y":100}, "radius":100, "force": 1000, "distance":100},
+		{"type":"Wall", id: "WALL_2", draggable:false,"start":{"x":580,"y":500}, "end":{"x":920,"y":500}, "radius":100, "force": 1000, "distance":100},
+		{"type":"Bouncer", id: "WALL_B_1", draggable:false,"position":{"x":600,"y":100}, "radius":10, "force": 1000, "distance":10},
+		{"type":"Bouncer", id: "WALL_B_12", draggable:false,"position":{"x":900,"y":100}, "radius":10, "force": 1000, "distance":10},
+
+		{"type":"Wall", id: "WALL_3", draggable:false,"start":{"x":600,"y":80}, "end":{"x":600,"y":520}, "radius":100, "force": 1000, "distance":100},
+		{"type":"Wall", id: "WALL_4", draggable:false,"start":{"x":900,"y":80}, "end":{"x":900,"y":520}, "radius":100, "force": 1000, "distance":100},
+		{"type":"Bouncer", id: "WALL_B_3", draggable:false,"position":{"x":600,"y":500}, "radius":10, "force": 1000, "distance":10},
+		{"type":"Bouncer", id: "WALL_B_3", draggable:false,"position":{"x":900,"y":500}, "radius":10, "force": 1000, "distance":10},
+
+		{"type":"Goal", id: "PG_GOAL", draggable:false,"position":{"x":800,"y":800}, "radius":50, "force": -100, "distance":330},
 		{"type":"PG", id: "PG", draggable:false,"position":{"x":800,"y":800}, "radius":20, "force": -1, "distance":1},
 	]
 };
 for (var i = 0; i < bouncers.length; i++) {		
-	_conf.entities.push(bouncers[i]);
+	//_conf.entities.push(bouncers[i]);
 };
 
 module.exports = function (conf, key) {

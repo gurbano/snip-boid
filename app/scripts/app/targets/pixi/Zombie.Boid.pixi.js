@@ -11,6 +11,7 @@ var PixiBoid = function (source) {
 	this.position = {x:0, y:0};
 	//this.body = new PixiBoidBody(source);
     this.body = this.addChild(new PIXI.Sprite.fromImage('/images/player.png'));
+    this.body.anchor.set(0.5, 0.5)
     this.addChild(this.body);
     //this.render();
     return this;		
