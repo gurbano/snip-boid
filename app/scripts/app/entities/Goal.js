@@ -25,6 +25,7 @@ Goal.prototype.update = function(data) {
 };
 Goal.prototype.serialize = function () {
 	return $.extend(
+		{},
 			this._serialize(), // 'parent' serialize
 			{
 				radius: this.radius,

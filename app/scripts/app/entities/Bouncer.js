@@ -23,6 +23,7 @@ Bouncer.prototype.update = function(data) {
 };
 Bouncer.prototype.serialize = function () {
 	return $.extend(
+			{},
 			this._serialize(), // 'parent' serialize
 			{
 				radius: this.radius,

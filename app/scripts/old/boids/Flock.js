@@ -44,7 +44,7 @@ var Flock = function (opts) {
 	//ADD A BOID
 	this.addBoid = function (opts) {
 		var b = new Boid(
-				$.extend(opts,{id: _b.length})
+				$.extend({},opts,{id: _b.length})
 			);
 		_b.push(b);
 		return b;
@@ -101,7 +101,7 @@ var Flock = function (opts) {
 		if (opts.SIZE){
 			for (var i = 0; i < opts.SIZE; i++) {
 				if (opts.RANDOM){
-					self.addBoid($.extend(opts,{
+					self.addBoid($.extend({},opts,{
 						px: gu.random(0,mx), 
 						py: gu.random(0,my), 
 						pz: 0, 
@@ -110,7 +110,7 @@ var Flock = function (opts) {
 						sz: gu.randomReal(-MAX_FORCE,MAX_FORCE),
 					}));
 				}else{
-					self.addBoid($.extend(opts,{
+					self.addBoid($.extend({},opts,{
 						px: Math.floor(mx/2) + gu.random(-10,10), //gu.random(0,mx), 
 						py: Math.floor(my/2) + gu.random(-10,10), //gu.random(0,my), 
 						sx: gu.randomReal(-MAX_FORCE,MAX_FORCE), 

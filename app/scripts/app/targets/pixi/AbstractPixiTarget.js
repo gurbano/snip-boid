@@ -7,7 +7,7 @@ var AbstractPixiTarget = function(source, opts){
 	this.type = 'AbstractPixiTarget';
     opts = opts || {};
     this.source.opts = this.source.opts || {};
-    this.source.opts = $.extend(this.source.opts, opts)
+    this.source.opts = $.extend({},this.source.opts, opts)
 	this.buttonMode = source.opts.draggable || false;
 	this.interactive = source.opts.draggable || false;
 	this// events for drag start

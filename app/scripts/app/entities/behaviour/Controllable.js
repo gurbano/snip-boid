@@ -30,7 +30,7 @@ var Controllable = function (target, opts) {
     })
     window.app.register(contr);
     this.update = function (argument) {
-        //contr.onTrigger({});
+        
     }
 }
 

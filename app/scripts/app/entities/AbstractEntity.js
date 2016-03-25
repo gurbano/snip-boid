@@ -15,7 +15,7 @@ var AbstractEntity = function(opts ){
 	this.opts = opts || {};	
 	this.type = this.opts.type || this.TYPES.AbstractEntity;
 	this.id = this.opts.id || randomUUID();
-	this.parent = undefined;
+	this.parent = opts.parent || undefined;
 	this.renderTargets = undefined;
 	this.draggable = this.opts.draggable;
 	this.position = this.opts.position ||{
@@ -26,7 +26,10 @@ var AbstractEntity = function(opts ){
 		this.position.x = x;
 		this.position.y = y;
 	}
-	this.behaviours = [];
+	/**/
+	this.behaviours = []; //[ {name: 'test', priority:1, weight: 1, data: {}}  ]
+	
+
 	return this;
 }
 AbstractEntity.prototype.moveBy = function(x,y) {

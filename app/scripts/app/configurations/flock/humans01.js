@@ -20,19 +20,16 @@ var _conf = {
 
 		RANDOM: true,
 		behaviours: [
-			{name: 'SEEK', priority:1, weight: 1, data: { 
+			{name: 'SEEK', priority:1, weight: 0.5, data: { 
 				getGoal: function () {
 					var world = this.parent.parent;
-					var target = world.getEntityById('H_FLOCK').boids[0].getPosition();
-					console.info('zombie following ', target);
-					return target;
-					}
-				} 
-			}
+					var coord = world.stage.camera.cameraToWorldPoint({x: document.pageX, y: document.pageY}); //mouse coordinates
+					return {x: coord.x, y: coord.y  }} 
+				}
+			} 
 		]
 	}
 }
 
 
 module.exports = _conf;
-

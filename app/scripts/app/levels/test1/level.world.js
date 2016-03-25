@@ -21,7 +21,7 @@ module.exports = function (conf, key) {
 		conf[key] = _conf;
 		return conf;
 	}else{
-		return $.extend(conf, _conf);
+		return $.extend({},conf, _conf);
 	}
 }	
 

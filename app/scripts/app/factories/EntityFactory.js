@@ -16,28 +16,29 @@ var EntityFactory = function (opts) {
 	this.info = function () {
 		console.info(this);
 	}
-	this.generate = function (entityDesc, opts , cb) {
+	this.generate = function (entityDesc, _opts , cb) {
+		var opts = $.extend({},_opts,entityDesc);
 		var ret = undefined;
 		switch(entityDesc.type){
 			case "Wall":
-				ret = new Wall($.extend(opts,entityDesc));
+				ret = new Wall(opts);
 				opts.targetFactory.apply(ret);	
 				break;
 			case "Bouncer":
-				ret = new Bouncer($.extend(opts,entityDesc));
+				ret = new Bouncer(opts);
 				opts.targetFactory.apply(ret);	
 				break;
 			case "Goal":
-				ret = new Goal($.extend(opts,entityDesc));
+				ret = new Goal(opts);
 				opts.targetFactory.apply(ret);	
 				break;
 			case "PG":
-				ret = new PG($.extend(opts,entityDesc));
+				ret = new PG(opts);
 				opts.targetFactory.apply(ret);	
 				break;
 			case "Flock":
-				//ret = new Flock($.extend(opts,entityDesc));  //new Goal($.extend(opts,entityDesc));
-				opts = $.extend(opts,entityDesc);
+				//ret = new Flock(opts);  //new Goal(opts);
+				opts = opts;
 				ret = new FlockFactory(opts.FLOCKFACTORY).generate(opts.FLOCK);
 				opts.targetFactory.apply(ret);	
 				break;			

@@ -5,7 +5,7 @@ var bcook = function (opts) {
 	    height: opts.height
 	  }
 	}
-	return $.extend(opts,params);
+	return $.extend({},opts,params);
 };
 
 /*

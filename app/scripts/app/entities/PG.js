@@ -20,68 +20,9 @@ var PG = function(opts){
 	this.getDistanceFrom = function (x,y) {
     	return Math.sqrt(new V(this.position.x, this.position.y).distanceSq(new V(x,y)));
     }
-    this.behaviours.push(new Controllable(this,{}));
-    var target = this;
-    /*window.app.register (new AppEvent({
-            start:0,
-            end:-1,
-            type: "keypress",
-            onTrigger : function (data) {
-                if (data){
-                    switch(parseInt(data)){
-                        case document.K_A:
-                        case document.K_LEFT:
-                            target.moveBy(-10,0);  
-                            break;
-                        case document.K_D:
-                        case document.K_RIGHT:
-                            target.moveBy(10,0);  
-                            break;
-                        case document.K_W:
-                        case document.K_UP:
-                            target.moveBy(0,-10);  
-                            break;
-                        case document.K_S:
-                        case document.K_DOWN:
-                            target.moveBy(0,10);  
-                            break;
-                    }
-                }
-            }
-        })
-    );*/
-    this.behaviours.push(new CamMover(this,{}));
-    window.app.register(
-    	new AppEvent({
-    		start:0,
-        	end:-1,
-        	type: "play_music",
-        	onTrigger: function () {
-        		self.player.play();
-        	}
-    	})
-    );
-    window.app.register(
-    	new AppEvent({
-    		start:0,
-        	end:-1,
-        	type: "pause_music",
-        	onTrigger: function () {
-        		self.player.stop();
-        	}
-    	})
-    );
-    window.app.register(
-    	new AppEvent({
-    		start:0,
-        	end:-1,
-        	type: "add_note",
-        	onTrigger: function (data) {
-        		//console.info(data);
-        		self.player.addNote(data);
-        	}
-    	})
-    );
+    this.behaviours.push(new Controllable(this,{})); // move the entity with WASD
+    this.behaviours.push(new CamMover(this,{})); //the camera moves with the entity
+   
 }
 PG.prototype = Object.create(AbstractEntity.prototype);
 PG.prototype.constructor = AbstractEntity;
@@ -93,6 +34,7 @@ PG.prototype.update = function(data) {
 };
 PG.prototype.serialize = function () {
 	return $.extend(
+            {},
 			this._serialize(), // 'parent' serialize
 			{
 				radius: this.radius
@@ -100,3 +42,39 @@ PG.prototype.serialize = function () {
 		);
 }
 module.exports = PG;
+
+
+/*
+
+ window.app.register(
+        new AppEvent({
+            start:0,
+            end:-1,
+            type: "play_music",
+            onTrigger: function () {
+                self.player.play();
+            }
+        })
+    );
+    window.app.register(
+        new AppEvent({
+            start:0,
+            end:-1,
+            type: "pause_music",
+            onTrigger: function () {
+                self.player.stop();
+            }
+        })
+    );
+    window.app.register(
+        new AppEvent({
+            start:0,
+            end:-1,
+            type: "add_note",
+            onTrigger: function (data) {
+                //console.info(data);
+                self.player.addNote(data);
+            }
+        })
+    );
+*/

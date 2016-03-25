@@ -12,7 +12,8 @@ var helper = new HelperFactory({limitX: worldX, limitY: worldY});
 
 
 var bouncers = helper.generate(20,{"type":"Bouncer", draggable:true, "radius":20, "force": 10, "distance":10}, function (entities) {});
-
+var hFlock = $.extend({}, templates.FLOCK.HUMANS_01, {"type":"Flock", "FLOCK": {"SIZE": 1, random:true, id: "H_FLOCK"}  } );
+var zFlock = $.extend({}, templates.FLOCK.ZOMBIES_01, {"type":"Flock", "FLOCK": {"SIZE": 1, random:true, id: "Z_FLOCK"}  } );
 
 var _conf = {
 	"type":"World",
@@ -32,9 +33,9 @@ var _conf = {
 	    height: worldY,//opts.height *10
 	},
 	"entities":[
-		//$.extend(templates.FLOCK.BIRDS_01, {"type":"Flock", "FLOCK": {"position":{"x":800,"y":800}, "SIZE": 50, id: "PG_FLOCK"}  } ),
-		$.extend(templates.FLOCK.ZOMBIES_01, {"type":"Flock", "FLOCK": {"SIZE": 5, random:true, id: "PG_FLOCK"}  } ),
-
+		zFlock,	
+		hFlock,
+/*
 		{"type":"Wall", id: "WALL_1", draggable:false,"start":{"x":580,"y":100}, "end":{"x":920,"y":100}, "radius":100, "force": 1000, "distance":100},
 		{"type":"Wall", id: "WALL_2", draggable:false,"start":{"x":580,"y":500}, "end":{"x":920,"y":500}, "radius":100, "force": 1000, "distance":100},
 		{"type":"Bouncer", id: "WALL_B_1", draggable:false,"position":{"x":600,"y":100}, "radius":10, "force": 1000, "distance":10},
@@ -46,6 +47,7 @@ var _conf = {
 		{"type":"Bouncer", id: "WALL_B_3", draggable:false,"position":{"x":900,"y":500}, "radius":10, "force": 1000, "distance":10},
 
 		{"type":"Goal", id: "PG_GOAL", draggable:false,"position":{"x":800,"y":800}, "radius":50, "force": -100, "distance":330},
+	*/
 		{"type":"PG", id: "PG", draggable:false,"position":{"x":800,"y":800}, "radius":20, "force": -1, "distance":1},
 	]
 };

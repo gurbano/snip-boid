@@ -15,6 +15,7 @@ World.prototype.init = function() {
 };
 World.prototype.addEntity = function(options, entity) {
 	console.debug('adding ' + entity.type, entity,);
+	entity.parent = this;
 	if (entity.id){
 		if (!this.entities[entity.type]){
 			this.entities[entity.type] = [];

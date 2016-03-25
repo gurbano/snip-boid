@@ -1,7 +1,7 @@
 var gu = require('./../../utils');
 var Boid = require('./Boid');
 var AbstractEntity = require('./AbstractEntity');
-var defaultImpl = require('./../impl/3')();
+var defaultImpl = require('./../impl/beh')();
 
 var Flock = function(opts){
 	var self = this;
@@ -16,6 +16,7 @@ Flock.prototype = Object.create(AbstractEntity.prototype);
 Flock.prototype.constructor = AbstractEntity;
 Flock.prototype.serialize = function () {
 	return $.extend(
+			{},
 			this._serialize(), // 'parent' serialize
 			{
 				SIZE: this.boids.length,
@@ -68,12 +69,19 @@ Flock.prototype.init = function(opts) {
 };
 Flock.prototype.addBoid = function(opts) {
 	var b = new Boid(
-			$.extend(opts,
+			$.extend({},opts,
 			{	
 				impl: this.impl,
-				id: this.boids.length
+				id: this.boids.length, 
+				parent: this
+
 			})
 		);
+	for (var i = 0; i < opts.behaviours.length; i++) {
+		var beh = opts.behaviours[i];
+		b.behaviours.push(beh);
+	};
+
 	this.boids.push(b);
 	if (this.targetFactory){
 		b.addTarget(this.targetFactory.generate(b));
@@ -88,7 +96,7 @@ Flock.prototype.onTargetUpdate = function (target, data) {
 Flock.prototype.update = function(data) {
 	//console.info("Flock (" + this.id + ") update");
 	var self = this;
-	var opts = $.extend(data, {
+	var opts = $.extend({},data, {
 		sepD: this.sepD,
 		cohD: this.cohD,
 		aliD: this.aliD,
@@ -124,7 +132,7 @@ var generateInitialBoids = function  (opts) {
 	if (opts.boids){
 		for (var i = opts.boids.length - 1; i >= 0; i--) {
 			var b = opts.boids[i];
-			this.addBoid($.extend(opts,{
+			this.addBoid($.extend({},opts,{
 				px: Math.floor(mx/2) + gu.random(-10,10), //gu.random(0,mx), 
 				py: Math.floor(my/2) + gu.random(-10,10), //gu.random(0,my), 
 				sx: gu.randomReal(-MAX_FORCE,MAX_FORCE), 
@@ -135,7 +143,7 @@ var generateInitialBoids = function  (opts) {
 	}else if (opts.SIZE){
 		for (var i = 0; i < opts.SIZE; i++) {
 			if (opts.position){
-				this.addBoid($.extend(opts,{
+				this.addBoid($.extend({},opts,{
 					px: opts.position.x, 
 					py: opts.position.y, 
 					pz: 0, 
@@ -144,7 +152,7 @@ var generateInitialBoids = function  (opts) {
 					sz: gu.randomReal(-MAX_FORCE,MAX_FORCE),
 				}));
 			}else if (opts.RANDOM){
-				this.addBoid($.extend(opts,{
+				this.addBoid($.extend({},opts,{
 					px: gu.random(0,mx), 
 					py: gu.random(0,my), 
 					pz: 0, 
@@ -153,7 +161,7 @@ var generateInitialBoids = function  (opts) {
 					sz: gu.randomReal(-MAX_FORCE,MAX_FORCE),
 				}));
 			}else{
-				this.addBoid($.extend(opts,{
+				this.addBoid($.extend({},opts,{
 					px: Math.floor(mx/2) + gu.random(-10,10), //gu.random(0,mx), 
 					py: Math.floor(my/2) + gu.random(-10,10), //gu.random(0,my), 
 						sx: gu.randomReal(-MAX_FORCE,MAX_FORCE), 
