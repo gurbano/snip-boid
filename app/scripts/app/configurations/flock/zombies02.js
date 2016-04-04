@@ -20,7 +20,7 @@ var _conf = {
 
 		RANDOM: true,
 		behaviours: [
-			{name: 'SEEK', priority:1, weight: 1, data: { 
+			{name: 'EVADE', priority:1, weight: 1, data: { 
 				getGoal: function () {
 					var world = this.parent.parent;
 					var target = world.getEntityById('H_FLOCK').boids[0];

@@ -20,11 +20,16 @@ var _conf = {
 
 		RANDOM: true,
 		behaviours: [
-			{name: 'SEEK', priority:1, weight: 0.5, data: { 
-				getGoal: function () {
-					var world = this.parent.parent;
-					var coord = world.stage.camera.cameraToWorldPoint({x: document.pageX, y: document.pageY}); //mouse coordinates
-					return {x: coord.x, y: coord.y  }} 
+			{name: 'SEEK', priority:1, weight: 0.5, 
+				data: { 
+					getGoal: function () {
+						var world = this.parent.parent;
+						var coord = world.stage.camera.cameraToWorldPoint({x: document.pageX, y: document.pageY}); //mouse coordinates
+						return {
+								getPosition: function(){return {x: coord.x, y: coord.y }; },
+								getSpeed: function(){return {x: 0, y: 0 } ;}
+						};
+					} 
 				}
 			} 
 		]

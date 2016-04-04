@@ -85,11 +85,7 @@ var Boid = function(opts){
 	this.setMaxForce = function (m) {_[maxforce] = m}; 
 
 	this.getMaxTurn = function () {return  _[maxturn]}; 
-	this.setMaxTurn = function (m) {_[maxturn] = m}; 
-
-
-
-	
+	this.setMaxTurn = function (m) {_[maxturn] = m}; 	
 	
 	
 
@@ -104,5 +100,9 @@ Boid.prototype.step = function (neighb, data) {
 	this.implementation.step(this, neighb, data || {});
 	this.position = this.getPosition();
 	this.speed = this.getSpeed();
+}
+Boid.prototype.updateConfiguration = function (conf) {
+	//apply the rules
+	this.setMaxSpeed(conf.sLimit);
 }
 module.exports = Boid;

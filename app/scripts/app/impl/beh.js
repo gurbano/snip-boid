@@ -53,10 +53,13 @@ BehaveBoids.prototype.step = function(boid, boids, data) {
 				n_force = this.flee(boid, data, beh).multiply(weight);	
 				break;
 			case 'PURSUIT':
-				
+				n_force = this.pursuit(boid, data, beh).multiply(weight);	
+				break;
+			case 'EVADE':
+				n_force = this.evade(boid, data, beh).multiply(weight);	
 				break;
 			case 'TEST':
-				n_force = VVV(0.01,0.01);	
+				//n_force = VVV(0.01,0.01);	
 				break;
 			default: 
 				//console.error('not implemented',beh.name, beh);
@@ -99,19 +102,53 @@ BehaveBoids.prototype.calculateSteering = function(boid, accForce, newForce, dat
 
 /*BEHAVIOUS*/
 BehaveBoids.prototype.seek = function(boid, data, beh) { //SEEK
-	var target = VV(beh.data.getGoal.bind(boid)());
+	var target = VV(beh.data.getGoal.bind(boid)().getPosition());
 	var loc = V(boid); //position
-	var vel = VV(boid.getSpeed()); //velocity
 	var ret = target.subtract(loc).normalize().multiply(VVV(boid.getMaxSpeed(),boid.getMaxSpeed() ));
 	return ret;	
 };
 BehaveBoids.prototype.flee = function(boid, data, beh) { //SEEK
-	var target = VV(beh.data.getGoal.bind(boid)());
+	var target = VV(beh.data.getGoal.bind(boid)().getPosition());
 	var loc = V(boid); //position
 	var vel = VV(boid.getSpeed()); //velocity
 	var ret = loc.clone().subtract(target).normalize().multiply(VVV(boid.getMaxSpeed(),boid.getMaxSpeed() ));
 	return ret;	
 };
+BehaveBoids.prototype.pursuit = function(boid, data, beh) { //SEEK
+	//TARGET
+	var tObj = beh.data.getGoal.bind(boid)();
+	var tPos = VV(tObj.getPosition());
+	var tSpeed = VV(tObj.getSpeed());
+	//ENTITY
+	var loc = V(boid); //position
+	var vel = VV(boid.getSpeed()); //velocity
+
+	var distance = tPos.clone().subtract(loc);
+	var lookAheadTime = distance.clone().divide(VVV(boid.getMaxSpeed() * 4,boid.getMaxSpeed() *4 ))
+	var target = tPos.clone().add( tSpeed.multiply(lookAheadTime) );
+
+
+	var ret = target.subtract(loc).normalize().multiply(VVV(boid.getMaxSpeed(),boid.getMaxSpeed() ));
+	return ret;	
+};
+BehaveBoids.prototype.evade = function(boid, data, beh) { //SEEK
+	//TARGET
+	var tObj = beh.data.getGoal.bind(boid)();
+	var tPos = VV(tObj.getPosition());
+	var tSpeed = VV(tObj.getSpeed());
+	//ENTITY
+	var loc = V(boid); //position
+	var vel = VV(boid.getSpeed()); //velocity
+
+	var distance = tPos.clone().subtract(loc);
+	var lookAheadTime = distance.clone().divide(VVV(boid.getMaxSpeed() * 4,boid.getMaxSpeed() *4 ))
+	var target = tPos.clone().add( tSpeed.multiply(lookAheadTime) );
+
+
+	var ret = loc.subtract(target).normalize().multiply(VVV(boid.getMaxSpeed(),boid.getMaxSpeed() ));
+	return ret;	
+};
+
 
 BehaveBoids.prototype.updateBoid = function(boid, force, delta) {
 	var maxspeed = boid.getMaxSpeed();

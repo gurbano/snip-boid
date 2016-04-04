@@ -71,6 +71,7 @@ Flock.prototype.addBoid = function(opts) {
 	var b = new Boid(
 			$.extend({},opts,
 			{	
+				maxspeed: opts.sLimit,
 				impl: this.impl,
 				id: this.boids.length, 
 				parent: this
@@ -96,6 +97,7 @@ Flock.prototype.onTargetUpdate = function (target, data) {
 Flock.prototype.update = function(data) {
 	//console.info("Flock (" + this.id + ") update");
 	var self = this;
+
 	var opts = $.extend({},data, {
 		sepD: this.sepD,
 		cohD: this.cohD,
@@ -116,7 +118,7 @@ Flock.prototype.update = function(data) {
 	this.boids.forEach(function (boid) {
 		boid.debug = data.debug || false;
 		boid.step(self.boids, opts); //move boids
-		boid.updateTargets(data);  //update
+		boid.updateTargets(data);  //update		
 	});
 	this.updateTargets(data);
 };
