@@ -10,9 +10,9 @@ var helper = new HelperFactory({limitX: worldX, limitY: worldY});
 
 
 var bouncers = helper.generate(20,{"type":"Bouncer", draggable:true, "radius":20, "force": 10, "distance":10}, function (entities) {});
-var hFlock = $.extend({}, templates.FLOCK.HUMANS_01, {"type":"Flock", "FLOCK": {"SIZE": 1, random:false, id: "H_FLOCK", x:0, y:0}  } );
-var zFlock = $.extend({}, templates.FLOCK.ZOMBIES_01, {"type":"Flock", "FLOCK": {"SIZE": 1, random:false, id: "Z_FLOCK", x:100, y:100}  } );
-var zFlockP = $.extend({}, templates.FLOCK.ZOMBIES_02, {"type":"Flock", "FLOCK": {"SIZE": 1, random:false, id: "Z_FLOCK_P", x:100, y:100}  } );
+var hFlock = $.extend({}, templates.FLOCK.HUMANS_01, {"type":"Flock", "FLOCK": {"SIZE": 1, "RANDOM":false, id: "H_FLOCK", position:{x:50, y:0}}  } );
+var zFlock = $.extend({}, templates.FLOCK.ZOMBIES_01, {"type":"Flock", "FLOCK": {"SIZE": 1, "RANDOM":false, id: "Z_FLOCK", position:{x:100, y:100} }  } );
+var zFlockP = $.extend({}, templates.FLOCK.ZOMBIES_02, {"type":"Flock", "FLOCK": {"SIZE": 1, "RANDOM":false, id: "Z_FLOCK_P", position:{x:100, y:100}}  } );
 
 var _conf = {
 	"type":"World",
@@ -34,7 +34,7 @@ var _conf = {
 	"entities":[
 		//zFlock,	
 		hFlock,
-		zFlockP,
+		//zFlockP,
 /*
 		{"type":"Wall", id: "WALL_1", draggable:false,"start":{"x":580,"y":100}, "end":{"x":920,"y":100}, "radius":100, "force": 1000, "distance":100},
 		{"type":"Wall", id: "WALL_2", draggable:false,"start":{"x":580,"y":500}, "end":{"x":920,"y":500}, "radius":100, "force": 1000, "distance":100},

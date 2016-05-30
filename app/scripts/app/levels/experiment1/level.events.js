@@ -28,7 +28,7 @@ var cameraMover = new AppEvent({
 var _conf = {
 	"type":"Events",
 	"debug":false,
-	"events":[]
+	"events":[cameraMover]
 };
 
 

@@ -58,6 +58,9 @@ BehaveBoids.prototype.step = function(boid, boids, data) {
 			case 'EVADE':
 				n_force = this.evade(boid, data, beh).multiply(weight);	
 				break;
+			case 'WANDER':
+				n_force = this.wander(boid, data, beh).multiply(weight);	
+				break;
 			case 'TEST':
 				//n_force = VVV(0.01,0.01);	
 				break;
@@ -146,6 +149,25 @@ BehaveBoids.prototype.evade = function(boid, data, beh) { //SEEK
 
 
 	var ret = loc.subtract(target).normalize().multiply(VVV(boid.getMaxSpeed(),boid.getMaxSpeed() ));
+	return ret;	
+};
+BehaveBoids.prototype.wander = function(boid, data, beh) { 
+	var loc = V(boid); //position
+
+	var wRadius = 10; //radius of constraininc circle
+	var wDistance = 10; //distance the circle is projected
+	var wJitter = 10; //random displacement
+
+	var wTarget = loc.clone()
+					.add(VVV(utils.randomReal(-1,1) * wJitter ,utils.randomReal(-1,1) * wJitter) )
+					.normalize()
+					.multiply(VVV( wRadius, wRadius));
+	var locTarget = wTarget.clone().add(VVV(wDistance,0));
+	var worldTarget = wTarget.clone().add(VVV(wDistance,0));
+
+
+	
+	var ret = worldTarget.clone().subtract(loc).normalize().multiply(VVV(boid.getMaxSpeed(),boid.getMaxSpeed() ));
 	return ret;	
 };
 

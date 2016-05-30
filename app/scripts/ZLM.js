@@ -3,22 +3,17 @@ var WorldLoader = require('./app/world/WorldLoader');
 
 
 
-var loader = require('./app/levels/LOADER/level');
-var test1 = require('./app/levels/test1/level');
+var exp1 = require('./app/levels/experiment1/level');
 
 
 
 var ZombieLandStartupper = new function() {
-	var conf = loader;
-
-
-	var app = new ZombieLand({speed: conf.speed});
-	console.info(app.info());
-	app.pushLevel("LOADER", loader.CONF, WorldLoader.loadFromJSON(loader.CONF, loader.WORLD), loader.UI, "LEVEL1");
-	app.pushLevel("LEVEL1", test1.CONF,  WorldLoader.loadFromJSON(test1.CONF, test1.WORLD), test1.UI);
-	app.activateLevel("LOADER");
-
-	app.start();
+	var conf = exp1;
+	window.app = new ZombieLand({speed: conf.speed});
+	console.info(window.app.info());
+	window.app.pushLevel("LEVEL1", exp1.CONF, WorldLoader.loadFromJSON(exp1.CONF, exp1.WORLD), exp1.UI, exp1.EVENTS.events, exp1.POST.cb, "");
+	window.app.activateLevel("LEVEL1");
+	window.app.start();
 	
 }
 
